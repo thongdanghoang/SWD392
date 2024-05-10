@@ -1,0 +1,36 @@
+version: "3.9"
+services:
+  identity-access-management:
+    container_name: keycloak
+    image: quay.io/keycloak/keycloak:24.0.2
+    command: [ "start-dev", "--http-port", "8180" ]
+    environment:
+      TZ: Asia/Ho_Chi_Minh
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin_P@ssW0rd
+      KC_HEALTH_ENABLED: "true"
+      KC_METRICS_ENABLED: "true"
+    ports:
+      - "8180:8180"
+  mongodb:
+    image: mongodb/mongodb-community-server:latest
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=rootUser
+      - MONGO_INITDB_ROOT_PASSWORD=root_P@ssW0rd
+    ports:
+      - "27017:27017"
+  mysql:
+    container_name: mysql
+    image: mysql:8.0
+    environment:
+      TZ: Asia/Ho_Chi_Minh
+      MYSQL_ROOT_PASSWORD: root_P@ssW0rd
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    ports:
+      - "3306:3306"
