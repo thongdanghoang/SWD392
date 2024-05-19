@@ -1,3 +1,5 @@
+create database if not exists users;
+use users;
 create table user_entity
 (
     id        int auto_increment
