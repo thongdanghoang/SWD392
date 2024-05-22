@@ -24,10 +24,12 @@ jobs:
           cache: 'npm'
   
       - name: Install dependencies
-        run: cd frontend && npm ci
+        run: npm ci
+        working-directory: frontend
   
       - name: Run ESLint
-        run: cd frontend && npm run build
+        run: npm run lint
+        working-directory: frontend
 
     backend-lint:
       runs-on: ubuntu-latest
@@ -43,7 +45,9 @@ jobs:
             cache: 'npm'
   
         - name: Install dependencies
-          run: cd backend && npm ci
+          run: npm ci
+          working-directory: backend
     
         - name: Run ESLint
-          run: cd backend && npm run build
+          run: npm run lint
+          working-directory: backend
