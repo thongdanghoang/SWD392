@@ -2,7 +2,7 @@ import {NestFactory} from '@nestjs/core';
 import {AppModule} from './app.module';
 import {DocumentBuilder, SwaggerModule} from '@nestjs/swagger';
 
-async function bootstrap(): Promise<void> {
+async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
     origin: 'http://localhost:5173', // replace with your client's origin
@@ -11,7 +11,7 @@ async function bootstrap(): Promise<void> {
     credentials: true
   });
   const config = new DocumentBuilder()
-     .setTitle('Application example')
+    .setTitle('Application example')
     .setDescription('The application API description')
     .setVersion('1.0')
     .build();
