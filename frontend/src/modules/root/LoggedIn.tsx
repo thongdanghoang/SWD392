@@ -17,7 +17,7 @@ const LoggedIn = () => {
     return (
       <div>
         <strong>Logged in! 🎉</strong><br />
-        <button type="button" className="btn btn-danger" onClick={() => auth.signOutRedirect()}>Log out!</button>
+        <button type="button" className="btn btn-outline-success" onClick={() => auth.signOutRedirect()}>Log out!</button>
         <button type="button" className="btn btn-success" onClick={fetchData}>Fetch Data</button>
       </div>
     );

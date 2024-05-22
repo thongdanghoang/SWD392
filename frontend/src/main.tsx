@@ -4,7 +4,7 @@ import App from './modules/root/components/app/App.tsx'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'jquery';
 import 'bootstrap';
-import './index.css'
+import './index.scss'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
