@@ -21,9 +21,7 @@ jobs:
         with:
           node-version: '20.x'
       - run: npm -v
-      - run: ls
-      - run: cd ./frontend
-      - run: ls
+      - run: cd ./frontend && ls
       - run: npm ci
       - run: npm run lint
       - run: cd ../backend
