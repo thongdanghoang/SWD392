@@ -11,7 +11,7 @@ async function bootstrap(): Promise<void> {
     credentials: true
   });
   const config = new DocumentBuilder()
-    .setTitle('Application example')
+     .setTitle('Application example')
     .setDescription('The application API description')
     .setVersion('1.0')
     .build();
