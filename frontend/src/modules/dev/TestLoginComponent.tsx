@@ -1,5 +1,7 @@
-import ApplicationService from "../shared/services/application.service.ts";
-import {ReactElement} from "react";
+import ApplicationService from '../shared/services/application.service.ts';
+import {ReactElement} from 'react';
+import AppPrimaryButton from '../shared/components/buttons/AppPrimaryButton.tsx';
+import AppSecondaryButton from '../shared/components/buttons/AppSecondaryButton.tsx';
 
 const TestLoginComponent = (): ReactElement => {
   const applicationService: ApplicationService = new ApplicationService();
@@ -7,9 +9,9 @@ const TestLoginComponent = (): ReactElement => {
   const fetchData = (): void => {
     applicationService
       .getApiClient()
-      .get("http://localhost:3000/user")
+      .get('http://localhost:3000/user')
       .then(response => alert(JSON.stringify(response.data)))
-      .catch(error => console.error("Error:", error));
+      .catch(error => console.error('Error:', error));
   };
 
   if (applicationService.isAuthenticated()) {
@@ -17,16 +19,12 @@ const TestLoginComponent = (): ReactElement => {
       <div>
         <strong>Logged in! 🎉</strong>
         <br />
-        <button
-          type="button"
-          className="btn btn-outline-success"
-          onClick={() => applicationService.signOutRedirect()}
-        >
-          Log out!
-        </button>
-        <button type="button" className="btn btn-success" onClick={fetchData}>
-          Fetch Data
-        </button>
+        <AppSecondaryButton
+          onClickFn={() => applicationService.signOutRedirect()}
+          children="Log out!"
+          disabled
+        />
+        <AppPrimaryButton onClickFn={fetchData} children="Fetch data" active/>
       </div>
     );
   }

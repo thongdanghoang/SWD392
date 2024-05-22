@@ -1,6 +1,6 @@
-import {AuthContextProps, useAuth} from "oidc-react";
-import axios, {AxiosInstance} from "axios";
-import {UserDto} from "../models/userDto.ts";
+import {AuthContextProps, useAuth} from 'oidc-react';
+import axios, {AxiosInstance} from 'axios';
+import {UserDto} from '../models/userDto.ts';
 
 class ApplicationService {
   private readonly auth: AuthContextProps = useAuth();
@@ -16,7 +16,7 @@ class ApplicationService {
 
   public async fetchCurrentUser(): Promise<UserDto> {
     const apiClient = this.getApiClient();
-    const response = await apiClient.get("/user");
+    const response = await apiClient.get('/user');
     return response.data;
   }
 
@@ -24,7 +24,7 @@ class ApplicationService {
     this.auth
       .signOutRedirect()
       .then(() => {
-        alert("Successfully logged out");
+        alert('Successfully logged out');
       })
       .catch(error => {
         alert(error);
