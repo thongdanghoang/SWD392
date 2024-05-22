@@ -1,9 +1,9 @@
 import "./App.scss";
 import { AuthProvider } from "oidc-react";
-import LoggedIn from "../../LoggedIn.tsx";
+import TestLoginComponent from "../modules/dev/TestLoginComponent.tsx";
 import { AuthProviderProps } from "oidc-react/build/src/AuthContextInterface";
-import AppHeader from "../header/AppHeader.tsx";
-import AppFooter from "../footer/AppFooter.tsx";
+import AppHeader from "../modules/shared/components/header/AppHeader.tsx";
+import AppFooter from "../modules/shared/components/footer/AppFooter.tsx";
 
 export default function App() {
 
@@ -18,7 +18,7 @@ export default function App() {
     <AuthProvider {...oidcConfig}>
       <div className="app">
         <AppHeader />
-        <LoggedIn />
+        <TestLoginComponent />
         <AppFooter />
       </div>
     </AuthProvider>
