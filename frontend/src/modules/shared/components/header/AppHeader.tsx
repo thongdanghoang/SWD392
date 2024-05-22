@@ -1,5 +1,5 @@
-import styles from "./AppHeader.module.scss";
-import {ReactElement} from "react";
+import styles from './AppHeader.module.scss';
+import {ReactElement} from 'react';
 
 export default function AppHeader(): ReactElement {
   return (
