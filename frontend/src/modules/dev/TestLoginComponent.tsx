@@ -24,7 +24,7 @@ const TestLoginComponent = (): ReactElement => {
           children="Log out!"
           disabled
         />
-        <AppPrimaryButton onClickFn={fetchData} children="Fetch data" active/>
+        <AppPrimaryButton onClickFn={fetchData} children="Fetch data" active />
       </div>
     );
   }
