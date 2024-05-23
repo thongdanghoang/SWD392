@@ -3,7 +3,7 @@ import {ReactElement} from 'react';
 import AppPrimaryButton from '../shared/components/buttons/AppPrimaryButton.tsx';
 import AppSecondaryButton from '../shared/components/buttons/AppSecondaryButton.tsx';
 
-const TestLoginComponent = (): ReactElement => {
+const TestLoginComponent = () => {
   const applicationService: ApplicationService = new ApplicationService();
 
   const fetchData = (): void => {
@@ -22,7 +22,6 @@ const TestLoginComponent = (): ReactElement => {
         <AppSecondaryButton
           onClickFn={() => applicationService.signOutRedirect()}
           children="Log out!"
-          disabled
         />
         <AppPrimaryButton onClickFn={fetchData} children="Fetch data" active />
       </div>
