@@ -12,6 +12,7 @@
     "@popperjs/core": "^2.11.8",
     "axios": "^1.6.8",
     "bootstrap": "^5.3.3",
+    "bootstrap-icons": "^1.11.3",
     "jquery": "^3.7.1",
     "oidc-react": "^3.2.2",
     "popper.js": "^1.16.1",

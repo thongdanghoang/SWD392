@@ -1,10 +1,12 @@
-import styles from './AppFooter.module.scss';
+import './AppFooter.scss';
 import {ReactElement} from 'react';
 
 export default function AppFooter(): ReactElement {
   return (
     <>
-      <div className={styles.appFooter}>App Footer works!</div>
+      <div className="app-footer">
+        <h1>App Footer</h1>
+      </div>
     </>
   );
 }

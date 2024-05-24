@@ -1,0 +1,43 @@
+@import "@assets/styles/variables";
+
+.app-header {
+  background-color: $app-primary;
+
+  .search {
+    background-color: $app-white;
+    min-width: 400px;
+    min-height: 45px;
+    border-radius: 30px;
+
+    .search-icon {
+      color: $app-quaternary;
+    }
+
+    .search-bar {
+      background-color: transparent;
+      border: none;
+      outline: none;
+      color: $app-secondary
+    }
+  }
+
+  .search-and-actions {
+    .actions {
+      .user-actions-detail {
+        .bi {
+          color: $app-tertiary;
+        }
+
+        .user-info {
+          .bi {
+            color: $app-tertiary;
+          }
+        }
+
+        .user-full-name {
+          color: $app-quaternary;
+        }
+      }
+    }
+  }
+}
