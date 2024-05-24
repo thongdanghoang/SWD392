@@ -1,7 +1,6 @@
 import ApplicationService from '../shared/services/application.service.ts';
 import {ReactElement} from 'react';
-import AppPrimaryButton from '../shared/components/buttons/AppPrimaryButton.tsx';
-import AppSecondaryButton from '../shared/components/buttons/AppSecondaryButton.tsx';
+import AppButton from '../shared/components/buttons/AppButton.tsx';
 
 const TestLoginComponent = (): ReactElement => {
   const applicationService: ApplicationService = new ApplicationService();
@@ -19,12 +18,18 @@ const TestLoginComponent = (): ReactElement => {
       <div>
         <strong>Logged in! 🎉</strong>
         <br />
-        <AppSecondaryButton
-          onClickFn={() => applicationService.signOutRedirect()}
-          children="Log out!"
-          disabled
-        />
-        <AppPrimaryButton onClickFn={fetchData} children="Fetch data" active />
+        <div className="actions d-flex gap-3">
+          <AppButton
+            style="secondary"
+            onClickFn={() => applicationService.signOutRedirect()}
+            children="Log out!"
+          />
+          <AppButton
+            style="primary"
+            onClickFn={fetchData}
+            children="Fetch data"
+          />
+        </div>
       </div>
     );
   }

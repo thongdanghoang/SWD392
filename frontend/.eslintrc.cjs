@@ -71,6 +71,10 @@ module.exports = {
         "bracketSameLine": false
       }]
     }
+  }, {
+    files: ["*.tsx"], rules: {
+      "max-lines-per-function": "off"
+    }
   }],
   env: { browser: true, es2020: true },
   extends: ["eslint:recommended", "plugin:prettier/recommended", "plugin:@typescript-eslint/recommended", "plugin:@typescript-eslint/eslint-plugin/recommended", "plugin:react-hooks/recommended"],
