@@ -1,46 +1,51 @@
-@import "../../../../assets//styles/variables";
+@import "@assets/styles/variables";
 
 .app-footer {
   background-color: $app-primary;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
 
-  .footer-content {
-    color: $app-quaternary;
-    margin-left: 130px;
+  .page-footer {
+    .app-info {
+      color: $app-quaternary;
+      max-width: 450px;
+
+      .CTA {
+        a {
+          color: $app-tertiary;
+          text-decoration: none;
+        }
+
+        p {
+          color: $app-quaternary;
+        }
+      }
+    }
+
+    .app-support{
+      h5 {
+        color: $app-quaternary;
+      }
+
+      a{
+        color: $app-tertiary;
+        text-decoration: none;
+      }
+    }
   }
 
-  .footer-versionapp {
-    margin-left: 140px;
-    color: $app-tertiary;
-  }
+  .copyright {
+    padding: 24px 0 12px;
+    border-top: 1px solid $app-quaternary;
 
-  .footer-location {
-    margin-right: 140px;
-    color: $app-tertiary;
-  }
+    .footer-version-app {
+      color: $app-tertiary;
+    }
 
-  h5 {
-    color: $app-quaternary;
-    padding-bottom: 10px;
-  }
-
-  li {
-    color: $app-tertiary;
-  }
-
-  p {
-    padding-top: 10px;
-    max-width: 360px;
-  }
-
-  h1 {
-    color: $app-tertiary;
-    font-weight: lighter;
-    font-size: var(--bs-body-font-size);
-  }
-
-  .line {
-    max-width: 1255px;
-    display: block;
-    margin: 0 auto;
+    .footer-location {
+      color: $app-tertiary;
+    }
   }
 }

@@ -1,4 +1,6 @@
-
+.dev {
+    border: 1px solid red;
+}
 
 .btn-outline-success {
     --bs-btn-color: #70E2A2;

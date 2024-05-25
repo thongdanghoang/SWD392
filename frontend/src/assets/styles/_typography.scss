@@ -9,25 +9,25 @@
 }
 
 .bold-32 {
-  @include font-style(700, 32px, 48px);
+  @include font-style(600, 32px, 48px);
 }
 
 .semibold-20 {
-  @include font-style(600, 20px, 30px);
+  @include font-style(500, 20px, 30px);
 }
 
 .semibold-16 {
-  @include font-style(600, 16px, 24px);
+  @include font-style(500, 16px, 24px);
 }
 
 .semibold-14 {
-  @include font-style(600, 14px, 21px);
+  @include font-style(500, 14px, 21px);
 }
 
 .regular-14 {
-  @include font-style(400, 14px, 21px);
+  @include font-style(300, 14px, 21px);
 }
 
 .regular-12 {
-  @include font-style(400, 12px, 18px);
+  @include font-style(300, 12px, 18px);
 }
