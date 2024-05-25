@@ -9,11 +9,11 @@ import {UserEntity} from './modules/user/user.entity';
 @Module({
   imports: [
     AuthModule.forRoot({
-      oidcAuthority: 'http://localhost:8180/realms/access-guard'
+      oidcAuthority: 'https://thongdanghoang.id.vn/auth/realms/SwapMe'
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
+      host: 'thongdanghoang.id.vn',
       port: 3306,
       username: 'root',
       password: 'root_P@ssW0rd',
