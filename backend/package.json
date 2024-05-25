@@ -11,7 +11,7 @@
     "start": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix && nest start",
     "start:dev": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix && nest start --watch",
     "start:debug": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix && nest start --debug --watch",
-    "start:prod": "node dist/main",
+    "start:prod": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix && nest build && node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
