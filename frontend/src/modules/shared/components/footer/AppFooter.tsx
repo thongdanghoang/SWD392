@@ -62,15 +62,14 @@ export default function AppFooter(): ReactElement {
           <div className="line">
             <hr />
           </div>
-
-          <div className="d-flex justify-content-between pb-3">
-            <div className="footer-versionapp">Swapme Version 12.03.02</div>
-            <div className="footer-location">
-              Địa chỉ: Đại học FPT _ E2a-7, Đường D1, Phường Long Thạnh Mỹ, Q9,
-              Thành phố Thủ Đức, TP.HCM
-            </div>
-          </div>
         </footer>
+        <div className="d-flex justify-content-between pb-3">
+          <div className="footer-versionapp">Swapme Version 12.03.02</div>
+          <div className="footer-location">
+            Địa chỉ: Đại học FPT _ E2a-7, Đường D1, Phường Long Thạnh Mỹ, Q9,
+            Thành phố Thủ Đức, TP.HCM
+          </div>
+        </div>
       </div>
     </>
   );
