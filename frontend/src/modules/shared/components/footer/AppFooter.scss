@@ -1,42 +1,46 @@
-@import '../../../../assets//styles/variables';
+@import "../../../../assets//styles/variables";
 
 .app-footer {
   background-color: $app-primary;
 
-  .Footer-Content{
+  .footer-content {
     color: $app-quaternary;
     margin-left: 130px;
   }
-  
-  .Footer-VersionApp{
+
+  .footer-versionapp {
     margin-left: 140px;
     color: $app-tertiary;
   }
-  
-  .Footer-Location{
+
+  .footer-location {
     margin-right: 140px;
     color: $app-tertiary;
   }
-  h5{
+
+  h5 {
     color: $app-quaternary;
     padding-bottom: 10px;
   }
-  li{
+
+  li {
     color: $app-tertiary;
   }
-  p{
+
+  p {
     padding-top: 10px;
     max-width: 360px;
   }
-  h1{
+
+  h1 {
     color: $app-tertiary;
     font-weight: lighter;
     font-size: var(--bs-body-font-size);
   }
-  .Thai{
+
+  .line {
     max-width: 1255px;
     display: block;
     margin: 0 auto;
   }
 }
-
