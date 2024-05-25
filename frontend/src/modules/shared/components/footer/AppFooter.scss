@@ -1,5 +1,46 @@
+@import "../../../../assets//styles/variables";
+
 .app-footer {
+  background-color: $app-primary;
+
+  .footer-content {
+    color: $app-quaternary;
+    margin-left: 130px;
+  }
+
+  .footer-versionapp {
+    margin-left: 140px;
+    color: $app-tertiary;
+  }
+
+  .footer-location {
+    margin-right: 140px;
+    color: $app-tertiary;
+  }
+
+  h5 {
+    color: $app-quaternary;
+    padding-bottom: 10px;
+  }
+
+  li {
+    color: $app-tertiary;
+  }
+
+  p {
+    padding-top: 10px;
+    max-width: 360px;
+  }
+
   h1 {
-    color: blue;
+    color: $app-tertiary;
+    font-weight: lighter;
+    font-size: var(--bs-body-font-size);
+  }
+
+  .line {
+    max-width: 1255px;
+    display: block;
+    margin: 0 auto;
   }
 }
