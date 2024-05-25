@@ -1,0 +1,15 @@
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 100; // Ensure the header is above other content
+  }
+
+  .footer {
+    margin-top: auto;
+  }
+}

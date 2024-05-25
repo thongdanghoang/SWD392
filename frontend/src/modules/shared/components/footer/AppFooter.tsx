@@ -8,7 +8,7 @@ export default function AppFooter(): ReactElement {
       <div className="app-footer">
         <div className="container">
           <div className="page-footer">
-            <div className="d-flex justify-content-between my-5">
+            <div className="d-flex justify-content-between py-5">
               <div className="app-info d-flex flex-column gap-2">
                 <h5 className="text-uppercase">
                   <img src={logo} alt="" />
