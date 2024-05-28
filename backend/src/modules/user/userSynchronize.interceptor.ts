@@ -13,7 +13,7 @@ import {UserEntity} from './user.entity';
 
 @Injectable()
 export class UserSynchronizeInterceptor implements NestInterceptor {
-  private readonly logger = new Logger(UserSynchronizeInterceptor.name);
+  private readonly logger: Logger = new Logger(UserSynchronizeInterceptor.name);
 
   constructor(private readonly usersService: UsersService) {}
 
