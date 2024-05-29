@@ -12,12 +12,16 @@ jobs:
       -
         name: Checkout
         uses: actions/checkout@v4
+      - name: Extract version from branch name
+        run: echo "VERSION=${GITHUB_REF#refs/heads/release/}" >> $GITHUB_ENV
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20.x'
       - run: cd backend && npm ci
       - run: cd backend && npm run build
+      - run: cd frontend && npm ci
+      - run: cd frontend && npm run build
       -
         name: Login to Docker Hub
         uses: docker/login-action@v3
@@ -35,12 +39,13 @@ jobs:
           file: ./backend/Dockerfile
           push: true
           platforms: linux/amd64,linux/arm64
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/swap-me-services:latest
-      - name: Build and push frontend
+          tags: "${{ secrets.DOCKERHUB_USERNAME }}/swap-me-services:${{ env.VERSION }}"
+      -
+        name: Build and push frontend
         uses: docker/build-push-action@v5
         with:
           context: ./frontend
           file: ./frontend/Dockerfile
           push: true
           platforms: linux/amd64,linux/arm64
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/swap-me-web:latest
+          tags: "${{ secrets.DOCKERHUB_USERNAME }}/swap-me-web:${{ env.VERSION }}"

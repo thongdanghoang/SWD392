@@ -1,0 +1,12 @@
+version: "3.9"
+services:
+  web:
+    container_name: swap-me-web
+    image: thongdh3401/swap-me-web:latest
+    ports:
+      - "5173:80"
+  services:
+    container_name: swap-me-services
+    image: thongdh3401/swap-me-services:latest
+    ports:
+      - "3000:3000"

@@ -17,9 +17,15 @@ export default function App(): ReactElement {
   return (
     <AuthProvider {...oidcConfig}>
       <div className="app">
-        <AppHeader />
-        <TestLoginComponent />
-        <AppFooter />
+        <div className="header">
+          <AppHeader />
+        </div>
+        <div className="body">
+          <TestLoginComponent />
+        </div>
+        <div className="footer">
+          <AppFooter />
+        </div>
       </div>
     </AuthProvider>
   );

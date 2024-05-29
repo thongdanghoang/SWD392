@@ -6,11 +6,19 @@ const TestLoginComponent = (): ReactElement => {
   const applicationService: ApplicationService = new ApplicationService();
 
   const fetchData = (): void => {
-    applicationService
-      .getApiClient()
-      .get('http://localhost:3000/user')
-      .then(response => alert(JSON.stringify(response.data)))
-      .catch(error => console.error('Error:', error));
+    const currentUser = applicationService.getCurrentUser();
+    if (currentUser) {
+      alert(`Hello ${currentUser.given_name} ${currentUser.family_name}!`);
+    } else {
+      void applicationService.fetchCurrentUser().then(() => {
+        const currentUser = applicationService.getCurrentUser();
+        if (currentUser) {
+          alert(`Hello ${currentUser.given_name} ${currentUser.family_name}!`);
+        } else {
+          alert('User not found');
+        }
+      });
+    }
   };
 
   if (applicationService.isAuthenticated()) {
