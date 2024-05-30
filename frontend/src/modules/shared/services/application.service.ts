@@ -1,51 +1,53 @@
-import {AuthContextProps, useAuth} from 'oidc-react';
+import {AuthContextProps} from 'oidc-react';
 import axios, {AxiosInstance} from 'axios';
 import {UserDto} from '../models/userDto.ts';
+import {ApplicationConstants} from '../application.constants.ts';
 
 class ApplicationService {
-  private readonly auth: AuthContextProps = useAuth();
-  private currentUser: UserDto | null = null;
+  private static instance: ApplicationService;
+  private auth: AuthContextProps | null = null;
 
-  constructor() {
-    void this.init();
+  private constructor() {}
+
+  public static getInstance(): ApplicationService {
+    if (!ApplicationService.instance) {
+      ApplicationService.instance = new ApplicationService();
+    }
+    return ApplicationService.instance;
   }
 
-  public getCurrentUser(): UserDto | null {
-    return this.currentUser;
+  public setAuth(auth: AuthContextProps): void {
+    this.auth = auth;
   }
 
   public async fetchCurrentUser(): Promise<UserDto> {
-    const apiClient = this.getApiClient();
-    const response = await apiClient.get('/user');
+    const apiClient: AxiosInstance = this.createApiClient();
+    const response = await apiClient.get(
+      `${ApplicationConstants.API_URL}/user`
+    );
     return response.data;
   }
 
   public signOutRedirect(): void {
-    this.auth
-      .signOutRedirect()
-      .then(() => {
-        alert('Successfully logged out');
-      })
-      .catch(error => {
-        alert(error);
-      });
-  }
-
-  public getApiClient(): AxiosInstance {
-    const accessToken: string | undefined = this.auth.userData?.access_token;
-    return this.createApiClient(accessToken);
+    if (this.auth) {
+      this.auth
+        .signOutRedirect()
+        .then(() => {
+          alert('Successfully logged out');
+        })
+        .catch(error => {
+          alert(error);
+        });
+    }
   }
 
   public isAuthenticated(): boolean {
     return !!this.auth?.userData;
   }
 
-  private async init(): Promise<void> {
-    this.currentUser = await this.fetchCurrentUser();
-  }
-
-  private createApiClient(accessToken: string | undefined): AxiosInstance {
+  public createApiClient(): AxiosInstance {
     const apiClient: AxiosInstance = axios.create();
+    const accessToken: string | undefined = this.auth?.userData?.access_token;
 
     apiClient.interceptors.request.use(
       config => {

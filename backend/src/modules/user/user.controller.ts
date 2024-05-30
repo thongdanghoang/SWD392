@@ -1,11 +1,15 @@
 import {Controller, Get, UseGuards} from '@nestjs/common';
-import {CurrentUser, JwtAuthGuard} from '@5stones/nest-oidc';
+import {JwtAuthGuard} from '@5stones/nest-oidc';
+import {UsersService} from './users.service';
+import {UserEntity} from './user.entity';
+
 @Controller('user')
+@UseGuards(JwtAuthGuard)
 export class UsersController {
+  constructor(private readonly usersService: UsersService) {}
+
   @Get()
-  @UseGuards(JwtAuthGuard)
-  getUser(@CurrentUser() user: any): any {
-    const {name, preferred_username, given_name, family_name, email} = user;
-    return {name, preferred_username, given_name, family_name, email};
+  getUser(): UserEntity {
+    return this.usersService.getCurrentUser();
   }
 }

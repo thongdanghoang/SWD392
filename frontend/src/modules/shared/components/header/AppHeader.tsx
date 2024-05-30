@@ -1,8 +1,29 @@
 import './AppHeader.scss';
-import {ReactElement} from 'react';
+import {ReactElement, useEffect, useState} from 'react';
 import AppButton from '../buttons/AppButton.tsx';
+import ApplicationService from '../../services/application.service.ts';
+import {UserDto} from '../../models/userDto.ts';
 
 export default function AppHeader(): ReactElement {
+  const applicationService: ApplicationService =
+    ApplicationService.getInstance();
+
+  const [currentUser, setCurrentUser] = useState<UserDto | null>(null);
+
+  useEffect(() => {
+    if (applicationService.isAuthenticated()) {
+      applicationService
+        .fetchCurrentUser()
+        .then((user: UserDto) => {
+          setCurrentUser(user);
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [applicationService.isAuthenticated()]);
+
   return (
     <div className="app-header position-sticky">
       <div className="container py-3 d-flex justify-content-between">
@@ -92,7 +113,9 @@ export default function AppHeader(): ReactElement {
               <i className="fs-5 bi bi-bag btn"></i>
               <div className="user-info d-flex flex-row align-items-center">
                 <i className="fs-5 bi bi-person-circle btn-lg btn"></i>
-                <div className="user-full-name regular-14">DangHoangThong</div>
+                <div className="user-full-name regular-14">
+                  {currentUser?.firstName} {currentUser?.lastName}
+                </div>
               </div>
             </div>
             <AppButton style="primary" children={`Đăng tin ngay`} />
