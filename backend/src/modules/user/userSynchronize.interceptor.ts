@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import {Observable, catchError, throwError} from 'rxjs';
 import {UsersService} from './users.service';
-import {CreateUserDto} from './user.dtos';
+import {UserSynchronizedDto} from './user.dtos';
 import {UserEntity} from './user.entity';
 
 @Injectable()
@@ -22,26 +22,28 @@ export class UserSynchronizeInterceptor implements NestInterceptor {
     const user = request.user;
 
     void this.usersService
-      .findOne(user.preferred_username)
+      .findOne(user.email)
       .then(result => {
         if (result) {
-          this.logger.log('============Synchronized User===============');
+          this.logger.log('=============Synchronized User================');
         } else {
-          this.logger.log('============Synchronizing User==============');
+          this.logger.log('=============Synchronizing User===============');
         }
         return (
           result ??
           this.usersService.create({
-            username: user.preferred_username,
+            creationDate: new Date(),
+            email: user.email,
+            emailVerified: user.email_verified,
             firstName: user.given_name,
-            lastName: user.family_name,
-            isActive: true
-          } as CreateUserDto)
+            lastName: user.family_name
+          } as UserSynchronizedDto)
         );
       })
       .then((syncUser: UserEntity) => {
-        this.logger.log(`User name: ${syncUser.username}`);
-        this.logger.log('============================================');
+        this.usersService.setCurrentUser(syncUser);
+        this.logger.log(`User email: ${syncUser.email}`);
+        this.logger.log('==============================================');
       });
 
     return next

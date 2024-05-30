@@ -1,16 +1,22 @@
 import ApplicationService from '../shared/services/application.service.ts';
 import {ReactElement} from 'react';
 import AppButton from '../shared/components/buttons/AppButton.tsx';
+import {ApplicationConstants} from '../shared/application.constants.ts';
 
 const TestLoginComponent = (): ReactElement => {
-  const applicationService: ApplicationService = new ApplicationService();
+  const applicationService: ApplicationService =
+    ApplicationService.getInstance();
 
   const fetchData = (): void => {
     applicationService
-      .getApiClient()
-      .get('http://localhost:3000/user')
-      .then(response => alert(JSON.stringify(response.data)))
-      .catch(error => console.error('Error:', error));
+      .createApiClient()
+      .get(`${ApplicationConstants.API_URL}/user`)
+      .then(response => {
+        alert(JSON.stringify(response.data));
+      })
+      .catch(error => {
+        console.error(error);
+      });
   };
 
   if (applicationService.isAuthenticated()) {
