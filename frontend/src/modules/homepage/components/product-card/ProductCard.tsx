@@ -1,6 +1,6 @@
 import './ProducCard.scss';
 import {ReactElement} from 'react';
-import {ProductDTO} from '../productDto.ts';
+import {ProductDTO} from '../../model/productDto.ts';
 
 export default function ProductCard(product: ProductDTO): ReactElement {
   return (
@@ -11,7 +11,7 @@ export default function ProductCard(product: ProductDTO): ReactElement {
       <div className="product-info">
         <div className="d-flex flex-column align-items-start">
           <h2 className="product-title">{product.title}</h2>
-          <p className="product-price">Price: ${product.suggested_price}</p>
+          <p className="product-price">Price: ${product.suggestedPrice}</p>
           <p className="product-creation-date">
             Creation date:{' '}
             {new Date(product.creation_date).toLocaleDateString()}

@@ -1,4 +1,11 @@
-import {Column, Entity, PrimaryGeneratedColumn, VersionColumn} from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+  VersionColumn
+} from 'typeorm';
 import {PartialType} from '@nestjs/swagger';
 
 export enum UserStatus {
@@ -6,7 +13,7 @@ export enum UserStatus {
   BANNED
 }
 
-@Entity()
+@Entity('users')
 export class UserEntity {
   @PrimaryGeneratedColumn('uuid')
   id: number;
@@ -14,15 +21,11 @@ export class UserEntity {
   @VersionColumn()
   version: number;
 
-  @Column({
-    name: 'last_modification_date',
-    nullable: true,
-    onUpdate: 'CURRENT_TIMESTAMP'
-  })
-  lastModificationDate: Date;
-
-  @Column({name: 'creation_date', nullable: false})
+  @CreateDateColumn({name: 'creation_date', nullable: false})
   creationDate: Date;
+
+  @UpdateDateColumn({name: 'last_modification_date', nullable: true})
+  lastModificationDate: Date;
 
   @Column({name: 'first_name', nullable: false, length: 30})
   firstName: string;
@@ -30,26 +33,26 @@ export class UserEntity {
   @Column({name: 'last_name', nullable: false, length: 30})
   lastName: string;
 
-  @Column({name: 'email', nullable: false, length: 100})
+  @Column({name: 'email', nullable: false, length: 100, unique: true})
   email: string;
 
   @Column({name: 'email_verified', nullable: false})
   emailVerified: boolean;
 
-  @Column({name: '', nullable: true, length: 20})
+  @Column({name: 'phone', nullable: true, length: 20})
   phone: string;
 
   // Tỉnh, thành phố
-  @Column({name: 'province', nullable: true, length: 40})
-  province: string;
+  @Column({name: 'province_id', nullable: true})
+  provinceId: number;
 
   // Quận huyện thị xã
-  @Column({name: 'district', nullable: true, length: 40})
-  district: string;
+  @Column({name: 'district_id', nullable: true})
+  districtId: number;
 
   // Phường xã thị trấn
-  @Column({name: 'commune', nullable: true, length: 40})
-  commune: string;
+  @Column({name: 'commune_id', nullable: true})
+  wardId: number;
 
   // Địa chỉ cụ thể
   @Column({name: 'address_detail', nullable: true, length: 100})

@@ -3,6 +3,10 @@
 .app-header {
   background-color: $app-primary;
 
+  .logo {
+    cursor: pointer;
+  }
+
   .search {
     background-color: $app-white;
     min-width: 400px;
@@ -29,15 +33,43 @@
         }
 
         .user-info {
+          --bs-btn-active-border-color: #70E2A2;
+          position: relative;
+
           .bi {
             color: $app-tertiary;
           }
+
+          .user-full-name {
+            color: $app-quaternary;
+          }
+
+
+        }
+      }
+
+      .popup-profile {
+        --bs-offcanvas-width: unset;
+
+        .avatar {
+          width: 60px;
+          height: 60px;
+          border-radius: 50%;
         }
 
-        .user-full-name {
+        .bi {
+          color: $app-tertiary;
+        }
+
+        .follow {
+          width: 100%;
+        }
+
+        .full-name, .following, .followers, .rate-point, .number-of-rates {
           color: $app-quaternary;
         }
       }
+
     }
   }
 }

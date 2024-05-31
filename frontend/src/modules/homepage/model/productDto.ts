@@ -6,9 +6,10 @@ export interface ProductDTO {
   creation_date: Date;
   modified_by: string | null;
   last_modification_date: Date;
-  owner_id: string;
+  status: string;
   title: string;
   summary: string;
-  suggested_price: number;
-  status: string;
+  suggestedPrice: number;
+  owner: string;
+  category: string;
 }

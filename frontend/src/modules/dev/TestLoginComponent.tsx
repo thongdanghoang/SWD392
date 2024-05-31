@@ -1,16 +1,15 @@
-import ApplicationService from '../shared/services/application.service.ts';
+import {useApplicationService} from '../shared/services/application.service.ts';
 import {ReactElement} from 'react';
 import AppButton from '../shared/components/buttons/AppButton.tsx';
-import {ApplicationConstants} from '../shared/application.constants.ts';
+import {AppRoutingConstants} from '../shared/app-routing.constants.ts';
 
 const TestLoginComponent = (): ReactElement => {
-  const applicationService: ApplicationService =
-    ApplicationService.getInstance();
+  const applicationService = useApplicationService();
 
   const fetchData = (): void => {
     applicationService
       .createApiClient()
-      .get(`${ApplicationConstants.API_URL}/user`)
+      .get(`${AppRoutingConstants.BASE_URL}/user`)
       .then(response => {
         alert(JSON.stringify(response.data));
       })

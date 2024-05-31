@@ -1,3 +1,5 @@
+@import 'variables';
+
 @mixin font-style($weight, $size, $lineHeight) {
   font-family: "Inter", sans-serif;
   font-weight: $weight;

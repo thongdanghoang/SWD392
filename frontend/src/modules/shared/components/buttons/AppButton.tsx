@@ -22,11 +22,11 @@ export default function AppButton({
   const getSize = (size: string | undefined): string => {
     switch (size) {
       case 'small':
-        return 'btn-sm px-3 py-2';
+        return 'btn-sm px-3 py-2 semibold-14';
       case 'large':
-        return 'btn-lg px-5 px-3';
+        return 'btn-lg px-5 px-3 semibold-20';
       default:
-        return 'px-4 py-2';
+        return 'px-4 py-2 semibold-16';
     }
   };
 

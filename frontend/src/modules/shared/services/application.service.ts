@@ -1,30 +1,18 @@
-import {AuthContextProps} from 'oidc-react';
+import {AuthContextProps, useAuth} from 'oidc-react';
 import axios, {AxiosInstance} from 'axios';
 import {UserDto} from '../models/userDto.ts';
-import {ApplicationConstants} from '../application.constants.ts';
+import {AppRoutingConstants} from '../app-routing.constants.ts';
 
 class ApplicationService {
-  private static instance: ApplicationService;
-  private auth: AuthContextProps | null = null;
+  private readonly auth: AuthContextProps;
 
-  private constructor() {}
-
-  public static getInstance(): ApplicationService {
-    if (!ApplicationService.instance) {
-      ApplicationService.instance = new ApplicationService();
-    }
-    return ApplicationService.instance;
-  }
-
-  public setAuth(auth: AuthContextProps): void {
+  constructor(auth: AuthContextProps) {
     this.auth = auth;
   }
 
   public async fetchCurrentUser(): Promise<UserDto> {
     const apiClient: AxiosInstance = this.createApiClient();
-    const response = await apiClient.get(
-      `${ApplicationConstants.API_URL}/user`
-    );
+    const response = await apiClient.get(AppRoutingConstants.CURRENT_USER_PATH);
     return response.data;
   }
 
@@ -65,4 +53,7 @@ class ApplicationService {
   }
 }
 
-export default ApplicationService;
+export function useApplicationService(): ApplicationService {
+  const auth: AuthContextProps = useAuth();
+  return new ApplicationService(auth);
+}

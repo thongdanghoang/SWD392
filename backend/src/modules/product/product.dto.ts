@@ -1,9 +1,11 @@
+import {ProductStatus} from './product.entity';
+
 export class CreateProductDto {
-  created_by: string;
-  owner_id: number;
-  modified_by: string;
+  createdBy: string;
+  status: ProductStatus;
   title: string;
-  summary: string;
-  suggested_price: number;
-  status: string;
+  summary?: string;
+  suggestedPrice: number;
+  owner: number;
+  category?: number;
 }

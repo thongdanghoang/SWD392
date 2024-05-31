@@ -1,6 +1,6 @@
 import './Homepage.scss';
 import {ReactElement} from 'react';
-import ProductList from './productlist/ProductList';
+import ProductList from './components/productlist/ProductList';
 
 export default function HomepageComponent(): ReactElement {
   return (
