@@ -6,7 +6,7 @@ import {Route, BrowserRouter as Router, Routes} from 'react-router-dom';
 import TestLoginComponent from '../modules/dev/TestLoginComponent.tsx';
 import AppHeader from '../modules/shared/components/header/AppHeader.tsx';
 import AppFooter from '../modules/shared/components/footer/AppFooter.tsx';
-import HomepageComponent from '../modules/homepage/HomepageComponent.tsx';
+import HomepageComponent from '../modules/homepage/HomepageComponent.tsx'; // import the ProductList component
 
 export default function App(): ReactElement {
   const auth: AuthContextProps = useAuth();
