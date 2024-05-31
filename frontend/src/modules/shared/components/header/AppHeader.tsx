@@ -118,7 +118,7 @@ export default function AppHeader(): ReactElement {
                 </div>
               </div>
             </div>
-            <AppButton style="primary" children={`Đăng tin ngay`} />
+            <AppButton style="primary" children={`Đăng tin ngay`}/>
           </div>
         </div>
       </div>

@@ -13,3 +13,71 @@
 .btn-sm{
   @include font-style(600, 12px, 15.6px);
 }
+//=======================================================
+//PostProduct
+.column{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: 20px;
+  margin-bottom: 20px;    
+}
+.box1{
+  width: 30%;
+  margin-right: 3%;
+}
+.box2{
+  width: 65%;
+}
+.container h1{
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.25rem;
+  margin-top: 2%;
+  margin-bottom: 0;
+  margin-left: 9%;
+}
+.box1 .upload_image_button{
+  height: 30vh;
+  width: 40vh;
+  display: grid;
+  place-content: center;
+  font-family: 'Poppins', sans-serif;
+  background-color: #70E2A2;
+  border-radius: 5%;
+  margin-bottom: 2%;
+}
+input[type="file"]{
+  display: none;
+}
+.box1{
+  display: flex;
+  flex-direction: column;
+  align-items:end;
+
+}
+.box1 .upload_image_button label{
+  cursor: pointer;
+  font-size: 1.75rem;
+  color: white;
+}
+.box1 .upload_image_button i{
+  font-size: 5rem;
+  padding-left: 1.5rem;
+}
+
+.box2 button{
+  width: 48%;
+  justify-content:end;
+  background-color: #70E2A2;
+  border-color:#70E2A2;
+}
+#xem_truoc_button{
+  margin-right: 4%;
+  background-color: white;
+  color: #70E2A2;
+}
+.post_title_detail{
+  margin-top: 4%;
+}
+
+//=======================================================
