@@ -24,7 +24,7 @@ export default function App(): ReactElement {
           <Routes>
             <Route path="/" element={<HomepageComponent />}></Route>
             <Route path="/dev" element={<TestLoginComponent />}></Route>
-            <Route path="/postProduct" element={<PostProduct />}></Route>
+            <Route path="/post-product" element={<PostProduct />}></Route>
           </Routes>
         </div>
         <div className="footer">
