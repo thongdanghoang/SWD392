@@ -42,7 +42,7 @@
   display: grid;
   place-content: center;
   font-family: 'Poppins', sans-serif;
-  background-color: #70E2A2;
+  background-color: #C5EED7;
   border-radius: 5%;
   margin-bottom: 2%;
 }
@@ -57,7 +57,7 @@ input[type="file"]{
 }
 .box1 .upload_image_button label{
   cursor: pointer;
-  font-size: 1.75rem;
+  font-size: 1rem;
   color: white;
 }
 .box1 .upload_image_button i{
@@ -65,7 +65,7 @@ input[type="file"]{
   padding-left: 1.5rem;
 }
 
-.box2 button{
+.box2 .form_footer_button button{
   width: 48%;
   justify-content:end;
   background-color: #70E2A2;
@@ -79,5 +79,12 @@ input[type="file"]{
 .post_title_detail{
   margin-top: 4%;
 }
-
+.modal-body .form-select{
+  margin-bottom: 5%;
+}
+.modal-title-fs-5{
+  font-size: 1.5rem;
+  margin-left: 43%;
+  color: #31B46A;
+}
 //=======================================================
