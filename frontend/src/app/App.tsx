@@ -40,7 +40,7 @@ export default function App(): ReactElement {
     }
   }, [applicationService.isAuthenticated()]);
   return (
-    <Router>
+    <Router basename="/swapme">
       <LoadingProvider>
         <FullScreenSpinner />
         <ModalProvider>

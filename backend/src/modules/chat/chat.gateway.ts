@@ -11,7 +11,14 @@ import {Room} from './schemas/room.schema';
 import {CreateRoomDto} from './schemas/create-room.dto';
 import {CreateMessageDto} from './schemas/create-message.dto';
 
-@WebSocketGateway(3001, {namespace: 'chat'})
+@WebSocketGateway(3001, {
+  cors: {
+    origin: 'https://thongdanghoang.id.vn/swapme',
+    credentials: true,
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+  }
+})
 export class ChatGateway {
   @WebSocketServer()
   server: Server;

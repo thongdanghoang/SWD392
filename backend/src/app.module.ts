@@ -27,7 +27,7 @@ import {CategoryEntity} from './modules/category/category.entity';
       port: 3306,
       username: 'root',
       password: 'root_P@ssW0rd',
-      database: 'swapme',
+      database: 'swapme_prod',
       entities: [
         UserEntity,
         NotificationEntity,

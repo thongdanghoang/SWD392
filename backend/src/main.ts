@@ -5,7 +5,7 @@ import {DocumentBuilder, SwaggerModule} from '@nestjs/swagger';
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
-    origin: 'http://localhost:5173', // replace with your client's origin
+    origin: 'https://thongdanghoang.id.vn/swapme',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: 'Content-Type, Accept, Authorization, Cache-Control',
     credentials: true
