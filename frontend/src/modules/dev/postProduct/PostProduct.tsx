@@ -11,14 +11,14 @@ export default function PostProduct(): ReactElement {
           <div className="upload_image_button">
             <input type="file" id="uploadBtn" />
             <i className="bi bi-camera"></i>
-            <label for="uploadBtn">Chọn ảnh</label>
+            <label htmlFor="uploadBtn">Chọn ảnh</label>
           </div>
           <div className="upload_image_button">
             <input type="file" id="uploadBtn" />
             <i>
               <i className="bi bi-camera-video"></i>
             </i>
-            <label for="uploadBtn">Chọn video</label>
+            <label htmlFor="uploadBtn">Chọn video</label>
           </div>
         </Form>
         <Form className="box2">
@@ -49,7 +49,7 @@ export default function PostProduct(): ReactElement {
               id="inlineRadio1"
               value="option1"
             />
-            <label className="form-check-label" for="inlineRadio1">
+            <label className="form-check-label" htmlFor="inlineRadio1">
               Đã sử dụng
             </label>
           </div>
@@ -61,7 +61,7 @@ export default function PostProduct(): ReactElement {
               id="inlineRadio2"
               value="option2"
             />
-            <label className="form-check-label" for="inlineRadio2">
+            <label className="form-check-label" htmlFor="inlineRadio2">
               Mới
             </label>
           </div>
@@ -79,7 +79,7 @@ export default function PostProduct(): ReactElement {
               value=""
               id="flexCheckDefault"
             />
-            <label className="form-check-label" for="flexCheckDefault">
+            <label className="form-check-label" htmlFor="flexCheckDefault">
               Tôi muốn cho tặng miễn phí
             </label>
           </div>
