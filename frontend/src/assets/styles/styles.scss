@@ -1,15 +1,15 @@
 @import "variables";
 @import "typography";
 
-.btn{
+.btn {
   @include font-style(600, 16px, 24px);
   border-radius: 43px;
 }
 
-.btn-lg{
+.btn-lg {
   @include font-style(600, 20px, 30px);
 }
 
-.btn-sm{
+.btn-sm {
   @include font-style(600, 12px, 15.6px);
 }
