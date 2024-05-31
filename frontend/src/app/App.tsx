@@ -7,6 +7,7 @@ import TestLoginComponent from '../modules/dev/TestLoginComponent.tsx';
 import AppHeader from '../modules/shared/components/header/AppHeader.tsx';
 import AppFooter from '../modules/shared/components/footer/AppFooter.tsx';
 import HomepageComponent from '../modules/homepage/HomepageComponent.tsx';
+import ProductList from '../modules/shared/components/productlist/ProductList.tsx'; // import the ProductList component
 
 export default function App(): ReactElement {
   const auth: AuthContextProps = useAuth();
@@ -23,6 +24,7 @@ export default function App(): ReactElement {
           <Routes>
             <Route path="/" element={<HomepageComponent />}></Route>
             <Route path="/dev" element={<TestLoginComponent />}></Route>
+            <Route path="/products" element={<ProductList />}></Route>
           </Routes>
         </div>
         <div className="footer">
