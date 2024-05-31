@@ -8,26 +8,42 @@
   font-variation-settings: "slnt" 0;
 }
 
+.text-color-primary {
+  color: $app-primary
+}
+
+.text-color-secondary {
+  color: $app-secondary
+}
+
+.text-color-tertiary {
+  color: $app-tertiary
+}
+
+.text-color-quaternary {
+  color: $app-quaternary
+}
+
 .bold-32 {
-  @include font-style(600, 32px, 48px);
+  @include font-style(500, 32px, 120%);
 }
 
 .semibold-20 {
-  @include font-style(500, 20px, 30px);
+  @include font-style(500, 20px, 150%);
 }
 
 .semibold-16 {
-  @include font-style(500, 16px, 24px);
+  @include font-style(500, 16px, 150%);
 }
 
 .semibold-14 {
-  @include font-style(500, 14px, 21px);
+  @include font-style(500, 14px, 150%);
 }
 
 .regular-14 {
-  @include font-style(300, 14px, 21px);
+  @include font-style(300, 14px, 150%);
 }
 
 .regular-12 {
-  @include font-style(300, 12px, 18px);
+  @include font-style(300, 12px, 150%);
 }

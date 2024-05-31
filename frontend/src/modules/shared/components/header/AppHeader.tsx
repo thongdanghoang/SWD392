@@ -3,11 +3,12 @@ import {ReactElement, useEffect, useState} from 'react';
 import AppButton from '../buttons/AppButton.tsx';
 import ApplicationService from '../../services/application.service.ts';
 import {UserDto} from '../../models/userDto.ts';
+import {useNavigate} from 'react-router-dom';
 
 export default function AppHeader(): ReactElement {
   const applicationService: ApplicationService =
     ApplicationService.getInstance();
-
+  const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState<UserDto | null>(null);
 
   useEffect(() => {
@@ -24,6 +25,9 @@ export default function AppHeader(): ReactElement {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [applicationService.isAuthenticated()]);
 
+  function postProductAction(): void {
+    navigate('/post-product');
+  }
   return (
     <div className="app-header position-sticky">
       <div className="container py-3 d-flex justify-content-between">
@@ -118,7 +122,11 @@ export default function AppHeader(): ReactElement {
                 </div>
               </div>
             </div>
-            <AppButton style="primary" children={`Đăng tin ngay`} />
+            <AppButton
+              onClickFn={postProductAction}
+              style="primary"
+              children={`Đăng tin ngay`}
+            />
           </div>
         </div>
       </div>
