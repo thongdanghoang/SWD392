@@ -3,41 +3,68 @@ import {
   CreateDateColumn,
   Entity,
   PrimaryGeneratedColumn,
-  UpdateDateColumn
+  UpdateDateColumn,
+  VersionColumn
 } from 'typeorm';
 
-@Entity()
+export enum ProductStatus {
+  REVIEWING,
+  PUBLISHED,
+  EXCHANGING,
+  EXCHANGED,
+  BANNED,
+  REMOVED
+}
+
+@Entity('products')
 export class Product {
-  @PrimaryGeneratedColumn('increment')
+  @PrimaryGeneratedColumn('uuid')
   id: number;
 
-  @Column({type: 'int', default: 0})
+  @VersionColumn()
   version: number;
 
-  @Column({type: 'nvarchar', length: 255, nullable: true})
-  created_by: string;
+  @Column({name: 'created_by', length: 255, nullable: true})
+  createdBy: string;
 
-  @CreateDateColumn()
-  creation_date: Date;
+  @Column({name: 'modified_by', length: 255, nullable: true})
+  modifiedBy: string;
 
-  @Column({type: 'nvarchar', length: 255, nullable: true})
-  modified_by: string;
+  @CreateDateColumn({name: 'creation_date', nullable: false})
+  creationDate: Date;
 
-  @UpdateDateColumn()
-  last_modification_date: Date;
+  @UpdateDateColumn({name: 'last_modification_date', nullable: true})
+  lastModificationDate: Date;
 
-  @Column({type: 'bigint'})
-  owner_id: number;
+  @Column({
+    name: 'status',
+    type: 'enum',
+    enum: ProductStatus,
+    nullable: false,
+    default: ProductStatus.REVIEWING
+  })
+  status: ProductStatus;
 
-  @Column({type: 'varchar', length: 75})
+  @Column({name: 'title', length: 75, nullable: false})
   title: string;
 
-  @Column({type: 'text', nullable: true})
+  @Column({name: 'summary', type: 'text', nullable: true})
   summary: string;
 
-  @Column({type: 'float', nullable: true})
-  suggested_price: number;
+  @Column({
+    name: 'suggested_price',
+    type: 'bigint',
+    nullable: false
+  })
+  suggestedPrice: number;
 
-  @Column({type: 'varchar', length: 20})
-  status: string;
+  @Column({
+    name: 'owner_id',
+    type: 'uuid',
+    nullable: false
+  })
+  owner: number;
+
+  @Column({type: 'uuid', name: 'category_id', nullable: false})
+  category: number;
 }

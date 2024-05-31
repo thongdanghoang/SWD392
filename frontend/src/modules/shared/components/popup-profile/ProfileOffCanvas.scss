@@ -1,0 +1,27 @@
+@import "@assets/styles/variables";
+
+.popup-profile {
+  .offcanvas-header {
+
+  }
+
+  .list-features {
+
+    .list-title, .list-item {
+      padding: 12px 18px;
+    }
+
+    .list-title {
+      background-color: $app-primary;
+    }
+
+    .list-item {
+    }
+
+    .list-item:hover {
+      cursor: pointer;
+      border: 1px solid $app-primary;
+    }
+
+  }
+}

@@ -19,7 +19,7 @@ import {Product} from 'src/modules/product/product.entity';
       port: 3306,
       username: 'root',
       password: 'root_P@ssW0rd',
-      database: 'users',
+      database: 'swapme',
       entities: [UserEntity, Product],
       synchronize: true
     }),

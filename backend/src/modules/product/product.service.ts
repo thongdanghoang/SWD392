@@ -20,8 +20,8 @@ export class ProductService {
     await this.productRepository.save(product);
     return product;
   }
+
   async getProductDetails(id: number): Promise<Product> {
-    const products = await this.productRepository.findByIds([id]);
-    return products[0];
+    return this.productRepository.findOneBy({id});
   }
 }

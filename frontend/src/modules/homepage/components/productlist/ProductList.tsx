@@ -1,23 +1,22 @@
 import React, {useEffect, useState} from 'react';
-import ApplicationService from '../../shared/services/application.service.ts';
-import {ProductDTO} from '../productDto.ts';
-import AppButton from '../../shared/components/buttons/AppButton.tsx';
+import {ProductDTO} from '../../model/productDto.ts';
+import AppButton from '../../../shared/components/buttons/AppButton.tsx';
 import './ProducList.scss';
-import {ApplicationConstants} from '../../shared/application.constants.ts';
 import ProductCard from '../product-card/ProductCard.tsx';
+import {AppRoutingConstants} from '../../../shared/app-routing.constants.ts';
+import {useApplicationService} from '../../../shared/services/application.service.ts';
 
 const ProductList = (): React.ReactElement => {
   const [products, setProducts] = useState<ProductDTO[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const applicationService: ApplicationService =
-    ApplicationService.getInstance();
+  const applicationService = useApplicationService();
 
   const fetchProducts = (): void => {
     setLoading(true);
     applicationService
       .createApiClient()
-      .get(`${ApplicationConstants.API_URL}/products`)
+      .get(`${AppRoutingConstants.PRODUCTS_PATH}`)
       .then(response => {
         setProducts(
           response.data.data.map((product: ProductDTO) => ({
