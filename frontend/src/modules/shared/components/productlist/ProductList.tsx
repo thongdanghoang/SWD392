@@ -32,7 +32,7 @@ const ProductList = (): React.ReactElement => {
     if (applicationService.isAuthenticated()) {
       fetchProducts();
     }
-  }, [applicationService]);
+  }, [applicationService.isAuthenticated()]);
 
   if (loading) {
     return <div>Loading...</div>;
