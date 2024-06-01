@@ -1,11 +1,18 @@
 .product-list {
-  padding: 200px;
+  padding: 180px;
   text-align: center;
   color: #333;
 
   h1 {
-    font-size: 24px;
-    margin-bottom: 20px;
+    font-family: "Inter", sans-serif;
+    font-size: 32px;
+    font-weight: 600;
+    line-height: 38.4px;
+    color: #1f7343;
+    width: 200px;
+    height: 38px;
+    display: flex;
+    justify-content: space-between;
   }
 
   .products {
@@ -14,63 +21,80 @@
       auto-fill,
       minmax(280px, 1fr)
     ); /* Adjust the 250px value as needed */
-    gap: 20px;
+    gap: 20px 40px;
     list-style: none;
     padding: 0;
 
     .product-card {
-      background: #fff;
-      border: 1px solid #e0e0e0;
+      width: 312px;
+      height: 368px;
+      border: 1px solid #c5eed7;
+      background: rgba(255, 255, 255, 0.8); /* #FFFFFF with 80% opacity */
       border-radius: 8px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       padding: 15px;
-      text-align: left;
+      text-align: center; /* Center alignment */
 
       .product-content {
         display: flex;
         flex-direction: column;
-        align-items: flex-start;
-        color: #1ef41e;
+        align-items: center; /* Center alignment */
 
         .product-title {
-          font-size: 18px;
+          font-family: "Inter", sans-serif;
+          font-size: 20px;
           font-weight: 600;
-          margin-bottom: 10px;
+          line-height: 24px;
+          color: #31b46a;
+          width: 240px;
+          height: 24px;
         }
 
         .product-summary {
           font-size: 14px;
           margin-bottom: 10px;
         }
+
         .product-price {
-          color: #024b1a; /* This will make the text black. Adjust the color as needed. */
-          font-weight: bold;
+          font-family: "Inter", sans-serif;
+          font-size: 20px;
+          font-weight: 600;
+          line-height: 30px;
+          color: #1f7343;
+          height: 30px;
         }
 
-        .product-price,
-        .product-status,
-        .product-created-by,
-        .product-creation-date,
-        .product-modified-by,
-        .product-modification-date {
-          font-size: 12px;
-          margin-bottom: 5px;
+        .product-creation-date {
+          font-family: "Inter", sans-serif;
+          font-size: 14px;
+          font-weight: 400;
+          line-height: 21px;
+          color: #31b46a;
+          width: 240px;
+          height: 21px;
         }
       }
     }
   }
 
+  .button-container {
+    display: flex;
+    justify-content: center;
+  }
+
   .load-more {
-    margin-top: 20px;
-    padding: 10px 20px;
-    background-color: #007bff;
-    border: none;
-    border-radius: 4px;
-    color: #fff;
-    cursor: pointer;
-    font-size: 16px;
-    display: block;
-    margin: 0 auto; /* Center the button */
+    width: 648px;
+    height: 51px;
+    border: 2px solid #70e2a2;
+    border-radius: 43px;
+    padding: 16px 40px;
+    background-color: #ffffff;
+    color: #000; /* Adjust the text color as needed */
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 16px; /* Adjust the margin as needed to create the gap */
 
     &:hover {
       background-color: #0056b3;

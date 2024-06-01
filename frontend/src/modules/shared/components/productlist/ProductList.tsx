@@ -51,44 +51,26 @@ const ProductList = (): React.ReactElement => {
             <li key={product.id} className="product-card">
               <div className="product-content">
                 <h2 className="product-title">{product.title}</h2>
-                <p className="product-summary">{product.summary}</p>
                 <p className="product-price">
                   Price: ${product.suggested_price}
-                </p>
-                <p className="product-status">Status: {product.status}</p>
-                <p className="product-created-by">
-                  Created by: {product.created_by}
                 </p>
                 <p className="product-creation-date">
                   Creation date:{' '}
                   {new Date(product.creation_date).toLocaleDateString()}
                 </p>
-                <p className="product-modified-by">
-                  Last modified by: {product.modified_by}
-                </p>
-                <p className="product-modification-date">
-                  Last modification date:{' '}
-                  {new Date(
-                    product.last_modification_date
-                  ).toLocaleDateString()}
-                </p>
               </div>
             </li>
           ))}
         </ul>
-        <AppButton
-          style="secondary"
-          onClickFn={() => applicationService.signOutRedirect()}
-        >
-          Log out!
-        </AppButton>
-        <AppButton
-          style="secondary"
-          className="load-more"
-          onClickFn={fetchProducts}
-        >
-          Xem Thêm
-        </AppButton>
+        <div className="button-container">
+          <AppButton
+            style="secondary"
+            className="load-more"
+            onClickFn={fetchProducts}
+          >
+            Xem Thêm
+          </AppButton>
+        </div>
       </div>
     );
   }
