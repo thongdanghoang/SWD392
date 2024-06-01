@@ -10,7 +10,10 @@
 
   .products {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Adjust the 250px value as needed */
+    grid-template-columns: repeat(
+      auto-fill,
+      minmax(280px, 1fr)
+    ); /* Adjust the 250px value as needed */
     gap: 20px;
     list-style: none;
     padding: 0;
@@ -35,15 +38,13 @@
           margin-bottom: 10px;
         }
 
-        
-
         .product-summary {
           font-size: 14px;
           margin-bottom: 10px;
         }
         .product-price {
-            color: #024b1a; /* This will make the text black. Adjust the color as needed. */
-            font-weight: bold;
+          color: #024b1a; /* This will make the text black. Adjust the color as needed. */
+          font-weight: bold;
         }
 
         .product-price,

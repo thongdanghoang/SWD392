@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import ApplicationService from '../../../shared/services/application.service.ts';
-import { ProductDTO } from '../../models/productDto.ts';
+import {ProductDTO} from '../../models/productDto.ts';
 import AppButton from '../../../shared/components/buttons/AppButton.tsx';
-import { ApplicationConstants } from '../../../shared/application.constants.ts';
+import {ApplicationConstants} from '../../../shared/application.constants.ts';
 import './ProducList.scss';
 
 const ProductList = (): React.ReactElement => {
   const [products, setProducts] = useState<ProductDTO[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const applicationService: ApplicationService = ApplicationService.getInstance();
+  const applicationService: ApplicationService =
+    ApplicationService.getInstance();
 
   const fetchProducts = (): void => {
     setLoading(true);
@@ -43,7 +44,7 @@ const ProductList = (): React.ReactElement => {
 
   if (applicationService.isAuthenticated()) {
     return (
-        <div className="product-list">
+      <div className="product-list">
         <h1>Tin đăng mới</h1>
         <ul className="products">
           {products.map(product => (

@@ -10,4 +10,3 @@ export default function HomepageComponent(): ReactElement {
     </div>
   );
 }
-
