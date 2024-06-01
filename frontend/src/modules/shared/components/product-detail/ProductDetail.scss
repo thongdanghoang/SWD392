@@ -1,0 +1,36 @@
+@import "@assets/styles/variables";
+
+.product-detail {
+  .card-img {
+    max-width: 220px;
+    max-height: 200px;
+    display: block;
+    margin: 20px auto 0;
+  }
+  .bi {
+    color: $app-tertiary;
+  }
+  .report-note {
+    font-size: 12px;
+  }
+  h5 {
+    font-weight: bold;
+    font-size: 16px;
+    color: $app-quaternary;
+  }
+  h4 {
+    color: $app-quaternary;
+  }
+  h1 {
+    color: $app-quaternary;
+  }
+  p {
+    color: $app-tertiary;
+  }
+  span {
+    color: $app-quaternary;
+  }
+  a {
+    color: $app-tertiary;
+  }
+}

@@ -9,6 +9,7 @@ import PostProduct from '../modules/products/components/post-product/PostProduct
 import {ModalProvider} from '../modules/shared/components/modal/ModalContext.tsx';
 import {LoadingProvider} from '../modules/shared/components/loading/LoadingContext.tsx';
 import FullScreenSpinner from '../modules/shared/components/loading/loading-spinner/FullScreenSpinner.tsx';
+import ProductDetail from '../modules/shared/components/product-detail/ProductDetail.tsx';
 
 export default function App(): ReactElement {
   return (
@@ -24,6 +25,7 @@ export default function App(): ReactElement {
               <Routes>
                 <Route path="/" element={<HomepageComponent />}></Route>
                 <Route path="/dev" element={<TestLoginComponent />}></Route>
+                <Route path="/product" element={<ProductDetail />}></Route>
                 <Route path="/post-product" element={<PostProduct />}></Route>
               </Routes>
             </div>
