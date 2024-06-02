@@ -103,7 +103,9 @@ export default function AppHeader(): ReactElement {
         </div>
         <div className="d-flex align-items-center">
           <div className="search d-flex align-items-center gap-2 px-3">
-            <i className="search-icon bi bi-search"></i>
+            <div className="search-btn clickable">
+              <i className="search-icon bi bi-search"></i>
+            </div>
             <input
               className="search-bar regular-14"
               type="text"
@@ -114,9 +116,21 @@ export default function AppHeader(): ReactElement {
         <div className="search-and-actions d-flex align-items-center">
           <div className="actions d-flex flex-row">
             <div className="user-actions-detail d-flex align-items-center gap-4 px-5">
-              <i className="fs-5 bi bi-bell"></i>
-              <i className="fs-5 bi bi-chat-left-text"></i>
-              <i className="fs-5 bi bi-bag"></i>
+              <div
+                className="dev-mode clickable"
+                onClick={() => navigate('/dev')}
+              >
+                <i className="bi bi-code-slash"></i>
+              </div>
+              <div className="notification clickable">
+                <i className="fs-5 bi bi-bell"></i>
+              </div>
+              <div className="chat clickable">
+                <i className="fs-5 bi bi-chat-left-text"></i>
+              </div>
+              <div className="cart clickable">
+                <i className="fs-5 bi bi-bag"></i>
+              </div>
               <div
                 className="user-info d-flex flex-row align-items-center gap-2 btn"
                 data-bs-toggle="offcanvas"

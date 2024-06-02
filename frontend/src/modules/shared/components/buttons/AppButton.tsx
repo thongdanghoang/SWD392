@@ -3,6 +3,7 @@ import {MouseEventHandler, ReactElement, ReactNode} from 'react';
 interface AppBtnProps {
   children: ReactNode;
   style: 'primary' | 'secondary';
+  type?: 'button' | 'submit' | 'reset';
   size?: 'small' | 'large';
   onClickFn?: MouseEventHandler<HTMLButtonElement>;
   className?: string;
@@ -12,8 +13,9 @@ interface AppBtnProps {
 
 export default function AppButton({
   children,
-  size,
   style,
+  type,
+  size,
   onClickFn,
   className,
   disabled,
@@ -45,9 +47,24 @@ export default function AppButton({
     return active ? 'active' : '';
   };
 
+  const getType = (
+    type: string | undefined
+  ): 'button' | 'submit' | 'reset' | undefined => {
+    switch (type) {
+      case 'button':
+        return 'button';
+      case 'submit':
+        return 'submit';
+      case 'reset':
+        return 'reset';
+      default:
+        return 'button';
+    }
+  };
+
   return (
     <button
-      type="button"
+      type={getType(type)}
       className={`btn ${className} ${getSize(size)} ${getStyle(style)} ${isActive(active)}`}
       onClick={onClickFn}
       disabled={disabled}

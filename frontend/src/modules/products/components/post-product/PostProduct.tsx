@@ -1,10 +1,65 @@
 import './PostProduct.scss';
 import '@assets/styles/styles.scss';
 import {Form} from 'react-bootstrap';
-import {ReactElement} from 'react';
-import AppButton from '../../shared/components/buttons/AppButton.tsx';
+import React, {ReactElement} from 'react';
+import AppButton from '../../../shared/components/buttons/AppButton.tsx';
+import {useModal} from '../../../shared/components/modal/useModal.tsx';
+import AddressFormModal, {AddressDto} from '../AddressFormModal.tsx';
+import {useApplicationService} from '../../../shared/services/application.service.ts';
+import {AppRoutingConstants} from '../../../shared/app-routing.constants.ts';
+import {useNavigate} from 'react-router-dom';
+
+interface ProductDTO extends AddressDto {
+  title: string;
+  suggestedPrice: string;
+}
 
 export default function PostProduct(): ReactElement {
+  const navigate = useNavigate();
+  const applicationService = useApplicationService();
+  const [fullName, setFullName] = React.useState<string>('');
+  const [product, setProduct] = React.useState<ProductDTO>({
+    title: '',
+    suggestedPrice: '',
+    provinceCode: '',
+    districtCode: '',
+    wardCode: '',
+    addressDetail: ''
+  });
+  const modalContext = useModal();
+  if (!modalContext) {
+    // handle the case where modalContext is null
+    // for example, you could return a loading spinner
+    return <div>Loading...</div>;
+  }
+  const {showModal} = modalContext;
+  const handleAddressFormModalSubmit = (data: any): void => {
+    setFullName(data.fullName);
+    setProduct({
+      ...product,
+      provinceCode: data.provinceCode,
+      districtCode: data.districtCode,
+      wardCode: data.wardCode,
+      addressDetail: data.addressDetail
+    });
+  };
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
+    e.preventDefault();
+    // Here you can handle the form submission.
+    // The form data is in the state variables.
+    applicationService
+      .createApiClient()
+      .post(`${AppRoutingConstants.PRODUCTS_PATH}`, product)
+      .then(
+        (): void => {
+          navigate(`${AppRoutingConstants.HOMEPAGE}`);
+        },
+        error => {
+          console.error(error);
+        }
+      );
+  };
+
   return (
     <div className="container my-5">
       <div className="row mb-3">
@@ -93,12 +148,17 @@ export default function PostProduct(): ReactElement {
             </div>
           </div>
         </Form>
-        <Form className="detail col-8 d-flex flex-column gap-4">
+        <Form
+          className="detail col-8 d-flex flex-column gap-4"
+          onSubmit={handleSubmit}
+        >
           <select
             className="list-of-postings form-select"
             aria-label="Default select example"
           >
-            <option selected>Danh mục tin đăng</option>
+            <option value="0" disabled>
+              Danh mục tin đăng
+            </option>
             <option value="1">Thời trang nam</option>
             <option value="2">Thời trang nữ</option>
             <option value="3">Giày dép</option>
@@ -162,26 +222,34 @@ export default function PostProduct(): ReactElement {
                 Tôi muốn cho tặng miễn phí
               </label>
             </div>
-            <div className="mb-3">
-              <input
+            <Form.Group controlId="formProductSuggestedPrice" className="mb-3">
+              <Form.Control
                 className="form-control regular-14"
-                id="exampleFormControlInput1"
+                type="number"
+                required
                 placeholder="Giá đề xuất"
+                value={product.suggestedPrice}
+                onChange={e =>
+                  setProduct({...product, suggestedPrice: e.target.value})
+                }
               />
-            </div>
+            </Form.Group>
           </div>
 
           <div className="title-and-description d-flex flex-column gap-2">
             <div className="post_title_detail semibold-20 text-color-quaternary">
               Tiêu đề Tin đăng và Mô tả chi tiết
             </div>
-            <div className="mb-3">
-              <input
-                className="form-control regular-14"
-                id="exampleFormControlInput1"
+            <Form.Group controlId="formProductTitle">
+              <Form.Control
+                className="mb-3 regular-14"
+                type="text"
+                required
                 placeholder="Tiêu đề tin đăng"
-              />
-            </div>
+                value={product.title}
+                onChange={e => setProduct({...product, title: e.target.value})}
+              ></Form.Control>
+            </Form.Group>
             <div className="mb-3">
               <textarea
                 className="form-control regular-14"
@@ -195,21 +263,28 @@ export default function PostProduct(): ReactElement {
             <div className="semibold-20 text-color-quaternary">
               Thông tin người bán
             </div>
-            <div>
-              <div className="mb-3">
-                <input
-                  className="form-control regular-14"
-                  id="exampleFormControlInput1"
-                  placeholder="Địa chỉ"
-                />
-              </div>
-            </div>
+            <Form.Group controlId="formProductAddress" className="mb-3">
+              <Form.Control
+                className="form-control regular-14 clickable"
+                placeholder="Địa chỉ"
+                required
+                readOnly
+                onClick={() =>
+                  showModal(AddressFormModal, handleAddressFormModalSubmit)
+                }
+                value={
+                  product.addressDetail
+                    ? `${product.addressDetail}, ${fullName}`
+                    : ''
+                }
+              />
+            </Form.Group>
           </div>
           <div className="summit d-flex justify-content-between">
             <AppButton className="preview" style={'secondary'}>
               Xem trước
             </AppButton>
-            <AppButton className="submit" style={'primary'}>
+            <AppButton className="submit" type="submit" style={'primary'}>
               Đăng tin
             </AppButton>
           </div>
