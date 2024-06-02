@@ -17,7 +17,7 @@ export enum ProductStatus {
 }
 
 @Entity('products')
-export class Product {
+export class ProductEntity {
   @PrimaryGeneratedColumn('uuid')
   id: number;
 
@@ -65,6 +65,6 @@ export class Product {
   })
   owner: number;
 
-  @Column({type: 'uuid', name: 'category_id', nullable: false})
+  @Column({type: 'uuid', name: 'category_id', nullable: true})
   category: number;
 }

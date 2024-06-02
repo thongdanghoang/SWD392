@@ -1,7 +1,11 @@
-import {useApplicationService} from '../shared/services/application.service.ts';
 import {ReactElement} from 'react';
-import AppButton from '../shared/components/buttons/AppButton.tsx';
+import {useApplicationService} from '../shared/services/application.service.ts';
 import {AppRoutingConstants} from '../shared/app-routing.constants.ts';
+import AppButton from '../shared/components/buttons/AppButton.tsx';
+import {useModal} from '../shared/components/modal/useModal.tsx';
+import {SimpleModal} from './SimpleModal.tsx';
+import FormModal from './FormModal.tsx';
+import AddressFormModal from '../products/components/AddressFormModal.tsx';
 
 const TestLoginComponent = (): ReactElement => {
   const applicationService = useApplicationService();
@@ -17,6 +21,20 @@ const TestLoginComponent = (): ReactElement => {
         console.error(error);
       });
   };
+
+  const handleModalSubmit = (data: any): void => {
+    alert(JSON.stringify(data));
+  };
+
+  const modalContext = useModal();
+
+  if (!modalContext) {
+    // handle the case where modalContext is null
+    // for example, you could return a loading spinner
+    return <div>Loading...</div>;
+  }
+
+  const {showModal} = modalContext;
 
   if (applicationService.isAuthenticated()) {
     return (
@@ -34,11 +52,26 @@ const TestLoginComponent = (): ReactElement => {
             onClickFn={fetchData}
             children="Fetch data"
           />
+          <AppButton style="primary" onClickFn={() => showModal(SimpleModal)}>
+            Show SimpleModal
+          </AppButton>
+          <AppButton
+            style="primary"
+            onClickFn={() => showModal(FormModal, handleModalSubmit)}
+          >
+            Show FormModel
+          </AppButton>
+          <AppButton
+            style="primary"
+            onClickFn={() => showModal(AddressFormModal, handleModalSubmit)}
+          >
+            Show AddressFormModal
+          </AppButton>
         </div>
       </div>
     );
   }
-  return <div>Not logged in! Try to refresh to be redirected to Google.</div>;
+  return <></>;
 };
 
 export default TestLoginComponent;

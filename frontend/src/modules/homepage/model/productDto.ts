@@ -1,11 +1,11 @@
 export interface ProductDTO {
   id: number;
-  image_url?: string;
+  imageUrl?: string;
   version: number;
-  created_by: string | null;
-  creation_date: Date;
-  modified_by: string | null;
-  last_modification_date: Date;
+  createdBy: string | null;
+  creationDate: Date;
+  modifiedBy: string | null;
+  lastModificationDate: Date;
   status: string;
   title: string;
   summary: string;
