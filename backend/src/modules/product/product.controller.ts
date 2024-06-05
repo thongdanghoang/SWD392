@@ -1,14 +1,14 @@
 import {Body, Controller, Get, Param, Post, UseGuards} from '@nestjs/common';
 import {JwtAuthGuard} from '@5stones/nest-oidc';
 import {ProductService} from './product.service';
-import {CreateProductDto} from './product.dto';
+import {CreateProductDto, ProductOwnerDto} from './product.dto';
 import {ProductEntity, ProductStatus} from './product.entity';
 import {ResponseData} from '../../global/globalClass';
 import {HttpMessage, HttpStatus} from '../../global/globalEnum';
 import {UsersService} from '../user/users.service';
+import {UserDto} from '../user/user.dto';
 
 @Controller('products')
-@UseGuards(JwtAuthGuard)
 export class ProductController {
   constructor(
     private readonly productService: ProductService,
@@ -16,6 +16,7 @@ export class ProductController {
   ) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   async createProduct(
     @Body() createProductDto: CreateProductDto
   ): Promise<ResponseData<ProductEntity>> {
@@ -43,12 +44,17 @@ export class ProductController {
   @Get('/:id')
   async getProductDetails(
     @Param('id') id: number
-  ): Promise<ResponseData<ProductEntity>> {
+  ): Promise<ResponseData<ProductOwnerDto>> {
     try {
       const product = await this.productService.getProductDetails(id);
-      return new ResponseData(product, HttpMessage.OK, HttpStatus.OK);
+      const owner = await this.userService.findById(product.owner);
+      return new ResponseData(
+        this.mapToProductOwnerDto(product, owner),
+        HttpMessage.OK,
+        HttpStatus.OK
+      );
     } catch (error) {
-      return new ResponseData<ProductEntity>(
+      return new ResponseData<ProductOwnerDto>(
         null,
         HttpMessage.INTERNAL_SERVER_ERROR,
         HttpStatus.INTERNAL_SERVER_ERROR
@@ -72,5 +78,32 @@ export class ProductController {
         HttpStatus.INTERNAL_SERVER_ERROR
       );
     }
+  }
+
+  private mapToProductOwnerDto(
+    product: ProductEntity,
+    owner: UserDto
+  ): ProductOwnerDto {
+    return {
+      id: product.id,
+      version: product.version,
+      createdBy: product.createdBy,
+      lastModificationDate: product.lastModificationDate,
+      title: product.title,
+      summary: product.summary,
+      suggestedPrice: product.suggestedPrice,
+      modifiedBy: product.modifiedBy,
+      creationDate: product.creationDate,
+      status: product.status,
+      owner: {
+        id: owner.id,
+        version: owner.version,
+        firstName: owner.firstName,
+        lastName: owner.lastName,
+        email: owner.email,
+        phone: owner.phone,
+        status: owner.status
+      } as UserDto
+    } as ProductOwnerDto;
   }
 }

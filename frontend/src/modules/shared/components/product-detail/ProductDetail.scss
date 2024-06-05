@@ -1,36 +1,19 @@
 @import "@assets/styles/variables";
 
 .product-detail {
-  .card-img {
-    max-width: 220px;
-    max-height: 200px;
-    display: block;
-    margin: 20px auto 0;
+
+  .avatar{
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin: 0 auto;
   }
-  .bi {
-    color: $app-tertiary;
-  }
-  .report-note {
-    font-size: 12px;
-  }
-  h5 {
-    font-weight: bold;
-    font-size: 16px;
-    color: $app-quaternary;
-  }
-  h4 {
-    color: $app-quaternary;
-  }
-  h1 {
-    color: $app-quaternary;
-  }
-  p {
-    color: $app-tertiary;
-  }
-  span {
-    color: $app-quaternary;
-  }
-  a {
-    color: $app-tertiary;
+
+  .wish-btn {
+    border: 1px solid $app-sub-color;
+    border-radius: 50%;
+    background-color: transparent;
+    width: 40px;
+    height: 40px;
   }
 }

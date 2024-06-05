@@ -1,29 +1,16 @@
 import './AppHeader.scss';
-import {ReactElement, useEffect, useState} from 'react';
+import {ReactElement} from 'react';
 import {UserDto} from '../../models/userDto.ts';
 import AppButton from '../buttons/AppButton.tsx';
 import {useNavigate} from 'react-router-dom';
 import ProfileOffCanvas from '../popup-profile/ProfileOffCanvas.tsx';
-import {useApplicationService} from '../../services/application.service.ts';
 
-export default function AppHeader(): ReactElement {
-  const applicationService = useApplicationService();
+export default function AppHeader({
+  currentUser
+}: {
+  currentUser: UserDto | null;
+}): ReactElement {
   const navigate = useNavigate();
-  const [currentUser, setCurrentUser] = useState<UserDto | null>(null);
-
-  useEffect(() => {
-    if (applicationService.isAuthenticated()) {
-      applicationService
-        .fetchCurrentUser()
-        .then((user: UserDto) => {
-          setCurrentUser(user);
-        })
-        .catch(error => {
-          console.error(error);
-        });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [applicationService.isAuthenticated()]);
   return (
     <div className="app-header position-sticky">
       <div className="container py-3 d-flex justify-content-between">

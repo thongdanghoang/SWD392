@@ -26,6 +26,10 @@
   color: $app-quaternary !important;
 }
 
+.text-color-sub-color {
+  color: $app-sub-color !important;
+}
+
 .bold-32 {
   @include font-style(500, 32px, 120%);
 }

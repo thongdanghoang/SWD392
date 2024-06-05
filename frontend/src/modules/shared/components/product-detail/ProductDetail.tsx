@@ -1,190 +1,258 @@
 import './ProductDetail.scss';
 import AppButton from '../buttons/AppButton.tsx';
 import {ReactElement, useEffect, useState} from 'react';
-import {ProductDto} from '../../models/productDto.ts';
-import {AxiosInstance} from 'axios';
 import {useApplicationService} from '../../services/application.service.ts';
 import {AppRoutingConstants} from '../../app-routing.constants.ts';
-
-// import { useLocation } from 'react-router-dom';
+import {useParams} from 'react-router-dom';
+import {
+  ProductDTO,
+  getProductStatusDisplay
+} from '../../../homepage/model/productDto.ts';
 
 function ProductDetail(): ReactElement {
   const applicationService = useApplicationService();
-
-  const [currentProduct, setCurrentProduct] = useState<ProductDto | null>(null);
-
-  const fetchCurrentProduct = async (id: string): Promise<ProductDto> => {
-    const apiClient: AxiosInstance = applicationService.createApiClient();
-    const response = await apiClient.get(
-      `${AppRoutingConstants.PRODUCTS_PATH}/${id}`
-    );
-    return response.data;
-  };
+  const {id} = useParams<{id: string}>();
+  const [currentProduct, setCurrentProduct] = useState<ProductDTO | null>(null);
 
   useEffect(() => {
-    if (applicationService.isAuthenticated()) {
-      fetchCurrentProduct('1')
-        .then((products: ProductDto) => {
-          setCurrentProduct(products);
-          alert(currentProduct);
+    if (id) {
+      applicationService
+        .createApiClient()
+        .get(`${AppRoutingConstants.PRODUCTS_PATH}/${id}`)
+        .then(response => {
+          setCurrentProduct({
+            ...response.data.data,
+            imageUrl:
+              'https://binhminhdigital.com/storedata/images/product/canon-eos-4000d-kit-1855mm-f3556-iii-den.jpg',
+            summary:
+              'Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nulla nibh diam, blandit vel consequat nec, ultrices et ipsum. Nulla varius magna a consequat pulvinar. '
+          });
         })
         .catch(error => {
           console.error(error);
         });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [applicationService.isAuthenticated()]);
+  }, [id]);
 
   const [liked, setLiked] = useState(false);
 
   const handleLikeClick = (): void => {
     setLiked(!liked);
   };
+
+  const formatToVietnameseCurrency = (amount: number | undefined): string => {
+    if (amount) {
+      const formatter = new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND'
+      });
+      return formatter.format(amount);
+    }
+    return '';
+  };
+
   return (
-    <div className="product-detail">
+    <div className="product-detail container">
       <section>
-        <div className="container px-3 px-lg-5 my-1 mb-3">
-          <div className="row gx-4 gx-lg-5 align-items-center">
-            <div className="col-md-6">
+        <div className="px-3 px-lg-5 my-1 mb-3 my-5">
+          <div className="row gx-4 align-items-start">
+            <div className="col-6">
               <img
-                className="card-img-top mb-5 mb-md-0"
-                src="https://locknlock.store/wp-content/uploads/2022/03/LHC4125BLU-1.jpg"
-                alt="..."
+                className="card-img"
+                src={currentProduct?.imageUrl}
+                alt="Product image"
               />
-            </div>
-            <div className="col-md-6">
-              <div className="col-md-12">
-                <div className="d-flex align-items-center justify-content-between mt-5">
-                  <div className="d-flex align-items-center">
-                    <i className="fs-1 bi bi-person-circle me-2"></i>
-                    <h4 className="mb-1">{currentProduct?.title}</h4>
+              <div className="information flex-column d-flex gap-3">
+                <div className="d-flex align-items-center justify-content-between">
+                  <h1 className="bold-32 text-color-quaternary">
+                    {currentProduct?.title}
+                  </h1>
+                  <div
+                    className="wish-btn clickable d-flex justify-content-center align-items-center"
+                    onClick={handleLikeClick}
+                  >
+                    {liked ? (
+                      <i className="bi bi-heart-fill text-color-sub-color"></i>
+                    ) : (
+                      <i className="bi bi-heart text-color-sub-color"></i>
+                    )}
                   </div>
-                  <AppButton
-                    style="secondary"
-                    className="px-5 ms-2"
-                    children={`Xem trang cá nhân`}
+                </div>
+                <div className="suggested-price">
+                  <div className="semibold-20 text-color-tertiary">
+                    {formatToVietnameseCurrency(currentProduct?.suggestedPrice)}
+                  </div>
+                  <hr />
+                </div>
+                <div className="regular-14 text-color-tertiary">
+                  {currentProduct?.summary}
+                </div>
+                <div className="d-flex align-items-center gap-2">
+                  <div className="semibold-14 text-color-quaternary">
+                    Số điện thoại:
+                  </div>
+                  <div className="regular-14 text-color-tertiary">
+                    {`0978 45* *** (Nhấn để hiện số)`}
+                  </div>
+                </div>
+                <div className="d-flex align-items-center gap-2">
+                  <div className="semibold-14 text-color-quaternary">
+                    Địa chỉ:
+                  </div>
+                  <div className="regular-14 text-color-tertiary">
+                    Phường 13, Quận Bình Thạnh, Tp Hồ Chí Minh
+                  </div>
+                </div>
+                <div className="d-flex align-items-center gap-2">
+                  <div className="semibold-14 text-color-quaternary">
+                    Xuất xứ:
+                  </div>
+                  <div className="regular-14 text-color-tertiary">Hàn Quốc</div>
+                </div>
+                <div className="d-flex align-items-center gap-2">
+                  <div className="semibold-14 text-color-quaternary">
+                    Thông tin sử dụng:
+                  </div>
+                  <div className="regular-14 text-color-tertiary">
+                    In trên bao bì
+                  </div>
+                </div>
+                <div className="d-flex align-items-center gap-2">
+                  <div className="semibold-14 text-color-quaternary">
+                    Tình trạng:
+                  </div>
+                  <div className="regular-14 text-color-tertiary">
+                    {getProductStatusDisplay(currentProduct?.status)}
+                  </div>
+                </div>
+                <div className="d-flex align-items-center gap-2">
+                  <div className="semibold-14 text-color-quaternary">
+                    Chính sách bảo hành:
+                  </div>
+                  <div className="regular-14 text-color-tertiary">
+                    Bảo hành chính hãng
+                  </div>
+                </div>
+                <div className="d-flex align-items-center gap-4">
+                  <div className="regular-14 text-color-tertiary">
+                    Chia sẻ tin đăng này cho bạn bè:
+                  </div>
+                  <i className="text-color-quaternary fs-5 bi bi-facebook "></i>
+                  <i className="text-color-quaternary fs-5 bi bi-twitter "></i>
+                  <i className="text-color-quaternary fs-5 bi bi-instagram "></i>
+                  <i className="text-color-quaternary fs-5 bi bi-share-fill"></i>
+                </div>
+              </div>
+            </div>
+            <div className="col-6 d-flex flex-column gap-4">
+              <div className="col-12 flex-column d-flex gap-2">
+                <div className="row">
+                  <div className="owner d-flex justify-content-between">
+                    <div className="owner-info d-flex gap-3">
+                      <div className="avatar">
+                        <img
+                          className="avatar"
+                          src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+                          alt="avatar"
+                        />
+                      </div>
+                      <div className="info-and-rating">
+                        <div className="semibold-20 text-color-quaternary">
+                          {currentProduct?.owner
+                            ? `${currentProduct?.owner.firstName} ${currentProduct?.owner.lastName}`
+                            : 'Người bán'}
+                        </div>
+                        <div className="rating d-flex gap-3">
+                          <div className="rate-point semibold-16 text-color-quaternary">
+                            5.0
+                          </div>
+                          <div className="stars d-flex gap-1">
+                            <i className="bi bi-star-fill text-color-secondary"></i>
+                            <i className="bi bi-star-fill text-color-secondary"></i>
+                            <i className="bi bi-star-fill text-color-secondary"></i>
+                            <i className="bi bi-star-half text-color-secondary"></i>
+                            <i className="bi bi-star text-color-secondary"></i>
+                          </div>
+                          <div className="number-of-rates regular-14 text-color-quaternary">
+                            (10)
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="view-owner">
+                      <AppButton
+                        style="secondary"
+                        children={`Xem trang cá nhân`}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="follow col-6 d-flex justify-content-between">
+                    <div className="following regular-14 text-color-quaternary">
+                      12 đang theo dõi
+                    </div>
+                    <div className="followers regular-14 text-color-quaternary">
+                      12 người theo dõi
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="semibold-20 text-color-quaternary">
+                Liên hệ với người bán
+              </div>
+              <div className="d-flex flex-column gap-4">
+                <AppButton style="primary" children={`Giao dịch ngay`} />
+                <AppButton style="secondary" children={`Chat với người này`} />
+              </div>
+              <div className="row d-flex align-items-center">
+                <div className="col-6 flex-shrink-0">
+                  <img
+                    src="https://img.freepik.com/free-vector/global-data-security-personal-data-security-cyber-data-security-online-concept-illustration-internet-security-information-privacy-protection_1150-37350.jpg?t=st=1717578898~exp=1717582498~hmac=e21a4ccba3ea18221fb79603f76644ed74c9c89cc19ddeb967b1ba55f88ce21f&w=1800"
+                    alt="Safe exchange"
+                    width={313}
+                    height={170}
                   />
                 </div>
-                <div className="">
-                  <div className="d-flex align-items-center mb-1">
-                    <span className="text-success">5.0</span>
-                    <i className="bi bi-star-fill text-warning ms-1"></i>
-                    <i className="bi bi-star-fill text-warning ms-1"></i>
-                    <i className="bi bi-star-fill text-warning ms-1"></i>
-                    <i className="bi bi-star-fill text-warning ms-1"></i>
-                    <i className="bi bi-star-fill text-warning ms-1"></i>
-                    <span className="ms-1">(10)</span>
+                <div className="col-6 report-note d-flex flex-column gap-3">
+                  <div className="regular-12 text-color-quaternary">
+                    Lưu ý và cảnh giác các hoạt động đáng ngờ liên quan đến giao
+                    dịch trên website. Để đảm bảo an toàn trong giao dịch và bảo
+                    vệ quyền lợi cá nhân của quý khách, xin vui lòng báo cáo cho
+                    chúng tôi khi thấy có các dấu hiệu bất thường và đáng ngờ.
                   </div>
-                  <div className="d-flex mb-2">
-                    <span className="me-3">12 người theo dõi</span>
-                    <span>12 đang theo dõi</span>
+                  <div className="regular-12 text-color-quaternary">
+                    Tìm hiểu thêm{'>>>>'}{' '}
                   </div>
-                  <p className="text-muted mb-3">• Hoạt động 12 phút trước</p>
                 </div>
               </div>
-              <h3 className="fw-bold mt-2 mb-5">Liên hệ với người bán</h3>
-              <AppButton
-                style="primary"
-                className="col-md-12 mb-3"
-                children={`Giao dịch ngay`}
-              />
-              <AppButton
-                style="secondary"
-                className="col-md-12 mb-5"
-                children={`Chat với người này`}
-              />
-              <div className="d-flex align-items-center">
-                <div className="flex-shrink-0">
-                  <img src="./safe-exchange.svg" alt="Safe exchange" />
-                </div>
-                <p className="ms-4 report-note">
-                  Lưu ý và cảnh giác các hoạt động đáng ngờ liên quan đến giao
-                  dịch trên website. Để đảm bảo an toàn trong giao dịch và bảo
-                  vệ quyền lợi cá nhân của quý khách, xin vui lòng báo cáo cho
-                  chúng tôi khi thấy có các dấu hiệu bất thường và đáng ngờ.
-                  <br />
-                  <br />
-                  <a className="fw-bold">Tìm hiểu thêm{'>>>>'} </a>
-                </p>
-              </div>
-              <div className="d-flex">
-                <i className="fs-1 bi bi-shield-check"></i>
-                <p className="mt-3 ms-2 report-note">
+              <div className="d-flex align-items-center gap-3">
+                <i className="fs-1 bi bi-shield-check text-color-quaternary"></i>
+                <div className="regular-12 text-color-quaternary">
                   Tin đăng này đã được kiểm duyệt. Nếu gặp vấn đề, vui lòng báo
                   cáo tin đăng hoặc liên hệ CSKH để được trợ giúp.
-                  <a className="ms-2">Xem thêm {'>>>'}</a>
-                </p>
-              </div>
-              <AppButton style="secondary" children={`Báo tin không hợp lệ`} />
-              <AppButton
-                style="secondary"
-                className="ms-2"
-                children={`Báo tin đã bán`}
-              />
-              <AppButton
-                style="primary"
-                className="ms-2"
-                children={`Đăng tin ngay!`}
-              />
-            </div>
-            <div className="col-md-6">
-              <div className="d-flex align-items-center">
-                <h1 className="mb-3 col-sm-11">{currentProduct?.title}</h1>
-                <div className="border rounded-circle">
-                  <button className="btn btn-link" onClick={handleLikeClick}>
-                    {liked ? (
-                      <i className="fs-1 bi bi-heart-fill text-danger"></i>
-                    ) : (
-                      <i className="fs-1 bi bi-heart text-danger"></i>
-                    )}
-                  </button>
+                  {` `}
+                  <a className="text-decoration-none text-color-quaternary">
+                    Xem thêm {'>>>'}
+                  </a>
                 </div>
               </div>
-              <h2 className="text-muted">{currentProduct?.suggested_price}</h2>
-              <hr />
-              <p>{currentProduct?.summary}</p>
-              <div className="information">
-                <div className="d-flex align-items-center">
-                  <h5 className="me-1">Số điện thoại:</h5>
-                  <p className="mt-2">0978 45* *** (Nhấn để hiện số)</p>
-                </div>
-                <div className="d-flex align-items-center">
-                  <h5 className="me-1">Địa chỉ:</h5>
-                  <p className="mt-2">
-                    Phường 13, Quận Bình Thạnh, Tp Hồ Chí Minh
-                  </p>
-                </div>
-                <div className="d-flex">
-                  <div className="align-items-center justify-content-between">
-                    <div className="d-flex align-items-center">
-                      <h5 className="me-1">Tình trạng:</h5>
-                      <p className="mt-2">{currentProduct?.status}</p>
-                    </div>
-                    <div className="d-flex align-items-center">
-                      <h5 className="me-1">Chính sách bảo hành:</h5>
-                      <p className="mt-2">Bảo hành chính hãng</p>
-                    </div>
-                  </div>
-                  <div className="align-items-center justify-content-between ms-3">
-                    <div className="d-flex align-items-center">
-                      <h5 className="me-1">Xuất xứ:</h5>
-                      <p className="mt-2">Hàn Quốc</p>
-                    </div>
-                    <div className="d-flex align-items-center">
-                      <h5 className="me-1">Thông tin sử dụng:</h5>
-                      <p className="mt-2">In trên bao bì</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="d-flex align-items-center">
-                  <h5 className="me-3 mt-1">
-                    Chia sẻ tin đăng này cho bạn bè:
-                  </h5>
-                  <i className="fs-2 bi bi-facebook me-3"></i>
-                  <i className="fs-2 bi bi-twitter me-3"></i>
-                  <i className="fs-2 bi bi-instagram me-3"></i>
-                  <i className="fs-2 bi bi-share-fill"></i>
-                </div>
+              <div className="report-actions d-flex justify-content-between">
+                <AppButton
+                  style="secondary"
+                  children={`Báo tin không hợp lệ`}
+                />
+                <AppButton
+                  style="secondary"
+                  className="ms-2"
+                  children={`Báo tin đã bán`}
+                />
+                <AppButton
+                  style="primary"
+                  className="ms-2"
+                  children={`Đăng tin ngay!`}
+                />
               </div>
             </div>
           </div>
