@@ -281,10 +281,10 @@ export default function PostProduct(): ReactElement {
             </div>
           </div>
           <div className="summit d-flex justify-content-between">
-            <AppButton className="preview" style={'secondary'}>
+            <AppButton className="preview" variant={'secondary'}>
               Xem trước
             </AppButton>
-            <AppButton className="submit" type="submit" style={'primary'}>
+            <AppButton className="submit" type="submit" variant={'primary'}>
               Đăng tin
             </AppButton>
           </div>

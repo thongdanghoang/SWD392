@@ -53,7 +53,7 @@ const ProductList = (): React.ReactElement => {
         ))}
       </div>
       <div className="load-more d-flex justify-content-center">
-        <AppButton style="primary" onClickFn={fetchProducts}>
+        <AppButton variant="primary" onClick={fetchProducts}>
           Xem Thêm
         </AppButton>
       </div>

@@ -6,6 +6,7 @@ import {useModal} from '../shared/components/modal/useModal.tsx';
 import {SimpleModal} from './SimpleModal.tsx';
 import FormModal from './FormModal.tsx';
 import AddressFormModal from '../products/components/AddressFormModal.tsx';
+import {ExchangeResponseModal} from '../transactions/components/exchange-response-modal/ExchangeResponseModal.tsx';
 
 const TestLoginComponent = (): ReactElement => {
   const applicationService = useApplicationService();
@@ -43,27 +44,47 @@ const TestLoginComponent = (): ReactElement => {
         <br />
         <div className="actions d-flex gap-3">
           <AppButton
-            style="secondary"
-            onClickFn={() => applicationService.signOutRedirect()}
+            variant="secondary"
+            onClick={() => applicationService.signOutRedirect()}
             children="Log out!"
           />
           <AppButton
-            style="primary"
-            onClickFn={fetchData}
+            variant="primary"
+            onClick={fetchData}
             children="Fetch data"
           />
-          <AppButton style="primary" onClickFn={() => showModal(SimpleModal)}>
+          <AppButton variant="primary" onClick={() => showModal(SimpleModal)}>
             Show SimpleModal
           </AppButton>
           <AppButton
-            style="primary"
-            onClickFn={() => showModal(FormModal, handleModalSubmit)}
+            variant="primary"
+            onClick={() => showModal(FormModal, handleModalSubmit)}
           >
             Show FormModel
           </AppButton>
           <AppButton
-            style="primary"
-            onClickFn={() => showModal(AddressFormModal, handleModalSubmit)}
+            variant="primary"
+            onClick={() =>
+              showModal(
+                ExchangeResponseModal,
+                handleModalSubmit,
+                handleModalSubmit,
+                {address: '123 Main St'}
+              )
+            }
+          >
+            Show ExchangeResponseModal
+          </AppButton>
+          <AppButton
+            variant="primary"
+            onClick={() =>
+              showModal(
+                AddressFormModal,
+                handleModalSubmit,
+                handleModalSubmit,
+                {address: '123 Main St'}
+              )
+            }
           >
             Show AddressFormModal
           </AppButton>

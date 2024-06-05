@@ -13,6 +13,7 @@ import ProductDetail from '../modules/shared/components/product-detail/ProductDe
 import ProductList from '../modules/homepage/components/productlist/ProductList.tsx';
 import {useApplicationService} from '../modules/shared/services/application.service.ts';
 import {UserDto} from '../modules/shared/models/userDto.ts';
+import ExchangeRequest from '../modules/transactions/components/ExchangeRequest.tsx';
 
 export default function App(): ReactElement {
   const applicationService = useApplicationService();
@@ -46,6 +47,10 @@ export default function App(): ReactElement {
                 <Route path="/products" element={<ProductList />}></Route>
                 <Route path="/products/:id" element={<ProductDetail />}></Route>
                 <Route path="/post-product" element={<PostProduct />}></Route>
+                <Route
+                  path="/exchange-request/:id"
+                  element={<ExchangeRequest />}
+                ></Route>
                 <Route path="/dev" element={<TestLoginComponent />}></Route>
               </Routes>
             </div>

@@ -13,3 +13,9 @@
 .btn-sm {
   @include font-style(600, 12px, 15.6px);
 }
+
+.disabled {
+  cursor: not-allowed;
+  color: $app-secondary;
+  background-color: rgba(197, 238, 215, 0.1);
+}

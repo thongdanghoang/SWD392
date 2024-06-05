@@ -1,5 +1,6 @@
-import {ProductStatus} from './product.entity';
-import {UserDto} from '../user/user.dto';
+import {ProductEntity, ProductStatus} from '../entities/product.entity';
+import {UserDto} from '../../user/user.dto';
+import {PartialType} from '@nestjs/swagger';
 
 export class CreateProductDto {
   status: ProductStatus;
@@ -10,6 +11,8 @@ export class CreateProductDto {
   summary?: string;
   category?: number;
 }
+
+export class UpdateProductDto extends PartialType(ProductEntity) {}
 
 export interface ProductOwnerDto {
   id: number;

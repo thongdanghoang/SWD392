@@ -1,12 +1,13 @@
 import {Body, Controller, Get, Param, Post, UseGuards} from '@nestjs/common';
 import {JwtAuthGuard} from '@5stones/nest-oidc';
-import {ProductService} from './product.service';
-import {CreateProductDto, ProductOwnerDto} from './product.dto';
-import {ProductEntity, ProductStatus} from './product.entity';
-import {ResponseData} from '../../global/globalClass';
-import {HttpMessage, HttpStatus} from '../../global/globalEnum';
-import {UsersService} from '../user/users.service';
-import {UserDto} from '../user/user.dto';
+import {ProductService} from '../services/product.service';
+import {CreateProductDto, ProductOwnerDto} from '../dto/product.dto';
+import {ProductEntity, ProductStatus} from '../entities/product.entity';
+import {ResponseData} from '../../../global/globalClass';
+import {HttpMessage, HttpStatus} from '../../../global/globalEnum';
+import {UsersService} from '../../user/users.service';
+import {UserDto} from '../../user/user.dto';
+import {UserEntity} from '../../user/user.entity';
 
 @Controller('products')
 export class ProductController {
@@ -41,6 +42,26 @@ export class ProductController {
     }
   }
 
+  @Get('/my-products')
+  @UseGuards(JwtAuthGuard)
+  async getMyProducts(): Promise<ResponseData<ProductEntity[]>> {
+    try {
+      return new ResponseData<ProductEntity[]>(
+        await this.productService.getProductsByOwnerIdCanBeExchanged(
+          this.userService.getCurrentUser().id
+        ),
+        HttpMessage.OK,
+        HttpStatus.OK
+      );
+    } catch (error) {
+      return new ResponseData<ProductEntity[]>(
+        null,
+        HttpMessage.INTERNAL_SERVER_ERROR,
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
+    }
+  }
+
   @Get('/:id')
   async getProductDetails(
     @Param('id') id: number
@@ -65,7 +86,16 @@ export class ProductController {
   @Get()
   async getAllProducts(): Promise<ResponseData<ProductEntity[]>> {
     try {
-      const products = await this.productService.getAllProducts();
+      const currentUser: UserEntity = this.userService.getCurrentUser();
+      let products: ProductEntity[] =
+        await this.productService.getAllProductsPublished();
+      if (currentUser) {
+        products = products.filter(
+          (product: ProductEntity): boolean =>
+            product.owner !== currentUser.id &&
+            product.status === ProductStatus.PUBLISHED
+        );
+      }
       return new ResponseData<ProductEntity[]>(
         products,
         HttpMessage.OK,

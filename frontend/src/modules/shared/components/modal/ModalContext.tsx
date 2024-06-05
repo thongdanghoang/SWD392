@@ -2,13 +2,17 @@ import React, {ReactElement, createContext, useState} from 'react';
 
 export interface ModalProps {
   hideModal: () => void;
-  onSubmit?: (formData: any) => void;
+  onSubmit?: (formData?: any) => void;
+  onReject?: (formData?: any) => void;
+  data?: any;
 }
 
 export interface ModalContextValue {
   showModal: (
     ModalComponent: React.ComponentType<ModalProps>,
-    onSubmit?: (formData: Record<string, string>) => void
+    onSubmit?: (formData: Record<string, string>) => void,
+    onReject?: (formData: Record<string, string>) => void,
+    data?: any
   ) => void;
   hideModal: () => void;
 }
@@ -24,14 +28,21 @@ export const ModalProvider = ({children}: ModalProviderProps): ReactElement => {
     {
       ModalComponent: React.ComponentType<ModalProps>;
       onSubmit?: (formData: Record<string, string>) => void;
+      onReject?: (formData: Record<string, string>) => void;
+      data?: any;
     }[]
   >([]);
 
   const showModal = (
     ModalComponent: React.ComponentType<ModalProps>,
-    onSubmit?: (formData: Record<string, string>) => void
+    onSubmit?: (formData: Record<string, string>) => void,
+    onReject?: (formData: Record<string, string>) => void,
+    data?: any
   ): void => {
-    setModals(prevModals => [...prevModals, {ModalComponent, onSubmit}]);
+    setModals(prevModals => [
+      ...prevModals,
+      {ModalComponent, onSubmit, onReject, data}
+    ]);
   };
 
   const hideModal = (): void => {
@@ -40,8 +51,14 @@ export const ModalProvider = ({children}: ModalProviderProps): ReactElement => {
   return (
     <ModalContext.Provider value={{showModal, hideModal}}>
       {children}
-      {modals.map(({ModalComponent, onSubmit}, index) => (
-        <ModalComponent key={index} hideModal={hideModal} onSubmit={onSubmit} />
+      {modals.map(({ModalComponent, onSubmit, onReject, data}, index) => (
+        <ModalComponent
+          key={index}
+          hideModal={hideModal}
+          onSubmit={onSubmit}
+          onReject={onReject}
+          data={data}
+        />
       ))}
     </ModalContext.Provider>
   );

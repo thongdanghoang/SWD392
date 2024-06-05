@@ -32,6 +32,19 @@
           color: $app-tertiary;
         }
 
+        .notification-wrapper {
+          position: relative;
+        }
+
+        .notification-wrapper .list-group {
+          position: absolute;
+          min-width: 350px;
+          top: 95%; /* Position it at the bottom of the wrapper */
+          transform: translateY(5%); /* Move it to the center of the wrapper */
+          left: 0; /* Move the left edge to the center of the wrapper */
+          z-index: 1; /* Make sure it's above other elements */
+        }
+
         .user-info {
           --bs-btn-active-border-color: #70E2A2;
           position: relative;
@@ -43,8 +56,6 @@
           .user-full-name {
             color: $app-quaternary;
           }
-
-
         }
       }
 

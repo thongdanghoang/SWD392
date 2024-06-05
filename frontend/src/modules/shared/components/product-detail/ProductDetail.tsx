@@ -3,13 +3,14 @@ import AppButton from '../buttons/AppButton.tsx';
 import {ReactElement, useEffect, useState} from 'react';
 import {useApplicationService} from '../../services/application.service.ts';
 import {AppRoutingConstants} from '../../app-routing.constants.ts';
-import {useParams} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 import {
   ProductDTO,
   getProductStatusDisplay
 } from '../../../homepage/model/productDto.ts';
 
 function ProductDetail(): ReactElement {
+  const navigate = useNavigate();
   const applicationService = useApplicationService();
   const {id} = useParams<{id: string}>();
   const [currentProduct, setCurrentProduct] = useState<ProductDTO | null>(null);
@@ -182,7 +183,7 @@ function ProductDetail(): ReactElement {
                     </div>
                     <div className="view-owner">
                       <AppButton
-                        style="secondary"
+                        variant="secondary"
                         children={`Xem trang cá nhân`}
                       />
                     </div>
@@ -203,8 +204,17 @@ function ProductDetail(): ReactElement {
                 Liên hệ với người bán
               </div>
               <div className="d-flex flex-column gap-4">
-                <AppButton style="primary" children={`Giao dịch ngay`} />
-                <AppButton style="secondary" children={`Chat với người này`} />
+                <AppButton
+                  variant="primary"
+                  children={`Giao dịch ngay`}
+                  onClick={() =>
+                    navigate(`/exchange-request/${currentProduct?.id}`)
+                  }
+                />
+                <AppButton
+                  variant="secondary"
+                  children={`Chat với người này`}
+                />
               </div>
               <div className="row d-flex align-items-center">
                 <div className="col-6 flex-shrink-0">
@@ -240,16 +250,16 @@ function ProductDetail(): ReactElement {
               </div>
               <div className="report-actions d-flex justify-content-between">
                 <AppButton
-                  style="secondary"
+                  variant="secondary"
                   children={`Báo tin không hợp lệ`}
                 />
                 <AppButton
-                  style="secondary"
+                  variant="secondary"
                   className="ms-2"
                   children={`Báo tin đã bán`}
                 />
                 <AppButton
-                  style="primary"
+                  variant="primary"
                   className="ms-2"
                   children={`Đăng tin ngay!`}
                 />

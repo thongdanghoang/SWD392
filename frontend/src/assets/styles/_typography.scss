@@ -1,13 +1,13 @@
 @import 'variables';
 
 @mixin font-style($weight, $size, $lineHeight) {
-  font-family: "Inter", sans-serif;
-  font-weight: $weight;
-  font-size: $size;
-  line-height: $lineHeight;
-  font-style: normal;
-  font-optical-sizing: auto;
-  font-variation-settings: "slnt" 0;
+  font-family: "Inter", sans-serif !important;
+  font-weight: $weight !important;
+  font-size: $size !important;
+  line-height: $lineHeight !important;
+  font-style: normal !important;
+  font-optical-sizing: auto !important;
+  font-variation-settings: "slnt" 0 !important;
 }
 
 .text-color-primary {
