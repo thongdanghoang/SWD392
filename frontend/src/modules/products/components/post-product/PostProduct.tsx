@@ -3,11 +3,11 @@ import '@assets/styles/styles.scss';
 import {Form} from 'react-bootstrap';
 import React, {ReactElement} from 'react';
 import AppButton from '../../../shared/components/buttons/AppButton.tsx';
-import {useModal} from '../../../shared/components/modal/useModal.tsx';
 import AddressFormModal, {AddressDto} from '../AddressFormModal.tsx';
 import {useApplicationService} from '../../../shared/services/application.service.ts';
 import {AppRoutingConstants} from '../../../shared/app-routing.constants.ts';
 import {useNavigate} from 'react-router-dom';
+import {useModal} from '../../../shared/components/modal/useModal.tsx';
 
 interface ProductDTO extends AddressDto {
   title: string;
@@ -258,33 +258,33 @@ export default function PostProduct(): ReactElement {
                 placeholder="Mô tả chi tiết"
               ></textarea>
             </div>
-          </div>
-          <div className="address d-flex flex-column gap-2">
-            <div className="semibold-20 text-color-quaternary">
-              Thông tin người bán
+            <div className="address d-flex flex-column gap-2">
+              <div className="semibold-20 text-color-quaternary">
+                Thông tin người bán
+              </div>
+              <Form.Group controlId="formProductAddress" className="mb-3">
+                <Form.Control
+                  className="form-control regular-14 clickable"
+                  placeholder="Địa chỉ"
+                  required
+                  readOnly
+                  onClick={() =>
+                    showModal(AddressFormModal, handleAddressFormModalSubmit)
+                  }
+                  value={
+                    product.addressDetail
+                      ? `${product.addressDetail}, ${fullName}`
+                      : ''
+                  }
+                />
+              </Form.Group>
             </div>
-            <Form.Group controlId="formProductAddress" className="mb-3">
-              <Form.Control
-                className="form-control regular-14 clickable"
-                placeholder="Địa chỉ"
-                required
-                readOnly
-                onClick={() =>
-                  showModal(AddressFormModal, handleAddressFormModalSubmit)
-                }
-                value={
-                  product.addressDetail
-                    ? `${product.addressDetail}, ${fullName}`
-                    : ''
-                }
-              />
-            </Form.Group>
           </div>
           <div className="summit d-flex justify-content-between">
-            <AppButton className="preview" style={'secondary'}>
+            <AppButton className="preview" variant={'secondary'}>
               Xem trước
             </AppButton>
-            <AppButton className="submit" type="submit" style={'primary'}>
+            <AppButton className="submit" type="submit" variant={'primary'}>
               Đăng tin
             </AppButton>
           </div>

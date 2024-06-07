@@ -164,7 +164,7 @@ const AddressFormModal = ({hideModal, onSubmit}: ModalProps): ReactElement => {
           {/* <AppButton variant="secondary" onClick={hideModal}>*/}
           {/*  Đóng*/}
           {/* </AppButton>*/}
-          <AppButton className="flex-grow-1" style="primary" type="submit">
+          <AppButton className="flex-grow-1" variant="primary" type="submit">
             Xong
           </AppButton>
         </Modal.Footer>

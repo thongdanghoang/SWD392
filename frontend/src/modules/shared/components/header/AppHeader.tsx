@@ -1,29 +1,30 @@
 import './AppHeader.scss';
-import {ReactElement, useEffect, useState} from 'react';
+import {ReactElement, useState} from 'react';
 import {UserDto} from '../../models/userDto.ts';
 import AppButton from '../buttons/AppButton.tsx';
 import {useNavigate} from 'react-router-dom';
 import ProfileOffCanvas from '../popup-profile/ProfileOffCanvas.tsx';
-import {useApplicationService} from '../../services/application.service.ts';
+import {AppRoutingConstants} from '../../app-routing.constants.ts';
+import NotificationItem from '../notification-item/NotificationItem.tsx';
+import {formatDistanceToNow} from 'date-fns';
+import {vi} from 'date-fns/locale';
+import {ExchangeResponseModal} from '../../../transactions/components/exchange-response-modal/ExchangeResponseModal.tsx';
+import {useModal} from '../modal/useModal.tsx';
 
-export default function AppHeader(): ReactElement {
-  const applicationService = useApplicationService();
+export default function AppHeader({
+  currentUser
+}: {
+  currentUser: UserDto | null;
+}): ReactElement {
   const navigate = useNavigate();
-  const [currentUser, setCurrentUser] = useState<UserDto | null>(null);
-
-  useEffect(() => {
-    if (applicationService.isAuthenticated()) {
-      applicationService
-        .fetchCurrentUser()
-        .then((user: UserDto) => {
-          setCurrentUser(user);
-        })
-        .catch(error => {
-          console.error(error);
-        });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [applicationService.isAuthenticated()]);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const modalContext = useModal();
+  if (!modalContext) {
+    // handle the case where modalContext is null
+    // for example, you could return a loading spinner
+    return <div>Loading...</div>;
+  }
+  const {showModal} = modalContext;
   return (
     <div className="app-header position-sticky">
       <div className="container py-3 d-flex justify-content-between">
@@ -122,8 +123,57 @@ export default function AppHeader(): ReactElement {
               >
                 <i className="bi bi-code-slash"></i>
               </div>
-              <div className="notification clickable">
-                <i className="fs-5 bi bi-bell"></i>
+              <div className="notification-wrapper">
+                <div
+                  className="notification-button-wrapper clickable"
+                  onClick={() => setShowNotifications(!showNotifications)}
+                >
+                  <i className="fs-5 bi bi-bell"></i>
+                </div>
+                {showNotifications && (
+                  <div className="list-group">
+                    {currentUser?.notifications.length !== 0 && (
+                      <div className="list-group-item">
+                        <div className="d-flex w-100 justify-content-between">
+                          <div className="mb-1 semibold-20 text-color-tertiary">
+                            Thông báo
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    {currentUser?.notifications.length === 0 && (
+                      <div className="list-group-item">
+                        <div className="d-flex w-100 justify-content-between">
+                          <div className="mb-1 semibold-20 text-color-tertiary">
+                            Không có thông báo mới
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    {currentUser?.notifications.map((notification, index) => (
+                      <NotificationItem
+                        key={index}
+                        title={notification.title}
+                        time={formatDistanceToNow(
+                          new Date(notification.creationDate),
+                          {
+                            addSuffix: true,
+                            locale: vi
+                          }
+                        )}
+                        content={notification.content}
+                        onClickFn={() =>
+                          showModal(
+                            ExchangeResponseModal,
+                            () => {},
+                            () => {},
+                            {exchangeId: notification.exchangeId}
+                          )
+                        }
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
               <div className="chat clickable">
                 <i className="fs-5 bi bi-chat-left-text"></i>
@@ -145,8 +195,8 @@ export default function AppHeader(): ReactElement {
               <ProfileOffCanvas currentUser={currentUser} />
             </div>
             <AppButton
-              onClickFn={() => navigate('/post-product')}
-              style="primary"
+              onClick={() => navigate(AppRoutingConstants.POST_PRODUCT)}
+              variant="primary"
               children={`Đăng tin ngay`}
             />
           </div>

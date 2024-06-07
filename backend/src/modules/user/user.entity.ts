@@ -2,11 +2,13 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
   VersionColumn
 } from 'typeorm';
 import {PartialType} from '@nestjs/swagger';
+import {NotificationEntity} from './notification.entity';
 
 export enum UserStatus {
   ACTIVE,
@@ -65,6 +67,13 @@ export class UserEntity {
     default: UserStatus.ACTIVE
   })
   status: UserStatus;
+
+  @OneToMany(
+    () => NotificationEntity,
+    (notification: NotificationEntity) => notification.user,
+    {cascade: true, eager: true}
+  )
+  notifications: NotificationEntity[];
 }
 
 export class UserCreateEntity extends PartialType(UserEntity) {}

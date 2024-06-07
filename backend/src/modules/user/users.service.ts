@@ -24,6 +24,14 @@ export class UsersService {
     return this.usersRepository.save(user);
   }
 
+  save(user: UserEntity): Promise<UserEntity> {
+    return this.usersRepository.save(user);
+  }
+
+  findById(id: number): Promise<UserEntity | null> {
+    return this.usersRepository.findOneBy({id});
+  }
+
   findOne(email: string): Promise<UserEntity | null> {
     return this.usersRepository.findOneBy({email});
   }

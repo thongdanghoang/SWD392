@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import {Observable, catchError, throwError} from 'rxjs';
 import {UsersService} from './users.service';
-import {UserSynchronizedDto} from './user.dtos';
+import {UserSynchronizedDto} from './user.dto';
 import {UserEntity} from './user.entity';
 
 @Injectable()
@@ -25,7 +25,9 @@ export class UserSynchronizeInterceptor implements NestInterceptor {
   ): Promise<Observable<any>> {
     const request = context.switchToHttp().getRequest();
     const user = request.user;
-    await this.synchronizeUser(user);
+    if (user) {
+      await this.synchronizeUser(user);
+    }
     return next
       .handle()
       .pipe(catchError(() => throwError(() => new BadGatewayException())));

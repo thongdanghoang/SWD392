@@ -31,11 +31,9 @@ const ProductList = (): React.ReactElement => {
   };
 
   useEffect(() => {
-    if (applicationService.isAuthenticated()) {
-      fetchProducts();
-    }
+    fetchProducts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [applicationService.isAuthenticated()]);
+  }, []);
 
   if (error) {
     return <div>{error}</div>;
@@ -46,13 +44,16 @@ const ProductList = (): React.ReactElement => {
       <div className="products-list row g-3">
         <div className="bold-32">Tin đăng mới</div>
         {products.map((product: ProductDTO) => (
-          <div className="col-3" key={product.id.toString()}>
+          <div
+            className="col-12 col-xxl-3 col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-12 d-flex justify-content-center"
+            key={product.id.toString()}
+          >
             <ProductCard {...product} />
           </div>
         ))}
       </div>
       <div className="load-more d-flex justify-content-center">
-        <AppButton style="primary" onClickFn={fetchProducts}>
+        <AppButton variant="primary" onClick={fetchProducts}>
           Xem Thêm
         </AppButton>
       </div>

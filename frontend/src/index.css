@@ -6,6 +6,26 @@
   cursor: pointer;
 }
 
+.btn-danger {
+  --bs-btn-border-width: 2px;
+
+  --bs-btn-color: #FF9FB4;
+  --bs-btn-bg: #fff;
+  --bs-btn-border-color: #FF9FB4;
+
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #FF9FB4;
+  --bs-btn-hover-border-color: #fff;
+
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #FF9FB4;
+  --bs-btn-active-border-color: #fff;
+
+  --bs-btn-disabled-color: #FF9FB4;
+  --bs-btn-disabled-bg: #fff;
+  --bs-btn-disabled-border-color: #FF9FB4;
+}
+
 .btn-outline-success {
   --bs-btn-color: #70e2a2;
   --bs-btn-border-width: 2px;
@@ -37,7 +57,7 @@
   --bs-btn-active-bg: #31b46a;
   --bs-btn-active-border-color: #31b46a;
 
-  --bs-btn-disabled-color: #fff;
-  --bs-btn-disabled-bg: #70e2a2;
-  --bs-btn-disabled-border-color: #70e2a2;
+  --bs-btn-disabled-color: #70e2a2;
+  --bs-btn-disabled-bg: rgba(197, 238, 215, 0.3);
+  --bs-btn-disabled-border-color: rgba(197, 238, 215, 0.3);
 }

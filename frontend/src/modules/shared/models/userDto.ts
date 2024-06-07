@@ -1,5 +1,22 @@
 export interface UserDto {
-  email: string;
+  id: number;
+  version: number;
   firstName: string;
   lastName: string;
+  email: string;
+  phone: string;
+  notifications: NotificationDto[];
+}
+
+export interface NotificationDto {
+  id: string;
+  type: NotificationType;
+  creationDate: Date;
+  title: string;
+  content: string;
+  exchangeId: string;
+}
+
+export enum NotificationType {
+  EXCHANGE_REQUEST
 }

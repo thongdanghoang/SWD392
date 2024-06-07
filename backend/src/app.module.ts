@@ -6,10 +6,13 @@ import {UserModule} from './modules/user/user.module';
 import {ProductModule} from './modules/product/product.module';
 import {TypeOrmModule} from '@nestjs/typeorm';
 import {UserEntity} from './modules/user/user.entity';
-import {ProductEntity} from 'src/modules/product/product.entity';
+import {ProductEntity} from 'src/modules/product/entities/product.entity';
+import {TransactionsModule} from './modules/transactions/transactions.module';
+import {ExchangeEntity} from './modules/transactions/entities/ExchangeEntity';
+import {NotificationEntity} from './modules/user/notification.entity';
+
 @Module({
   imports: [
-    ProductModule,
     AuthModule.forRoot({
       oidcAuthority: 'https://thongdanghoang.id.vn/auth/realms/SwapMe'
     }),
@@ -20,10 +23,12 @@ import {ProductEntity} from 'src/modules/product/product.entity';
       username: 'root',
       password: 'root_P@ssW0rd',
       database: 'swapme',
-      entities: [UserEntity, ProductEntity],
+      entities: [UserEntity, NotificationEntity, ProductEntity, ExchangeEntity],
       synchronize: true
     }),
-    UserModule
+    UserModule,
+    ProductModule,
+    TransactionsModule
   ],
   controllers: [AppController],
   providers: [AppService]

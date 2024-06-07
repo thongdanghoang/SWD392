@@ -1,0 +1,99 @@
+@import '@assets/styles/styles';
+
+
+.exchange-info {
+  .form-check {
+    .form-check-input {
+      width: 20px;
+      height: 20px;
+      border-color: $app-quaternary !important;
+      box-shadow: none;
+    }
+
+    .form-check-input:checked {
+      background-color: $app-quaternary;
+      border-color: $app-quaternary;
+    }
+  }
+}
+
+
+.select-products {
+
+  .search {
+    background-color: $app-white;
+    min-width: 400px;
+    min-height: 45px;
+    border-radius: 30px;
+    border: 1px solid $app-primary;
+
+    .search-icon {
+      color: $app-quaternary;
+    }
+
+    .search-bar {
+      background-color: transparent;
+      border: none;
+      outline: none;
+      color: $app-secondary;
+    }
+  }
+
+  .my-products {
+    background-color: rgba(197, 238, 215, 0.5);
+    border-radius: 8px;
+    min-height: 169px;
+
+    .flex-1 {
+      flex: 1;
+    }
+
+    .my-product-item:hover {
+      border: 1px solid $app-primary;
+      border-radius: 8px;
+      background-color: $app-primary;
+    }
+
+    .my-product-item.selected {
+      border: 1px solid $app-primary;
+      background-color: $app-primary;
+      border-radius: 8px;
+    }
+
+    .product-detail {
+      .product-image {
+        border-radius: 8px;
+      }
+    }
+
+    .custom-radio {
+      width: 20px;
+      height: 20px;
+      border: 1px solid $app-quaternary;
+      border-radius: 50%;
+      position: relative;
+
+      .inner {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 10px;
+        height: 10px;
+        background-color: $app-quaternary;
+        border-radius: 50%;
+        transform: translate(-50%, -50%) scale(0);
+        transition: transform 0.2s ease;
+      }
+    }
+
+    input[type="radio"]:checked + .form-check-label .custom-radio .inner {
+      transform: translate(-50%, -50%) scale(1);
+    }
+  }
+
+  .actions {
+    button {
+      min-width: 274px !important;
+    }
+  }
+}
