@@ -11,6 +11,7 @@ export default function ExchangeDetail(): ReactElement {
 
   // Fetch product detail by id
   const {id} = useParams<{id: string}>();
+  const {secondId} = useParams<{secondId: string}>();
   const [currentProduct, setCurrentProduct] = useState<ProductDTO | null>(null);
   useEffect((): void => {
     if (id) {
@@ -18,6 +19,7 @@ export default function ExchangeDetail(): ReactElement {
         .createApiClient()
         .get(`${AppRoutingConstants.PRODUCTS_PATH}/${id}`)
         .then(response => {
+          console.log(response);
           setCurrentProduct({
             ...response.data.data,
             imageUrl:
@@ -34,25 +36,24 @@ export default function ExchangeDetail(): ReactElement {
   // Fetch my products
   const [myProducts, setMyProducts] = useState<ProductDTO | null>(null);
   useEffect((): void => {
-    if (id) {
+    if (secondId) {
       applicationService
         .createApiClient()
-        .get(`${AppRoutingConstants.MY_PRODUCTS_PATH}/${id}`)
+        .get(`${AppRoutingConstants.PRODUCTS_PATH}/${secondId}`)
         .then(response => {
-          setMyProducts(
-            response.data.data.map((product: ProductDTO) => ({
-              ...product,
-              imageUrl:
-                'https://binhminhdigital.com/storedata/images/product/canon-eos-4000d-kit-1855mm-f3556-iii-den.jpg'
-            })) ?? []
-          );
+          console.log(response);
+          setMyProducts({
+            ...response.data.data,
+            imageUrl:
+              'https://binhminhdigital.com/storedata/images/product/canon-eos-4000d-kit-1855mm-f3556-iii-den.jpg'
+          });
         })
         .catch(error => {
           console.error(error);
         });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
+  }, [secondId]);
 
   const formatToVietnameseCurrency = (amount: number | undefined): string => {
     if (amount) {
@@ -129,7 +130,7 @@ export default function ExchangeDetail(): ReactElement {
               {/* Thông tin người mua */}
               <div className="col-6 d-flex flex-column gap-3">
                 <div className="owner-full-name label bold-25 text-color-quaternary">
-                  {`Bạn`}
+                  {`${myProducts?.owner?.firstName} ${myProducts?.owner?.lastName}`}
                 </div>
                 <div className="phone-number d-flex gap-1">
                   <div className="label semibold-14 text-color-quaternary">
@@ -164,9 +165,7 @@ export default function ExchangeDetail(): ReactElement {
                       {`Được đăng bởi bạn`}
                     </div>
                     <div className="price semibold-20 text-color-tertiary">
-                      {formatToVietnameseCurrency(
-                        myProducts?.suggestedPrice
-                      )}
+                      {formatToVietnameseCurrency(myProducts?.suggestedPrice)}
                     </div>
                   </div>
                 </div>
