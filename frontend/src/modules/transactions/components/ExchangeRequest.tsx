@@ -99,8 +99,6 @@ export default function ExchangeRequest(): ReactElement {
         });
     }
   };
-  
-
 
   const handleExchangeRequestByProduct = (): void => {
     if (id && selectedProductId) {
@@ -113,7 +111,9 @@ export default function ExchangeRequest(): ReactElement {
         .createApiClient()
         .post(AppRoutingConstants.EXCHANGE_REQUESTS_PATH, exchangeRequest)
         .then((): void => {
-          navigate(AppRoutingConstants.EXCHANGE_DETAIL_PATH);
+          navigate(
+            `/exchange-detail/${currentProduct?.id}/${selectedProductId}`
+          );
         })
         .catch(error => {
           console.error(error);
@@ -267,10 +267,8 @@ export default function ExchangeRequest(): ReactElement {
             className="button"
             variant={'primary'}
             disabled={!confirm || !selectedProductId}
-            // onClick={handleExchangeRequestByProduct}
-            onClick={() =>
-              navigate(`/exchange-detail/${currentProduct?.id}&&${selectedProductId}`)
-            }
+            onClick={handleExchangeRequestByProduct}
+            // onClick={() => navigate(`/exchange-detail/${currentProduct?.id}`)}
           >
             Giao dịch bằng sản phẩm
           </AppButton>
