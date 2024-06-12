@@ -1,0 +1,26 @@
+@import '@assets/styles/styles';
+
+.halftop-info {
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  background-color: #fff; 
+  border-bottom: 0;
+}
+
+.halfbottom-info{
+  padding: 30px;
+  border: 1px solid #ddd;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  background-color: #fff; 
+}
+
+.detail-information{
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff; 
+}
+
+

@@ -34,6 +34,10 @@
   @include font-style(500, 32px, 120%);
 }
 
+.bold-25 {
+  @include font-style(500, 25px, 120%);
+}
+
 .semibold-20 {
   @include font-style(500, 20px, 150%);
 }
