@@ -10,6 +10,7 @@ async function bootstrap(): Promise<void> {
     allowedHeaders: 'Content-Type, Accept, Authorization, Cache-Control',
     credentials: true
   });
+
   const config = new DocumentBuilder()
     .setTitle('Application example')
     .setDescription('The application API description')

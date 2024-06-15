@@ -177,7 +177,7 @@ export default function AppHeader({
                   </div>
                 )}
               </div>
-              <div className="chat clickable">
+              <div className="chat clickable" onClick={() => navigate('/chat')}>
                 <i className="fs-5 bi bi-chat-left-text"></i>
               </div>
               <div className="cart clickable">

@@ -10,6 +10,8 @@ import {ProductEntity} from 'src/modules/product/entities/product.entity';
 import {TransactionsModule} from './modules/transactions/transactions.module';
 import {ExchangeEntity} from './modules/transactions/entities/ExchangeEntity';
 import {NotificationEntity} from './modules/user/notification.entity';
+import {MongooseModule} from '@nestjs/mongoose';
+import {ChatModule} from './modules/chat/chat.module';
 
 @Module({
   imports: [
@@ -26,6 +28,8 @@ import {NotificationEntity} from './modules/user/notification.entity';
       entities: [UserEntity, NotificationEntity, ProductEntity, ExchangeEntity],
       synchronize: true
     }),
+    MongooseModule.forRoot('mongodb://127.0.0.1:27017/nest'), // Kết nối tới MongoDB
+    ChatModule,
     UserModule,
     ProductModule,
     TransactionsModule
