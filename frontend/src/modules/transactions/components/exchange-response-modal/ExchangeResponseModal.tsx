@@ -4,6 +4,7 @@ import {ModalProps} from '../../../shared/components/modal/ModalContext.tsx';
 import AppButton from '../../../shared/components/buttons/AppButton.tsx';
 import {useApplicationService} from '../../../shared/services/application.service.ts';
 import {AppRoutingConstants} from '../../../shared/app-routing.constants.ts';
+import DetailPopup from '../detail-popup/DetailPopup.tsx';
 
 export const ExchangeResponseModal = ({
   hideModal,
@@ -35,7 +36,7 @@ export const ExchangeResponseModal = ({
           Xác nhận giao dịch
         </Modal.Title>
       </Modal.Header>
-      <Modal.Body></Modal.Body>
+      <Modal.Body><DetailPopup/></Modal.Body>
       <Modal.Footer>
         <AppButton variant="secondary" onClick={hideModal}>
           Đóng

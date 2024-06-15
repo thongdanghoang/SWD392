@@ -1,26 +1,60 @@
-@import '@assets/styles/styles';
+@import "@assets/styles/variables";
 
-.halftop-info {
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
-  background-color: #fff; 
-  border-bottom: 0;
-}
+.exchange-detail {
+  .halftop-box {
+    padding: 20px;
+    border: 1px solid $app-primary;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    background-color: #fff;
+    border-bottom: 0;
+  }
 
-.halfbottom-info{
-  padding: 30px;
-  border: 1px solid #ddd;
-  border-bottom-left-radius: 8px;
-  border-bottom-right-radius: 8px;
-  background-color: #fff; 
-}
+  .halfbottom-box {
+    padding: 30px;
+    border: 1px solid $app-primary;
+    border-bottom-left-radius: 8px;
+    background-color: #fff;
+  }
 
-.detail-information{
-    border: 1px solid #ddd;
+  .halfleft-box {
+    padding: 30px;
+    border: 1px solid $app-primary;
+    border-bottom-left-radius: 8px;
+    background-color: #fff;
+  }
+
+  .halfright-box {
+    padding: 30px;
+    border: 1px solid $app-primary;
+    border-bottom-right-radius: 8px;
+    border-left: 0;
+    background-color: #fff;
+  }
+
+  .detail-information {
+    border: 1px solid $app-primary;
     border-radius: 8px;
-    background-color: #fff; 
+    background-color: #fff;
+  }
+
+  .actions {
+    button {
+      min-width: 274px !important;
+    }
+  }
+  .progress-bar-inline-1 {
+    background-color: $app-secondary;
+    display: inline-block;
+    width: 50%;
+    margin-top: 10px;
+    margin-right: 10px;
+  }
+  .progress-bar-inline-2 {
+    background-color: $app-primary;
+    display: inline-block;
+    width: 50%;
+    margin-top: 10px;
+    margin-right: 10px;
+  }
 }
-
-
