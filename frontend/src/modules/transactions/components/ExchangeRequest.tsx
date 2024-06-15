@@ -111,7 +111,9 @@ export default function ExchangeRequest(): ReactElement {
         .createApiClient()
         .post(AppRoutingConstants.EXCHANGE_REQUESTS_PATH, exchangeRequest)
         .then((): void => {
-          navigate(AppRoutingConstants.HOMEPAGE);
+          navigate(
+            `/exchange-detail/${currentProduct?.id}/${selectedProductId}`
+          );
         })
         .catch(error => {
           console.error(error);
@@ -266,6 +268,7 @@ export default function ExchangeRequest(): ReactElement {
             variant={'primary'}
             disabled={!confirm || !selectedProductId}
             onClick={handleExchangeRequestByProduct}
+            // onClick={() => navigate(`/exchange-detail/${currentProduct?.id}`)}
           >
             Giao dịch bằng sản phẩm
           </AppButton>
