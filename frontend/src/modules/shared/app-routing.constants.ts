@@ -17,4 +17,7 @@ export class AppRoutingConstants {
   public static readonly EXCHANGE_REQUESTS_PATH: string = `${AppRoutingConstants.BASE_URL}/exchanges/request`;
   public static readonly EXCHANGE_ACCEPT_PATH: string = `${AppRoutingConstants.BASE_URL}${AppRoutingConstants.EXCHANGE}/accept`;
   public static readonly EXCHANGE_REJECT_PATH: string = `${AppRoutingConstants.BASE_URL}${AppRoutingConstants.EXCHANGE}/reject`;
+
+  // Chat
+  public static readonly CHAT_PATH: string = `${AppRoutingConstants.BASE_URL}/chat`;
 }

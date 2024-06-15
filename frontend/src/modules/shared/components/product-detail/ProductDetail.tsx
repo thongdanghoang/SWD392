@@ -8,13 +8,37 @@ import {
   ProductDTO,
   getProductStatusDisplay
 } from '../../../homepage/model/productDto.ts';
+import {UserDto} from '../../models/userDto.ts';
+import io from 'socket.io-client';
 
-function ProductDetail(): ReactElement {
+// Replace with your NestJS server URL
+const socket = io('http://localhost:3001/chat', {
+  transports: ['websocket'] // Ensure WebSocket transport is used
+});
+
+export interface Room {
+  roomId: string;
+  buyerId: string;
+  sellerId: string;
+  // Other properties as needed
+}
+function ProductDetail({
+  currentUser
+}: {
+  currentUser: UserDto | null;
+}): ReactElement {
   const navigate = useNavigate();
   const applicationService = useApplicationService();
   const {id} = useParams<{id: string}>();
   const [currentProduct, setCurrentProduct] = useState<ProductDTO | null>(null);
 
+  const handleChatClick = async (): Promise<void> => {
+    const buyerId = currentUser?.id;
+    const sellerId = currentProduct?.owner.id;
+    socket.emit('createRoom', {buyerId, sellerId}, (): void => {
+      navigate(`/chat`);
+    });
+  };
   useEffect(() => {
     if (id) {
       applicationService
@@ -214,6 +238,7 @@ function ProductDetail(): ReactElement {
                 <AppButton
                   variant="secondary"
                   children={`Chat với người này`}
+                  onClick={handleChatClick}
                 />
               </div>
               <div className="row d-flex align-items-center">

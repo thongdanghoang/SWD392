@@ -1,4 +1,4 @@
-import {Controller, Get, UseGuards} from '@nestjs/common';
+import {Controller, Get, Param, UseGuards} from '@nestjs/common';
 import {JwtAuthGuard} from '@5stones/nest-oidc';
 import {UsersService} from './users.service';
 import {UserEntity} from './user.entity';
@@ -16,5 +16,10 @@ export class UsersController {
   @Get('logout')
   signout(): void {
     return this.usersService.setCurrentUser(null);
+  }
+
+  @Get(':id')
+  getUserById(@Param('id') id: number): Promise<UserEntity | null> {
+    return this.usersService.findById(id);
   }
 }
