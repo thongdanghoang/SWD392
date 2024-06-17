@@ -4,6 +4,7 @@ import { Form, FormControl } from 'react-bootstrap';
 import React, { ReactElement } from 'react';
 import AppButton from '../../../shared/components/buttons/AppButton.tsx';
 import AddressFormModal, { AddressDto } from '../AddressFormModal.tsx';
+import PreviewModal from '../PreviewModal.tsx';
 import { useApplicationService } from '../../../shared/services/application.service.ts';
 import { AppRoutingConstants } from '../../../shared/app-routing.constants.ts';
 import { useNavigate } from 'react-router-dom';
@@ -38,6 +39,16 @@ export default function PostProduct(): ReactElement {
   }
   const { showModal } = modalContext;
   const handleAddressFormModalSubmit = (data: any): void => {
+    setFullName(data.fullName);
+    setProduct({
+      ...product,
+      provinceCode: data.provinceCode,
+      districtCode: data.districtCode,
+      wardCode: data.wardCode,
+      addressDetail: data.addressDetail
+    });
+  };
+  const handlePreviewSubmit = (data: any): void => {
     setFullName(data.fullName);
     setProduct({
       ...product,
@@ -278,7 +289,7 @@ export default function PostProduct(): ReactElement {
                   required
                   readOnly
                   onClick={() =>
-                    showModal(AddressFormModal, handleAddressFormModalSubmit)
+                    showModal(AddressFormModal, handlePreviewSubmit)
                   }
                   value={
                     product.addressDetail
@@ -294,7 +305,7 @@ export default function PostProduct(): ReactElement {
               className="preview"
               variant={'secondary'}
               onClick={() =>
-                showModal(AddressFormModal, handleAddressFormModalSubmit)
+                showModal(PreviewModal, handleAddressFormModalSubmit)
               }>
               Xem trước
             </AppButton>
