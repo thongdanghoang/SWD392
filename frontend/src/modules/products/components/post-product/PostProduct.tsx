@@ -1,14 +1,14 @@
 import './PostProduct.scss';
 import '@assets/styles/styles.scss';
-import { Form, FormControl } from 'react-bootstrap';
-import React, { ReactElement } from 'react';
+import React, {ReactElement} from 'react';
+import {Form} from 'react-bootstrap';
+import {useNavigate} from 'react-router-dom';
+import {AppRoutingConstants} from '../../../shared/app-routing.constants.ts';
 import AppButton from '../../../shared/components/buttons/AppButton.tsx';
-import AddressFormModal, { AddressDto } from '../AddressFormModal.tsx';
+import {useModal} from '../../../shared/components/modal/useModal.tsx';
+import {useApplicationService} from '../../../shared/services/application.service.ts';
+import AddressFormModal, {AddressDto} from '../AddressFormModal.tsx';
 import PreviewModal from '../PreviewModal.tsx';
-import { useApplicationService } from '../../../shared/services/application.service.ts';
-import { AppRoutingConstants } from '../../../shared/app-routing.constants.ts';
-import { useNavigate } from 'react-router-dom';
-import { useModal } from '../../../shared/components/modal/useModal.tsx';
 
 interface ProductDTO extends AddressDto {
   title: string;
@@ -37,7 +37,7 @@ export default function PostProduct(): ReactElement {
     // for example, you could return a loading spinner
     return <div>Loading...</div>;
   }
-  const { showModal } = modalContext;
+  const {showModal} = modalContext;
   const handleAddressFormModalSubmit = (data: any): void => {
     setFullName(data.fullName);
     setProduct({
@@ -88,7 +88,12 @@ export default function PostProduct(): ReactElement {
         <Form className="upload col-4 gap-3 d-flex flex-column" validated>
           <div className="upload-images d-flex justify-content-center align-items-center">
             <div className="upload-button d-flex flex-column align-items-center gap-1">
-              <input type="file" id="upload-picture" className="d-none" required />
+              <input
+                type="file"
+                id="upload-picture"
+                className="d-none"
+                required
+              />
               <div className="invalid-feedback">Chưa có hình ảnh</div>
               <label htmlFor="upload-picture">
                 <svg
@@ -135,7 +140,12 @@ export default function PostProduct(): ReactElement {
           </div>
           <div className="upload-videos d-flex justify-content-center align-items-center">
             <div className="upload-button d-flex flex-column align-items-center gap-2">
-              <input type="file" id="upload-videos" className="d-none" required />
+              <input
+                type="file"
+                id="upload-videos"
+                className="d-none"
+                required
+              />
               <div className="invalid-feedback">Chưa có video</div>
               <label htmlFor="upload-videos">
                 <svg
@@ -171,14 +181,18 @@ export default function PostProduct(): ReactElement {
           onSubmit={handleSubmit}
         >
           <Form.Group controlId="formProductCategoryList" className="mb-3">
-            <div className='semibold-20 text-color-quaternary'>Danh mục tin đăng<span className='text-danger'>*</span></div>
+            <div className="semibold-20 text-color-quaternary">
+              Danh mục tin đăng<span className="text-danger">*</span>
+            </div>
             <Form.Select
               className="list-of-postings form-select"
               aria-label="Default select example"
               id="validationCustom04"
               required
             >
-              <option selected disabled value=''>Danh mục tin đăng</option>
+              <option selected disabled value="">
+                Danh mục tin đăng
+              </option>
               <option value="1">Thời trang nam</option>
               <option value="2">Thời trang nữ</option>
               <option value="3">Giày dép</option>
@@ -192,17 +206,15 @@ export default function PostProduct(): ReactElement {
               <option value="11">Giải trí</option>
               <option value="12">Thể thao</option>
             </Form.Select>
-            <div className="invalid-feedback">
-              Hãy chọn một danh mục.
-            </div>
+            <div className="invalid-feedback">Hãy chọn một danh mục.</div>
           </Form.Group>
           <div className="info_details d-flex flex-column gap-1">
             <div className="semibold-20 text-color-quaternary">
-              Thông tin chi tiết<span className='text-danger'>*</span>
+              Thông tin chi tiết<span className="text-danger">*</span>
             </div>
             <div className="regular-12">Tình trạng</div>
             <Form.Group controlId="formProductCondition" className="mb-3">
-              {['radio'].map((type) => (
+              {['radio'].map(type => (
                 <div key={`inline-${type}`} className="mb-3">
                   <Form.Check
                     inline
@@ -247,7 +259,7 @@ export default function PostProduct(): ReactElement {
                 placeholder="Giá đề xuất"
                 value={product.suggestedPrice}
                 onChange={e =>
-                  setProduct({ ...product, suggestedPrice: e.target.value })
+                  setProduct({...product, suggestedPrice: e.target.value})
                 }
               />
             </Form.Group>
@@ -255,7 +267,8 @@ export default function PostProduct(): ReactElement {
 
           <div className="title-and-description d-flex flex-column gap-1">
             <div className="post_title_detail semibold-20 text-color-quaternary">
-              Tiêu đề Tin đăng và Mô tả chi tiết<span className='text-danger'>*</span>
+              Tiêu đề Tin đăng và Mô tả chi tiết
+              <span className="text-danger">*</span>
             </div>
             <Form.Group controlId="formProductTitle">
               <Form.Control
@@ -264,7 +277,7 @@ export default function PostProduct(): ReactElement {
                 required
                 placeholder="Tiêu đề tin đăng"
                 value={product.title}
-                onChange={e => setProduct({ ...product, title: e.target.value })}
+                onChange={e => setProduct({...product, title: e.target.value})}
               ></Form.Control>
             </Form.Group>
             <Form.Group controlId="formProductDescription">
@@ -275,12 +288,14 @@ export default function PostProduct(): ReactElement {
                 type="text"
                 required
                 placeholder="Mô tả chi tiết"
-                onChange={e => setProduct({ ...product, description: e.target.value })}
+                onChange={e =>
+                  setProduct({...product, description: e.target.value})
+                }
               ></Form.Control>
             </Form.Group>
             <div className="address d-flex flex-column gap-1">
               <div className="semibold-20 text-color-quaternary">
-                Thông tin người bán<span className='text-danger'>*</span>
+                Thông tin người bán<span className="text-danger">*</span>
               </div>
               <Form.Group controlId="formProductAddress" className="mb-3">
                 <Form.Control
@@ -306,7 +321,8 @@ export default function PostProduct(): ReactElement {
               variant={'secondary'}
               onClick={() =>
                 showModal(PreviewModal, handleAddressFormModalSubmit)
-              }>
+              }
+            >
               Xem trước
             </AppButton>
             <AppButton className="submit" type="submit" variant={'primary'}>
