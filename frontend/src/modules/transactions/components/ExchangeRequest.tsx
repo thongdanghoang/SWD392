@@ -268,7 +268,6 @@ export default function ExchangeRequest(): ReactElement {
             variant={'primary'}
             disabled={!confirm || !selectedProductId}
             onClick={handleExchangeRequestByProduct}
-            // onClick={() => navigate(`/exchange-detail/${currentProduct?.id}`)}
           >
             Giao dịch bằng sản phẩm
           </AppButton>

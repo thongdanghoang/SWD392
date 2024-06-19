@@ -10,7 +10,6 @@ export default function DetailPopup(): ReactElement {
 
   // Fetch product detail by id
   const {id} = useParams<{id: string}>();
-  const {secondId} = useParams<{secondId: string}>();
   const [currentProduct, setCurrentProduct] = useState<ProductDTO | null>(null);
   useEffect((): void => {
     if (id) {
@@ -32,14 +31,14 @@ export default function DetailPopup(): ReactElement {
   }, [id]);
 
   // Fetch my products
+  const {myproductId} = useParams<{myproductId: string}>();
   const [myProducts, setMyProducts] = useState<ProductDTO | null>(null);
   useEffect((): void => {
-    if (secondId) {
+    if (myproductId) {
       applicationService
         .createApiClient()
-        .get(`${AppRoutingConstants.PRODUCTS_PATH}/${secondId}`)
+        .get(`${AppRoutingConstants.PRODUCTS_PATH}/${myproductId}`)
         .then(response => {
-          console.log(response);
           setMyProducts({
             ...response.data.data,
             imageUrl:
@@ -51,7 +50,7 @@ export default function DetailPopup(): ReactElement {
         });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [secondId]);
+  }, [myproductId]);
 
   const formatToVietnameseCurrency = (amount: number | undefined): string => {
     if (amount) {
@@ -63,6 +62,7 @@ export default function DetailPopup(): ReactElement {
     }
     return '';
   };
+
   return (
     <div className="">
       <div className="">

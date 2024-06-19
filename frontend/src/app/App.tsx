@@ -53,8 +53,8 @@ export default function App(): ReactElement {
                   element={<ExchangeRequest />}
                 ></Route>
                 <Route
-                  path="/exchange-detail/:id"
-                  element={<ExchangeDetail/>}
+                  path="/exchange-detail/:id/:myproductId"
+                  element={<ExchangeDetail />}
                 ></Route>
                 <Route path="/dev" element={<TestLoginComponent />}></Route>
               </Routes>

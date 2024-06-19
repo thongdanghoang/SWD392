@@ -5,14 +5,12 @@ import {useParams} from 'react-router-dom';
 import {ProductDTO} from '../../homepage/model/productDto.ts';
 import {AppRoutingConstants} from '../../shared/app-routing.constants.ts';
 import AppButton from '../../shared/components/buttons/AppButton.tsx';
-// import ProgressBar from 'react-bootstrap/ProgressBar';
 
 export default function ExchangeDetail(): ReactElement {
   const applicationService = useApplicationService();
 
   // Fetch product detail by id
   const {id} = useParams<{id: string}>();
-  const {secondId} = useParams<{secondId: string}>();
   const [currentProduct, setCurrentProduct] = useState<ProductDTO | null>(null);
   useEffect((): void => {
     if (id) {
@@ -34,14 +32,14 @@ export default function ExchangeDetail(): ReactElement {
   }, [id]);
 
   // Fetch my products
+  const {myproductId} = useParams<{myproductId: string}>();
   const [myProducts, setMyProducts] = useState<ProductDTO | null>(null);
   useEffect((): void => {
-    if (secondId) {
+    if (myproductId) {
       applicationService
         .createApiClient()
-        .get(`${AppRoutingConstants.PRODUCTS_PATH}/${secondId}`)
+        .get(`${AppRoutingConstants.PRODUCTS_PATH}/${myproductId}`)
         .then(response => {
-          console.log(response);
           setMyProducts({
             ...response.data.data,
             imageUrl:
@@ -53,7 +51,7 @@ export default function ExchangeDetail(): ReactElement {
         });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [secondId]);
+  }, [myproductId]);
 
   const formatToVietnameseCurrency = (amount: number | undefined): string => {
     if (amount) {
@@ -169,24 +167,6 @@ export default function ExchangeDetail(): ReactElement {
             </div>
           </div>
           {/* Stepper */}
-          {/* <div>
-            <div className='d-flex'>
-              <div className='d-flex flex-column'>
-                <div> <i className="bi bi-check-circle-fill fs-1"></i></div>
-                <div> Chấp nhận giao dịch</div>
-              </div>
-              <ProgressBar className='progress-bar-inline-1' />
-              <div className='d-flex flex-column'>
-                <div> Check mark</div>
-                <div> Chấp nhận giao dịch</div>
-              </div>
-              <ProgressBar className='progress-bar-inline-2' />
-              <div className='d-flex flex-column'>
-                <div> Check mark</div>
-                <div> Chấp nhận giao dịch</div>
-              </div>
-            </div>
-          </div> */}
           {/* button */}
           <div className="actions d-flex justify-content-end gap-5 mt-5">
             <AppButton
