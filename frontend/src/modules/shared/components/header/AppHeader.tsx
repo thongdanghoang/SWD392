@@ -10,12 +10,14 @@ import {formatDistanceToNow} from 'date-fns';
 import {vi} from 'date-fns/locale';
 import {ExchangeResponseModal} from '../../../transactions/components/exchange-response-modal/ExchangeResponseModal.tsx';
 import {useModal} from '../modal/useModal.tsx';
+import {useApplicationService} from '../../services/application.service.ts';
 
 export default function AppHeader({
   currentUser
 }: {
   currentUser: UserDto | null;
 }): ReactElement {
+  const applicationService = useApplicationService();
   const navigate = useNavigate();
   const [showNotifications, setShowNotifications] = useState(false);
   const modalContext = useModal();
@@ -183,19 +185,26 @@ export default function AppHeader({
               </div>
               <div
                 className="user-info d-flex flex-row align-items-center gap-2 btn"
-                data-bs-toggle="offcanvas"
+                data-bs-toggle={currentUser ? 'offcanvas' : undefined}
                 data-bs-target="#popup-profile"
                 aria-controls="popup-profile"
+                onClick={() => !currentUser && applicationService.signIn()}
               >
                 <i className="user-avatar fs-5 bi bi-person-circle"></i>
                 <div className="user-full-name regular-14">
-                  {currentUser?.firstName} {currentUser?.lastName}
+                  {currentUser
+                    ? `${currentUser.firstName} ${currentUser.lastName}`
+                    : 'Đăng Nhập'}
                 </div>
               </div>
               <ProfileOffCanvas currentUser={currentUser} />
             </div>
             <AppButton
-              onClick={() => navigate(AppRoutingConstants.POST_PRODUCT)}
+              onClick={() =>
+                currentUser
+                  ? navigate(AppRoutingConstants.POST_PRODUCT)
+                  : applicationService.signIn()
+              }
               variant="primary"
               children={`Đăng tin ngay`}
             />

@@ -16,6 +16,7 @@ import {
 } from '../../user/notification.entity';
 
 @Controller('exchanges')
+@UseGuards(JwtAuthGuard)
 export class ExchangeRequestController {
   constructor(
     private readonly productService: ProductService,
@@ -24,7 +25,6 @@ export class ExchangeRequestController {
   ) {}
 
   @Post('/accept/:exchangeId')
-  @UseGuards(JwtAuthGuard)
   async acceptExchangeRequest(
     @Param('exchangeId') exchangeId: number
   ): Promise<ExchangeEntity> {
@@ -49,7 +49,6 @@ export class ExchangeRequestController {
   }
 
   @Post('/reject/:exchangeId')
-  @UseGuards(JwtAuthGuard)
   async rejectExchangeRequest(
     @Param('exchangeId') exchangeId: number
   ): Promise<ExchangeEntity> {
@@ -74,7 +73,6 @@ export class ExchangeRequestController {
   }
 
   @Post('/request')
-  @UseGuards(JwtAuthGuard)
   async create(
     @Body() exchangeRequestBody: ExchangeRequestBodyDto
   ): Promise<ExchangeEntity> {
@@ -96,10 +94,6 @@ export class ExchangeRequestController {
           currentUser,
           productExchanged,
           exchangeRequest
-        );
-        void this.changeStatusOfProductToExchanging(
-          exchangeRequestBody.productId,
-          exchangeRequestBody.productToExchangeId
         );
         return exchangeRequest;
       });

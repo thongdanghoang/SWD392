@@ -11,8 +11,8 @@ import {PartialType} from '@nestjs/swagger';
 import {NotificationEntity} from './notification.entity';
 
 export enum UserStatus {
-  ACTIVE,
-  BANNED
+  ACTIVE = 'ACTIVE',
+  BANNED = 'BANNED'
 }
 
 @Entity('users')

@@ -18,5 +18,5 @@ export interface NotificationDto {
 }
 
 export enum NotificationType {
-  EXCHANGE_REQUEST
+  EXCHANGE_REQUEST = 'EXCHANGE_REQUEST'
 }

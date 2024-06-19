@@ -7,7 +7,6 @@ import {ResponseData} from '../../../global/globalClass';
 import {HttpMessage, HttpStatus} from '../../../global/globalEnum';
 import {UsersService} from '../../user/users.service';
 import {UserDto} from '../../user/user.dto';
-import {UserEntity} from '../../user/user.entity';
 
 @Controller('products')
 export class ProductController {
@@ -86,16 +85,12 @@ export class ProductController {
   @Get()
   async getAllProducts(): Promise<ResponseData<ProductEntity[]>> {
     try {
-      const currentUser: UserEntity = this.userService.getCurrentUser();
       let products: ProductEntity[] =
         await this.productService.getAllProductsPublished();
-      if (currentUser) {
-        products = products.filter(
-          (product: ProductEntity): boolean =>
-            product.owner !== currentUser.id &&
-            product.status === ProductStatus.PUBLISHED
-        );
-      }
+      products = products.filter(
+        (product: ProductEntity): boolean =>
+          product.status === ProductStatus.PUBLISHED
+      );
       return new ResponseData<ProductEntity[]>(
         products,
         HttpMessage.OK,

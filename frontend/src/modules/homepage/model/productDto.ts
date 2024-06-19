@@ -17,12 +17,12 @@ export interface ProductDTO {
 }
 
 export enum ProductStatus {
-  REVIEWING,
-  PUBLISHED,
-  EXCHANGING,
-  EXCHANGED,
-  BANNED,
-  REMOVED
+  REVIEWING = 'REVIEWING',
+  PUBLISHED = 'PUBLISHED',
+  EXCHANGING = 'EXCHANGING',
+  EXCHANGED = 'EXCHANGED',
+  BANNED = 'BANNED',
+  REMOVED = 'REMOVED'
 }
 
 export const getProductStatusDisplay = (
