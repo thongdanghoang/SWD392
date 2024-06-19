@@ -7,7 +7,7 @@ async function bootstrap(): Promise<void> {
   app.enableCors({
     origin: 'http://localhost:5173', // replace with your client's origin
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    allowedHeaders: 'Content-Type, Accept, Authorization',
+    allowedHeaders: 'Content-Type, Accept, Authorization, Cache-Control',
     credentials: true
   });
   const config = new DocumentBuilder()

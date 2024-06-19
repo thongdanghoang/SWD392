@@ -12,4 +12,9 @@ export class UsersController {
   getUser(): UserEntity {
     return this.usersService.getCurrentUser();
   }
+
+  @Get('logout')
+  signout(): void {
+    return this.usersService.setCurrentUser(null);
+  }
 }

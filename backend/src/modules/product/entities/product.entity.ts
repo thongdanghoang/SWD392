@@ -8,12 +8,12 @@ import {
 } from 'typeorm';
 
 export enum ProductStatus {
-  REVIEWING,
-  PUBLISHED,
-  EXCHANGING,
-  EXCHANGED,
-  BANNED,
-  REMOVED
+  REVIEWING = 'REVIEWING',
+  PUBLISHED = 'PUBLISHED',
+  EXCHANGING = 'EXCHANGING',
+  EXCHANGED = 'EXCHANGED',
+  BANNED = 'BANNED',
+  REMOVED = 'REMOVED'
 }
 
 @Entity('products')

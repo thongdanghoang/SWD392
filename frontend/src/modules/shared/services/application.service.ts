@@ -28,17 +28,23 @@ class ApplicationService {
     return response.data;
   }
 
+  public signIn(): void {
+    void this.auth?.signIn();
+  }
+
   public signOutRedirect(): void {
-    if (this.auth) {
-      this.auth
-        .signOutRedirect()
-        .then(() => {
-          alert('Successfully logged out');
-        })
-        .catch(error => {
-          alert(error);
-        });
-    }
+    void this.createApiClient()
+      .get(AppRoutingConstants.LOGOUT_PATH)
+      .then((): void => {
+        void this.auth
+          ?.signOutRedirect()
+          .then(() => {
+            alert('Successfully logged out');
+          })
+          .catch(error => {
+            alert(error);
+          });
+      });
   }
 
   public isAuthenticated(): boolean {
@@ -48,12 +54,12 @@ class ApplicationService {
   public createApiClient(): AxiosInstance {
     const apiClient: AxiosInstance = axios.create();
     const accessToken: string | undefined = this.auth?.userData?.access_token;
-
     apiClient.interceptors.request.use(
       config => {
         if (accessToken) {
           config.headers.Authorization = `Bearer ${accessToken}`;
         }
+        config.headers['Cache-Control'] = 'no-cache';
         this.startLoading();
         return config;
       },

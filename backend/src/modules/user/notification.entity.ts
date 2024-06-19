@@ -9,7 +9,7 @@ import {
 import {UserEntity} from './user.entity';
 
 export enum NotificationType {
-  EXCHANGE_REQUEST
+  EXCHANGE_REQUEST = 'EXCHANGE_REQUEST'
 }
 
 @Entity('notifications')

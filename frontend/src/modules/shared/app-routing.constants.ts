@@ -7,6 +7,7 @@ export class AppRoutingConstants {
   public static readonly POST_PRODUCT: string = `/post-product`;
   // User
   public static readonly CURRENT_USER_PATH: string = `${AppRoutingConstants.BASE_URL}/user`;
+  public static readonly LOGOUT_PATH: string = `${AppRoutingConstants.BASE_URL}/user/logout`;
 
   // Product
   public static readonly PRODUCTS_PATH: string = `${AppRoutingConstants.BASE_URL}/products`;

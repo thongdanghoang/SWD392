@@ -8,9 +8,9 @@ import {
 } from 'typeorm';
 
 export enum ExchangeStatus {
-  PENDING,
-  ACCEPTED,
-  REJECTED
+  PENDING = 'PENDING',
+  ACCEPTED = 'ACCEPTED',
+  REJECTED = 'REJECTED'
 }
 
 @Entity('exchange')
