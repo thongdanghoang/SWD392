@@ -17,10 +17,8 @@ const ProductList = (): React.ReactElement => {
       .get(`${AppRoutingConstants.PRODUCTS_PATH}`)
       .then(response => {
         setProducts(
-          response.data.data.map((product: ProductDTO) => ({
-            ...product,
-            imageUrl:
-              'https://binhminhdigital.com/storedata/images/product/canon-eos-4000d-kit-1855mm-f3556-iii-den.jpg'
+          response.data.data?.map((product: ProductDTO) => ({
+            ...product
           }))
         );
       })

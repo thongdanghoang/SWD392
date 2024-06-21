@@ -52,6 +52,24 @@ export class ProductEntity {
   summary: string;
 
   @Column({
+    name: 'image_links',
+    type: 'text',
+    nullable: true,
+    transformer: {
+      to: (value: string[]) => JSON.stringify(value),
+      from: (value: string) => JSON.parse(value)
+    }
+  })
+  images: string[];
+
+  @Column({
+    name: 'video_link',
+    type: 'text',
+    nullable: true
+  })
+  video: string;
+
+  @Column({
     name: 'suggested_price',
     type: 'bigint',
     nullable: false

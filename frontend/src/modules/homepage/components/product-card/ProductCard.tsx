@@ -29,7 +29,7 @@ export default function ProductCard(product: ProductDTO): ReactElement {
       onClick={navigateToDetail(product.id)}
     >
       <div className="product-image">
-        <img src={product.imageUrl} alt={product.title} />
+        <img src={product?.images?.[0]} alt={product.title} />
       </div>
       <div className="product-info">
         <div className="d-flex flex-column align-items-start">

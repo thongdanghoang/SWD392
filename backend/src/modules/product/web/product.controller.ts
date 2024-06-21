@@ -116,6 +116,8 @@ export class ProductController {
       lastModificationDate: product.lastModificationDate,
       title: product.title,
       summary: product.summary,
+      images: product.images,
+      video: product.video,
       suggestedPrice: product.suggestedPrice,
       modifiedBy: product.modifiedBy,
       creationDate: product.creationDate,
