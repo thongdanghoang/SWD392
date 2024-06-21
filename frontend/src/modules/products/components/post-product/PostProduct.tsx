@@ -1,7 +1,7 @@
 import './PostProduct.scss';
 import '@assets/styles/styles.scss';
 import {Form} from 'react-bootstrap';
-import React, {ReactElement, useEffect, useState} from 'react';
+import React, {ReactElement} from 'react';
 import AppButton from '../../../shared/components/buttons/AppButton.tsx';
 import AddressFormModal, {AddressDto} from '../AddressFormModal.tsx';
 import {useApplicationService} from '../../../shared/services/application.service.ts';
@@ -65,13 +65,12 @@ export default function PostProduct(): ReactElement {
         }
       );
   };
-  const handleUploadComplete = (imageUrls: string[]) => {
+  const handleUploadComplete = (imageUrls: string[]): void => {
     setProduct({...product, images: imageUrls});
   };
-  const handleUploadVideoComplete = (videoUrl: string) => {
+  const handleUploadVideoComplete = (videoUrl: string): void => {
     setProduct({...product, video: videoUrl});
   };
-  useEffect(() => {}, [product]);
 
   return (
     <div className="container my-5">

@@ -31,7 +31,7 @@ function ProductDetail(): ReactElement {
           console.error(error);
         });
     }
-  }, [id]);
+  }, [id, applicationService]);
 
   const [liked, setLiked] = useState(false);
 
