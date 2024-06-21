@@ -2,6 +2,7 @@ import './ProfileOffCanvas.scss';
 import {ReactElement} from 'react';
 import {UserDto} from '../../models/userDto.ts';
 import {useApplicationService} from '../../services/application.service.ts';
+import {useNavigate} from 'react-router-dom';
 
 interface PopupProfileProps {
   currentUser: UserDto | null;
@@ -11,6 +12,7 @@ export default function ProfileOffCanvas({
   currentUser
 }: PopupProfileProps): ReactElement {
   const applicationService = useApplicationService();
+  const navigate = useNavigate();
 
   return (
     <div
@@ -21,14 +23,14 @@ export default function ProfileOffCanvas({
     >
       <div className="offcanvas-header p-4 m-0 gap-3 flex-column align-items-baseline">
         <div className="reviewer d-flex gap-4">
-          <div className="avatar">
+          <div className="avatar clickable" onClick={() => navigate('/user-profile')}>
             <img
               className="avatar"
               src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
               alt="avatar"
             />
           </div>
-          <div className="info">
+          <div className="info clickable" onClick={() => navigate('/user-profile')}>
             <div className="full-name semibold-20">
               {currentUser?.firstName} {currentUser?.lastName}
             </div>
