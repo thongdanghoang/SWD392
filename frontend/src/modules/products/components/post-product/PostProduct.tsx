@@ -67,17 +67,11 @@ export default function PostProduct(): ReactElement {
   };
   const handleUploadComplete = (imageUrls: string[]) => {
     setProduct({...product, images: imageUrls});
-    console.log('imageUrls:', imageUrls);
-    console.log('product:', product);
   };
   const handleUploadVideoComplete = (videoUrl: string) => {
     setProduct({...product, video: videoUrl});
-    console.log('imageUrls:', videoUrl);
-    console.log('product:', product);
   };
-  useEffect(() => {
-    console.log('Updated product:', product);
-  }, [product]);
+  useEffect(() => {}, [product]);
 
   return (
     <div className="container my-5">

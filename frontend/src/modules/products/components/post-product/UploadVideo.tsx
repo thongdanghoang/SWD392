@@ -33,10 +33,7 @@ const UploadWidgetVideo = ({
         if (error) {
           console.error('Upload error:', error);
         } else if (result.event === 'success') {
-          // Kiểm tra sự kiện thành công
-          console.log('Upload result:', result.info.secure_url);
           if (result.info.secure_url) {
-            // Kiểm tra nếu secure_url tồn tại
             setVideoUrl(result.info.secure_url);
           }
         }

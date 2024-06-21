@@ -31,7 +31,6 @@ function ProductDetail(): ReactElement {
           console.error(error);
         });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   const [liked, setLiked] = useState(false);
