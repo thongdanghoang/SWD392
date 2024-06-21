@@ -5,8 +5,11 @@ declare global {
     cloudinary: any;
   }
 }
+interface UploadWidgetVideoProps {
+  onUploadVideoComplete: (urls: string) => void;
+}
 
-const UploadWidgetVideo = ({
+const UploadWidgetVideo: React.FC<UploadWidgetVideoProps> = ({
   onUploadVideoComplete
 }: {
   onUploadVideoComplete: (urls: string) => void;
