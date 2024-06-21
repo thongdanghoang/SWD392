@@ -1,0 +1,46 @@
+@import "@assets/styles/variables";
+
+.exchange-detail {
+  .box {
+    padding: 20px;
+    border: 1px solid $app-primary;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    background-color: #fff;
+    border-bottom: 0;
+  }
+
+  .exchange-information {
+    padding: 30px;
+    border: 1px solid $app-primary;
+    border-bottom-left-radius: 8px;
+    background-color: #fff;
+  }
+
+  .seller-information {
+    padding: 30px;
+    border: 1px solid $app-primary;
+    border-bottom-left-radius: 8px;
+    background-color: #fff;
+  }
+
+  .buyer-information {
+    padding: 30px;
+    border: 1px solid $app-primary;
+    border-bottom-right-radius: 8px;
+    border-left: 0;
+    background-color: #fff;
+  }
+
+  .detail-information {
+    border: 1px solid $app-primary;
+    border-radius: 8px;
+    background-color: #fff;
+  }
+
+  .actions {
+    button {
+      min-width: 274px !important;
+    }
+  }
+}
