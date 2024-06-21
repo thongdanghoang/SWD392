@@ -9,10 +9,14 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
   },
   "dependencies": {
+    "@cloudinary/react": "^1.13.0",
+    "@cloudinary/url-gen": "^1.19.0",
     "@popperjs/core": "^2.11.8",
     "axios": "^1.6.8",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
+    "cloudinary-core": "^2.13.1",
+    "cloudinary-react": "^1.8.1",
     "date-fns": "^3.6.0",
     "jquery": "^3.7.1",
     "oidc-react": "^3.2.2",

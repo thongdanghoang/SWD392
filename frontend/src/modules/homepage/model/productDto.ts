@@ -12,7 +12,8 @@ export interface ProductDTO {
   suggestedPrice: number;
   category: string;
   status: ProductStatus;
-  imageUrl?: string;
+  images: string[];
+  video: string;
   owner: UserDto;
 }
 
