@@ -5,7 +5,7 @@ import UserProduct from './UserProduct.tsx';
 export default function UserProfile(): ReactElement {
 
   return (
-    <div className="container">
+    <div className="container user-profile">
       
       <div className="my-5 d-flex gap-4 flex-column">
         <div className='box'>

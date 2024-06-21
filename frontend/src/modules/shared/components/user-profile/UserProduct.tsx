@@ -51,10 +51,10 @@ export default function ExchangeRequest(): ReactElement {
 
   return (
     <div className="container">
-      <div className="my-5 d-flex gap-4 flex-column">
+      <div className="d-flex gap-4 flex-column">
         <div className="exchange-info d-flex gap-3">
           {myProducts.length > 0 && (
-            <div className="my-products d-flex justify-content-start p-3 gap-3">
+            <div className="my-products d-flex justify-content-start gap-3">
               {myProducts?.map((product: ProductDTO) => (
                 <li
                   key={product.id}
