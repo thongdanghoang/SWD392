@@ -24,8 +24,8 @@ const UploadWidgetVideo: React.FC<UploadWidgetVideoProps> = ({
     cloudinaryWidget.current = window.cloudinary;
     widgetRef.current = cloudinaryWidget.current.createUploadWidget(
       {
-        cloudName: cloudName,
-        uploadPreset: uploadPreset,
+        cloudName,
+        uploadPreset,
         folders: 'swd392',
         sources: ['local', 'url', 'camera'],
         multiple: true,
