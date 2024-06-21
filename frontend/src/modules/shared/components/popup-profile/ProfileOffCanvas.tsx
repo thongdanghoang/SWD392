@@ -23,15 +23,15 @@ export default function ProfileOffCanvas({
     >
       <div className="offcanvas-header p-4 m-0 gap-3 flex-column align-items-baseline">
         <div className="reviewer d-flex gap-4">
-          <div className="avatar">
+          <div className="avatar clickable" onClick={() => navigate('/user-profile')}>
             <img
               className="avatar"
               src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
               alt="avatar"
             />
           </div>
-          <div className="info">
-            <div className="full-name semibold-20" onClick={() => navigate('/user-profile')}>
+          <div className="info clickable" onClick={() => navigate('/user-profile')}>
+            <div className="full-name semibold-20">
               {currentUser?.firstName} {currentUser?.lastName}
             </div>
             <div className="rating d-flex gap-3">
