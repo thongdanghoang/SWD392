@@ -58,9 +58,7 @@ export default function ExchangeRequest(): ReactElement {
         .then(response => {
           setMyProducts(
             response.data.data.map((product: ProductDTO) => ({
-              ...product,
-              imageUrl:
-                'https://binhminhdigital.com/storedata/images/product/canon-eos-4000d-kit-1855mm-f3556-iii-den.jpg'
+              ...product
             })) ?? []
           );
         })
@@ -129,7 +127,7 @@ export default function ExchangeRequest(): ReactElement {
           <div className="product-detail d-flex gap-3">
             <div className="product-image">
               <img
-                src={currentProduct?.imageUrl}
+                src={currentProduct?.images[0]}
                 alt="product"
                 width={70}
                 height={70}
@@ -204,7 +202,7 @@ export default function ExchangeRequest(): ReactElement {
                 <div className="product-detail flex-1 d-flex gap-3 align-items-center">
                   <img
                     className={'product-image'}
-                    src={product.imageUrl}
+                    src={product.images[0]}
                     alt="product"
                     width={70}
                     height={70}

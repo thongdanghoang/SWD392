@@ -23,8 +23,6 @@ function ProductDetail(): ReactElement {
         .then(response => {
           setCurrentProduct({
             ...response.data.data,
-            imageUrl:
-              'https://binhminhdigital.com/storedata/images/product/canon-eos-4000d-kit-1855mm-f3556-iii-den.jpg',
             summary:
               'Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nulla nibh diam, blandit vel consequat nec, ultrices et ipsum. Nulla varius magna a consequat pulvinar. '
           });
@@ -33,8 +31,7 @@ function ProductDetail(): ReactElement {
           console.error(error);
         });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
+  }, [id, applicationService]);
 
   const [liked, setLiked] = useState(false);
 
@@ -61,7 +58,7 @@ function ProductDetail(): ReactElement {
             <div className="col-6">
               <img
                 className="card-img"
-                src={currentProduct?.imageUrl}
+                src={currentProduct?.images[0]}
                 alt="Product image"
               />
               <div className="information flex-column d-flex gap-3">
