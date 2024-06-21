@@ -9,6 +9,7 @@ export class CreateProductDto {
   owner: number;
   createdBy: string;
   summary?: string;
+  images?: string[];
   category?: number;
 }
 
@@ -23,6 +24,8 @@ export interface ProductOwnerDto {
   lastModificationDate: Date;
   title: string;
   summary: string;
+  images: string[];
+  video: string;
   suggestedPrice: number;
   owner: UserDto;
 }
