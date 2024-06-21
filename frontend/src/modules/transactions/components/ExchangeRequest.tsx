@@ -111,7 +111,7 @@ export default function ExchangeRequest(): ReactElement {
         .createApiClient()
         .post(AppRoutingConstants.EXCHANGE_REQUESTS_PATH, exchangeRequest)
         .then((): void => {
-          navigate(AppRoutingConstants.HOMEPAGE);
+          navigate(`/exchange-detail/${id}/${selectedProductId}`);
         })
         .catch(error => {
           console.error(error);
