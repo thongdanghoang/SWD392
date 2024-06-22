@@ -7,7 +7,7 @@ import {formatDistanceToNow} from 'date-fns';
 import {vi} from 'date-fns/locale';
 import './UserProduct.scss';
 
-export default function ExchangeRequest(): ReactElement {
+export default function UserProduct(): ReactElement {
   const applicationService = useApplicationService();
 
   const navigate = useNavigate();
