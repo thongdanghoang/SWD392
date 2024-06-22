@@ -22,6 +22,7 @@ export interface Room {
   sellerId: string;
   // Other properties as needed
 }
+
 function ProductDetail({
   currentUser
 }: {
@@ -55,7 +56,8 @@ function ProductDetail({
           console.error(error);
         });
     }
-  }, [id, applicationService]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
 
   const [liked, setLiked] = useState(false);
 
