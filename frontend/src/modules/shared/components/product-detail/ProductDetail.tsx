@@ -13,7 +13,8 @@ import io from 'socket.io-client';
 
 // Replace with your NestJS server URL
 const socket = io('http://localhost:3001/chat', {
-  transports: ['websocket'] // Ensure WebSocket transport is used
+  transports: ['websocket'],
+  autoConnect: false
 });
 
 export interface Room {
@@ -55,7 +56,7 @@ function ProductDetail({
           console.error(error);
         });
     }
-  }, [id, applicationService]);
+  }, [id]);
 
   const [liked, setLiked] = useState(false);
 
