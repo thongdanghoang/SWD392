@@ -46,9 +46,16 @@ export class ProductController {
   async getMyProducts(): Promise<ResponseData<ProductEntity[]>> {
     try {
       return new ResponseData<ProductEntity[]>(
-        await this.productService.getProductsByOwnerIdCanBeExchanged(
-          this.userService.getCurrentUser().id
-        ),
+        await this.productService
+          .getProductsByOwnerIdCanBeExchanged(
+            this.userService.getCurrentUser().id
+          )
+          .then((products: ProductEntity[]): ProductEntity[] =>
+            products.filter(
+              (product: ProductEntity): boolean =>
+                product.status === ProductStatus.PUBLISHED
+            )
+          ),
         HttpMessage.OK,
         HttpStatus.OK
       );
