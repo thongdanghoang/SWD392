@@ -35,11 +35,7 @@ export default function ExchangeRequest(): ReactElement {
         .createApiClient()
         .get(`${AppRoutingConstants.PRODUCTS_PATH}/${id}`)
         .then(response => {
-          setCurrentProduct({
-            ...response.data.data,
-            imageUrl:
-              'https://binhminhdigital.com/storedata/images/product/canon-eos-4000d-kit-1855mm-f3556-iii-den.jpg'
-          });
+          setCurrentProduct(response.data.data);
         })
         .catch(error => {
           console.error(error);
