@@ -10,7 +10,7 @@ import {ModalProvider} from '../modules/shared/components/modal/ModalContext.tsx
 import {LoadingProvider} from '../modules/shared/components/loading/LoadingContext.tsx';
 import FullScreenSpinner from '../modules/shared/components/loading/loading-spinner/FullScreenSpinner.tsx';
 import ProductDetail from '../modules/shared/components/product-detail/ProductDetail.tsx';
-import ProductList from '../modules/homepage/components/productlist/ProductList.tsx';
+import ProductList from '../modules/homepage/components/product-list/ProductList.tsx';
 import {useApplicationService} from '../modules/shared/services/application.service.ts';
 import {UserDto} from '../modules/shared/models/userDto.ts';
 import ExchangeRequest from '../modules/transactions/components/ExchangeRequest.tsx';

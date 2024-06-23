@@ -20,11 +20,7 @@ export default function ExchangeDetail(): ReactElement {
         .createApiClient()
         .get(`${AppRoutingConstants.PRODUCTS_PATH}/${id}`)
         .then(response => {
-          setCurrentProduct({
-            ...response.data.data,
-            imageUrl:
-              'https://binhminhdigital.com/storedata/images/product/canon-eos-4000d-kit-1855mm-f3556-iii-den.jpg'
-          });
+          setCurrentProduct(response.data.data);
         })
         .catch(error => {
           console.error(error);
@@ -41,11 +37,7 @@ export default function ExchangeDetail(): ReactElement {
         .createApiClient()
         .get(`${AppRoutingConstants.PRODUCTS_PATH}/${myProductId}`)
         .then(response => {
-          setMyProducts({
-            ...response.data.data,
-            imageUrl:
-              'https://binhminhdigital.com/storedata/images/product/canon-eos-4000d-kit-1855mm-f3556-iii-den.jpg'
-          });
+          setMyProducts(response.data.data);
         })
         .catch(error => {
           console.error(error);
@@ -104,7 +96,7 @@ export default function ExchangeDetail(): ReactElement {
               <div className="d-flex mt-2">
                 <div className="product-image">
                   <img
-                    src={currentProduct?.imageUrl}
+                    src={currentProduct?.images[0]}
                     alt="product"
                     width={100}
                     height={100}
@@ -147,7 +139,7 @@ export default function ExchangeDetail(): ReactElement {
               <div className="d-flex mt-2">
                 <div className="product-image">
                   <img
-                    src={myProducts?.imageUrl}
+                    src={myProducts?.images[0]}
                     alt="product"
                     width={100}
                     height={100}
