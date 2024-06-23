@@ -5,9 +5,9 @@ import {useApplicationService} from '../../services/application.service.ts';
 import {AppRoutingConstants} from '../../app-routing.constants.ts';
 import {useNavigate, useParams} from 'react-router-dom';
 import {
-  ProductDTO,
+  ProductWithOwnerDTO,
   getProductStatusDisplay
-} from '../../../homepage/model/productDto.ts';
+} from '../../../homepage/model/productWithOwnerDTO.ts';
 import {UserDto} from '../../models/userDto.ts';
 import io from 'socket.io-client';
 
@@ -31,7 +31,8 @@ function ProductDetail({
   const navigate = useNavigate();
   const applicationService = useApplicationService();
   const {id} = useParams<{id: string}>();
-  const [currentProduct, setCurrentProduct] = useState<ProductDTO | null>(null);
+  const [currentProduct, setCurrentProduct] =
+    useState<ProductWithOwnerDTO | null>(null);
 
   const handleChatClick = async (): Promise<void> => {
     const buyerId = currentUser?.id;
@@ -223,23 +224,29 @@ function ProductDetail({
                   </div>
                 </div>
               </div>
-              <div className="semibold-20 text-color-quaternary">
-                Liên hệ với người bán
-              </div>
-              <div className="d-flex flex-column gap-4">
-                <AppButton
-                  variant="primary"
-                  children={`Giao dịch ngay`}
-                  onClick={() =>
-                    navigate(`/exchange-request/${currentProduct?.id}`)
-                  }
-                />
-                <AppButton
-                  variant="secondary"
-                  children={`Chat với người này`}
-                  onClick={handleChatClick}
-                />
-              </div>
+              {currentProduct?.isMyProduct === false && (
+                <div className="semibold-20 text-color-quaternary">
+                  Liên hệ với người bán
+                </div>
+              )}
+              {currentProduct?.isMyProduct === false && (
+                <div className="d-flex flex-column gap-4">
+                  <AppButton
+                    variant="primary"
+                    children={`Giao dịch ngay`}
+                    onClick={() =>
+                      currentProduct?.isMyProduct
+                        ? null
+                        : navigate(`/exchange-request/${currentProduct?.id}`)
+                    }
+                  />
+                  <AppButton
+                    variant="secondary"
+                    children={`Chat với người này`}
+                    onClick={handleChatClick}
+                  />
+                </div>
+              )}
               <div className="row d-flex align-items-center">
                 <div className="col-6 flex-shrink-0">
                   <img

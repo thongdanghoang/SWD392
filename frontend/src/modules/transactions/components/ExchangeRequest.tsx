@@ -2,7 +2,7 @@ import './ExchangeRequest.scss';
 import React, {ReactElement, useEffect, useState} from 'react';
 import {useApplicationService} from '../../shared/services/application.service.ts';
 import {useNavigate, useParams} from 'react-router-dom';
-import {ProductDTO} from '../../homepage/model/productDto.ts';
+import {ProductWithOwnerDTO} from '../../homepage/model/productWithOwnerDTO.ts';
 import {AppRoutingConstants} from '../../shared/app-routing.constants.ts';
 import AppButton from '../../shared/components/buttons/AppButton.tsx';
 
@@ -28,14 +28,20 @@ export default function ExchangeRequest(): ReactElement {
 
   // Fetch product detail by id
   const {id} = useParams<{id: string}>();
-  const [currentProduct, setCurrentProduct] = useState<ProductDTO | null>(null);
+  const [currentProduct, setCurrentProduct] =
+    useState<ProductWithOwnerDTO | null>(null);
   useEffect((): void => {
     if (id) {
       applicationService
         .createApiClient()
         .get(`${AppRoutingConstants.PRODUCTS_PATH}/${id}`)
         .then(response => {
-          setCurrentProduct(response.data.data);
+          if (response.data.data.isMyProduct) {
+            console.error('You cannot exchange your own product');
+            navigate(AppRoutingConstants.HOMEPAGE);
+          } else {
+            setCurrentProduct(response.data.data);
+          }
         })
         .catch(error => {
           console.error(error);
@@ -45,18 +51,14 @@ export default function ExchangeRequest(): ReactElement {
   }, [id]);
 
   // Fetch my products
-  const [myProducts, setMyProducts] = useState<ProductDTO[]>([]);
+  const [myProducts, setMyProducts] = useState<ProductWithOwnerDTO[]>([]);
   useEffect((): void => {
     if (applicationService.isAuthenticated()) {
       applicationService
         .createApiClient()
         .get(AppRoutingConstants.MY_PRODUCTS_PATH)
         .then(response => {
-          setMyProducts(
-            response.data.data.map((product: ProductDTO) => ({
-              ...product
-            })) ?? []
-          );
+          setMyProducts(response.data.data ?? []);
         })
         .catch(error => {
           console.error(error);
@@ -190,7 +192,7 @@ export default function ExchangeRequest(): ReactElement {
         </div>
         {myProducts.length > 0 && (
           <div className="my-products d-flex flex-column justify-content-start p-3 gap-3">
-            {myProducts?.map((product: ProductDTO) => (
+            {myProducts?.map((product: ProductWithOwnerDTO) => (
               <label
                 key={product.id}
                 className={`my-product-item d-flex align-items-center clickable ${selectedProductId === product.id ? 'selected' : ''}`}

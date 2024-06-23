@@ -2,10 +2,10 @@ import './ProducCard.scss';
 import {formatDistanceToNow} from 'date-fns';
 import {vi} from 'date-fns/locale';
 import {ReactElement} from 'react';
-import {ProductDTO} from '../../model/productDto.ts';
+import {ProductDto} from '../../model/productWithOwnerDTO.ts';
 import {useNavigate} from 'react-router-dom';
 
-export default function ProductCard(product: ProductDTO): ReactElement {
+export default function ProductCard(product: ProductDto): ReactElement {
   const navigate = useNavigate();
 
   const navigateToDetail = (id: string) => {

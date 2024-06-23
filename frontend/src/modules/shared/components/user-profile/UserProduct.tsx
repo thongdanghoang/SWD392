@@ -1,6 +1,6 @@
 import {ReactElement, useEffect, useState} from 'react';
 import {useApplicationService} from '../../services/application.service.ts';
-import {ProductDTO} from '../../../homepage/model/productDto.ts';
+import {ProductWithOwnerDTO} from '../../../homepage/model/productWithOwnerDTO.ts';
 import {AppRoutingConstants} from '../../app-routing.constants.ts';
 import {useNavigate} from 'react-router-dom';
 import {formatDistanceToNow} from 'date-fns';
@@ -19,7 +19,7 @@ export default function ExchangeRequest(): ReactElement {
   };
 
   // Fetch my products
-  const [myProducts, setMyProducts] = useState<ProductDTO[]>([]);
+  const [myProducts, setMyProducts] = useState<ProductWithOwnerDTO[]>([]);
   useEffect((): void => {
     if (applicationService.isAuthenticated()) {
       applicationService
@@ -49,7 +49,7 @@ export default function ExchangeRequest(): ReactElement {
         <div className="exchange-info d-flex gap-3">
           {myProducts.length > 0 && (
             <div className="my-products d-flex justify-content-start gap-3">
-              {myProducts?.map((product: ProductDTO) => (
+              {myProducts?.map((product: ProductWithOwnerDTO) => (
                 <li
                   key={product.id}
                   className="product-card clickable"
