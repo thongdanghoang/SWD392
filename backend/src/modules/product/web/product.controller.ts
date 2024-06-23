@@ -1,7 +1,11 @@
 import {Body, Controller, Get, Param, Post, UseGuards} from '@nestjs/common';
 import {JwtAuthGuard} from '@5stones/nest-oidc';
 import {ProductService} from '../services/product.service';
-import {CreateProductDto, ProductOwnerDto} from '../dto/product.dto';
+import {
+  CreateProductDto,
+  ProductDto,
+  ProductWithOwnerDTO
+} from '../dto/product.dto';
 import {ProductEntity, ProductStatus} from '../entities/product.entity';
 import {ResponseData} from '../../../global/globalClass';
 import {HttpMessage, HttpStatus} from '../../../global/globalEnum';
@@ -19,7 +23,7 @@ export class ProductController {
   @UseGuards(JwtAuthGuard)
   async createProduct(
     @Body() createProductDto: CreateProductDto
-  ): Promise<ResponseData<ProductEntity>> {
+  ): Promise<ResponseData<ProductDto>> {
     try {
       const newProduct = await this.productService.createProduct({
         ...createProductDto,
@@ -28,12 +32,12 @@ export class ProductController {
         status: ProductStatus.PUBLISHED
       });
       return new ResponseData(
-        newProduct,
+        this.mapToProductDto(newProduct),
         HttpMessage.CREATED,
         HttpStatus.CREATED
       );
     } catch (error) {
-      return new ResponseData<ProductEntity>(
+      return new ResponseData<ProductDto>(
         null,
         HttpMessage.INTERNAL_SERVER_ERROR,
         HttpStatus.INTERNAL_SERVER_ERROR
@@ -43,24 +47,29 @@ export class ProductController {
 
   @Get('/my-products')
   @UseGuards(JwtAuthGuard)
-  async getMyProducts(): Promise<ResponseData<ProductEntity[]>> {
+  async getMyProducts(): Promise<ResponseData<ProductDto[]>> {
     try {
-      return new ResponseData<ProductEntity[]>(
+      return new ResponseData<ProductDto[]>(
         await this.productService
           .getProductsByOwnerIdCanBeExchanged(
             this.userService.getCurrentUser().id
           )
-          .then((products: ProductEntity[]): ProductEntity[] =>
-            products.filter(
-              (product: ProductEntity): boolean =>
-                product.status === ProductStatus.PUBLISHED
-            )
+          .then((products: ProductEntity[]): ProductDto[] =>
+            products
+              .filter(
+                (product: ProductEntity): boolean =>
+                  product.status === ProductStatus.PUBLISHED
+              )
+              .map(
+                (product: ProductEntity): ProductDto =>
+                  this.mapToProductDto(product)
+              )
           ),
         HttpMessage.OK,
         HttpStatus.OK
       );
     } catch (error) {
-      return new ResponseData<ProductEntity[]>(
+      return new ResponseData<ProductDto[]>(
         null,
         HttpMessage.INTERNAL_SERVER_ERROR,
         HttpStatus.INTERNAL_SERVER_ERROR
@@ -71,7 +80,7 @@ export class ProductController {
   @Get('/:id')
   async getProductDetails(
     @Param('id') id: number
-  ): Promise<ResponseData<ProductOwnerDto>> {
+  ): Promise<ResponseData<ProductWithOwnerDTO>> {
     try {
       const product = await this.productService.getProductDetails(id);
       const owner = await this.userService.findById(product.owner);
@@ -81,7 +90,7 @@ export class ProductController {
         HttpStatus.OK
       );
     } catch (error) {
-      return new ResponseData<ProductOwnerDto>(
+      return new ResponseData<ProductWithOwnerDTO>(
         null,
         HttpMessage.INTERNAL_SERVER_ERROR,
         HttpStatus.INTERNAL_SERVER_ERROR
@@ -90,7 +99,7 @@ export class ProductController {
   }
 
   @Get()
-  async getAllProducts(): Promise<ResponseData<ProductEntity[]>> {
+  async getAllProducts(): Promise<ResponseData<ProductDto[]>> {
     try {
       let products: ProductEntity[] =
         await this.productService.getAllProductsPublished();
@@ -98,13 +107,15 @@ export class ProductController {
         (product: ProductEntity): boolean =>
           product.status === ProductStatus.PUBLISHED
       );
-      return new ResponseData<ProductEntity[]>(
-        products,
+      return new ResponseData<ProductDto[]>(
+        products.map(
+          (product: ProductEntity): ProductDto => this.mapToProductDto(product)
+        ),
         HttpMessage.OK,
         HttpStatus.OK
       );
     } catch (error) {
-      return new ResponseData<ProductEntity[]>(
+      return new ResponseData<ProductDto[]>(
         null,
         HttpMessage.INTERNAL_SERVER_ERROR,
         HttpStatus.INTERNAL_SERVER_ERROR
@@ -112,10 +123,7 @@ export class ProductController {
     }
   }
 
-  private mapToProductOwnerDto(
-    product: ProductEntity,
-    owner: UserDto
-  ): ProductOwnerDto {
+  private mapToProductDto(product: ProductEntity): ProductDto {
     return {
       id: product.id,
       version: product.version,
@@ -129,6 +137,32 @@ export class ProductController {
       modifiedBy: product.modifiedBy,
       creationDate: product.creationDate,
       status: product.status,
+      isMyProduct: this.userService.getCurrentUser()
+        ? product.owner === this.userService.getCurrentUser()?.id
+        : false
+    } as ProductDto;
+  }
+
+  private mapToProductOwnerDto(
+    product: ProductEntity,
+    owner: UserDto
+  ): ProductWithOwnerDTO {
+    return {
+      id: product.id,
+      version: product.version,
+      createdBy: product.createdBy,
+      lastModificationDate: product.lastModificationDate,
+      title: product.title,
+      summary: product.summary,
+      images: product.images,
+      video: product.video,
+      suggestedPrice: product.suggestedPrice,
+      modifiedBy: product.modifiedBy,
+      creationDate: product.creationDate,
+      status: product.status,
+      isMyProduct: this.userService.getCurrentUser()
+        ? product.owner === this.userService.getCurrentUser()?.id
+        : false,
       owner: {
         id: owner.id,
         version: owner.version,
@@ -138,6 +172,6 @@ export class ProductController {
         phone: owner.phone,
         status: owner.status
       } as UserDto
-    } as ProductOwnerDto;
+    } as ProductWithOwnerDTO;
   }
 }

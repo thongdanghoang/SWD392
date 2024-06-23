@@ -2,7 +2,7 @@ import './ExchangeDetail.scss';
 import {ReactElement, useEffect, useState} from 'react';
 import {useApplicationService} from '../../shared/services/application.service.ts';
 import {useNavigate, useParams} from 'react-router-dom';
-import {ProductDTO} from '../../homepage/model/productDto.ts';
+import {ProductWithOwnerDTO} from '../../homepage/model/productWithOwnerDTO.ts';
 import {AppRoutingConstants} from '../../shared/app-routing.constants.ts';
 import AppButton from '../../shared/components/buttons/AppButton.tsx';
 
@@ -13,7 +13,8 @@ export default function ExchangeDetail(): ReactElement {
   // Fetch product detail by id
   const {id} = useParams<{id: string}>();
   const {myProductId} = useParams<{myProductId: string}>();
-  const [currentProduct, setCurrentProduct] = useState<ProductDTO | null>(null);
+  const [currentProduct, setCurrentProduct] =
+    useState<ProductWithOwnerDTO | null>(null);
   useEffect((): void => {
     if (id) {
       applicationService
@@ -30,7 +31,9 @@ export default function ExchangeDetail(): ReactElement {
   }, [id]);
 
   // Fetch my products
-  const [myProducts, setMyProducts] = useState<ProductDTO | null>(null);
+  const [myProducts, setMyProducts] = useState<ProductWithOwnerDTO | null>(
+    null
+  );
   useEffect((): void => {
     if (myProductId) {
       applicationService

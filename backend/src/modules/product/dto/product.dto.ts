@@ -15,7 +15,7 @@ export class CreateProductDto {
 
 export class UpdateProductDto extends PartialType(ProductEntity) {}
 
-export interface ProductOwnerDto {
+export interface ProductWithOwnerDTO {
   id: number;
   version: number;
   createdBy: string;
@@ -28,4 +28,20 @@ export interface ProductOwnerDto {
   video: string;
   suggestedPrice: number;
   owner: UserDto;
+  isMyProduct: boolean;
+}
+
+export interface ProductDto {
+  id: number;
+  version: number;
+  createdBy: string;
+  modifiedBy: string;
+  creationDate: Date;
+  lastModificationDate: Date;
+  title: string;
+  summary: string;
+  images: string[];
+  video: string;
+  suggestedPrice: number;
+  isMyProduct: boolean;
 }

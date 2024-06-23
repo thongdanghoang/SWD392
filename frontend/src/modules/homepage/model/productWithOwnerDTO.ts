@@ -1,6 +1,6 @@
 import {UserDto} from '../../shared/models/userDto.ts';
 
-export interface ProductDTO {
+export interface ProductWithOwnerDTO {
   id: string;
   version: number;
   createdBy: string;
@@ -14,7 +14,25 @@ export interface ProductDTO {
   status: ProductStatus;
   images: string[];
   video: string;
+  isMyProduct: boolean;
   owner: UserDto;
+}
+
+export interface ProductDto {
+  id: string;
+  version: number;
+  createdBy: string;
+  modifiedBy: string;
+  creationDate: Date;
+  lastModificationDate: Date;
+  title: string;
+  summary: string;
+  suggestedPrice: number;
+  category: string;
+  status: ProductStatus;
+  images: string[];
+  video: string;
+  isMyProduct: boolean;
 }
 
 export enum ProductStatus {
