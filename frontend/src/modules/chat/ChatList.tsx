@@ -49,7 +49,9 @@ function ChatRoom({
   const [sellerName, setSellerName] = useState('');
   const applicationService = useApplicationService();
   const parts = roomId.split('-');
+  const buyerId = parts.slice(0, 5).join('-');
   const sellerId = parts.slice(5).join('-');
+  const idToFetch = sellerId === userId ? buyerId : sellerId;
 
   async function fetchSellerInfo(sellerId: string): Promise<any> {
     const response = await applicationService
@@ -59,11 +61,11 @@ function ChatRoom({
   }
 
   useEffect(() => {
-    void fetchSellerInfo(sellerId).then(sellerData => {
+    void fetchSellerInfo(idToFetch).then(sellerData => {
       setSellerName(`${sellerData.firstName} ${sellerData.lastName}`);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sellerId]);
+  }, [idToFetch]);
   useEffect(() => {
     applicationService
       .createApiClient()
@@ -180,9 +182,15 @@ function ChatList({currentUser}: ChatListProps): ReactElement {
         .get(`${AppRoutingConstants.CHAT_PATH}/rooms/${currentUser.id}`)
         .then(response => {
           const roomsData: Room[] = response.data;
+          console.log(response.data);
           setRooms(roomsData);
           roomsData.forEach(room => {
-            void fetchSellerInfo(room.sellerId);
+            const userIdToFetch =
+              room.sellerId.toString() === currentUser.id.toString()
+                ? room.buyerId
+                : room.sellerId;
+            void fetchSellerInfo(userIdToFetch);
+            console.log(userIdToFetch);
           });
         })
         .catch(error => console.error('Error fetching rooms:', error));
@@ -190,17 +198,17 @@ function ChatList({currentUser}: ChatListProps): ReactElement {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser?.id]);
 
-  const fetchSellerInfo = async (sellerId: string): Promise<any> => {
+  const fetchSellerInfo = async (userIdToFetch: string): Promise<any> => {
     try {
       const response = await applicationService
         .createApiClient()
-        .get(`${AppRoutingConstants.BASE_URL}/user/${sellerId}`);
+        .get(`${AppRoutingConstants.BASE_URL}/user/${userIdToFetch}`);
       const sellerData = response.data;
       if (sellerData) {
         const seller = sellerData;
         setSellers(prevSellers => ({
           ...prevSellers,
-          [sellerId]: {
+          [userIdToFetch]: {
             id: seller.id,
             firstName: seller.firstName,
             lastName: seller.lastName,
@@ -234,7 +242,8 @@ function ChatList({currentUser}: ChatListProps): ReactElement {
               </div>
               <ul className="list-unstyled chat-list mt-2 mb-0">
                 {rooms.map(room => {
-                  const seller = sellers[room.sellerId];
+                  const seller =
+                    sellers[room.sellerId] || sellers[room.buyerId];
                   return (
                     <li
                       key={room.roomId}
