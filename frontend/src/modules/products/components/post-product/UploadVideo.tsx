@@ -37,7 +37,11 @@ const UploadWidgetVideo: React.FC<UploadWidgetVideoProps> = ({
           console.error('Upload error:', error);
         } else if (result.event === 'success') {
           if (result.info.secure_url) {
-            setVideoUrl(result.info.secure_url);
+            setVideoUrl(() => {
+              const newUrl = result.info.secure_url;
+              onUploadVideoComplete(newUrl);
+              return newUrl;
+            });
           }
         }
       }

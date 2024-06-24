@@ -1,7 +1,7 @@
 import './PostProduct.scss';
 import '@assets/styles/styles.scss';
 import {Form} from 'react-bootstrap';
-import React, {ReactElement} from 'react';
+import React, {ReactElement, useEffect} from 'react';
 import AppButton from '../../../shared/components/buttons/AppButton.tsx';
 import AddressFormModal, {AddressDto} from '../AddressFormModal.tsx';
 import {useApplicationService} from '../../../shared/services/application.service.ts';
@@ -51,6 +51,10 @@ export default function PostProduct(): ReactElement {
   };
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
+    if (product.images.length === 0 || !product.video) {
+      alert('Vui lòng tải lên ít nhất 1 hình ảnh và 1 video');
+      return;
+    }
     // Here you can handle the form submission.
     // The form data is in the state variables.
     applicationService
@@ -66,11 +70,14 @@ export default function PostProduct(): ReactElement {
       );
   };
   const handleUploadComplete = (imageUrls: string[]): void => {
-    setProduct({...product, images: imageUrls});
+    setProduct(prevProduct => ({...prevProduct, images: imageUrls}));
   };
+
   const handleUploadVideoComplete = (videoUrl: string): void => {
-    setProduct({...product, video: videoUrl});
+    setProduct(prevProduct => ({...prevProduct, video: videoUrl}));
   };
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  useEffect(() => {}, [product]);
 
   return (
     <div className="container my-5">
@@ -84,12 +91,30 @@ export default function PostProduct(): ReactElement {
       <Form className="row" onSubmit={handleSubmit}>
         <div className="upload col-4 gap-3 d-flex flex-column">
           <div className="upload-images d-flex justify-content-center align-items-center">
-            <UploadWidget onUploadComplete={handleUploadComplete} />
+            <div className="row">
+              {product.images.map((url, index) => (
+                <div className="col-4" key={index}>
+                  <img src={url} alt="Uploaded" className="img-fluid" />
+                </div>
+              ))}
+              <UploadWidget onUploadComplete={handleUploadComplete} />
+            </div>
           </div>
           <div className="upload-videos d-flex justify-content-center align-items-center">
-            <UploadWidgetVideo
-              onUploadVideoComplete={handleUploadVideoComplete}
-            />
+            <div className="row">
+              {product.video && (
+                <div className="col-6">
+                  <video
+                    src={product.video}
+                    controls
+                    className="img-fluid"
+                  ></video>
+                </div>
+              )}
+              <UploadWidgetVideo
+                onUploadVideoComplete={handleUploadVideoComplete}
+              />
+            </div>
           </div>
         </div>
         <div className="detail col-8 d-flex flex-column gap-4">
@@ -141,13 +166,6 @@ export default function PostProduct(): ReactElement {
               <label className="form-check-label" htmlFor="inlineRadio2">
                 Mới
               </label>
-            </div>
-            <div className="mb-3">
-              <input
-                className="form-control regular-14"
-                id="exampleFormControlInput1"
-                placeholder="Loại sản phẩm"
-              />
             </div>
             <div className="form-check">
               <input
