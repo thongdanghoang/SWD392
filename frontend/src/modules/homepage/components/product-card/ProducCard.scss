@@ -8,9 +8,9 @@
   align-items: flex-start;
   gap: 17.161px;
   border-radius: 8px;
-  border: 1px solid #C5EED7;
+  border: 1px solid #c5eed7;
   opacity: 0.8;
-  background: #FFF;
+  background: #fff;
 
   .product-image {
     display: flex;
@@ -26,6 +26,7 @@
       width: 254px;
       height: 230px;
       flex-shrink: 0;
+      object-fit: contain;
     }
   }
 
