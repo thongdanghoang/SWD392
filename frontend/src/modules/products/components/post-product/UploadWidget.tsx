@@ -29,14 +29,23 @@ const UploadWidget: React.FC<UploadWidgetProps> = ({
         folders: 'swd392',
         sources: ['local', 'url', 'camera'],
         multiple: true,
-        maxFiles: 5
+        maxFiles: 5,
+        resourceType: 'image'
       },
       function (error: any, result: any) {
         if (error) {
           console.error('Upload error:', error);
         } else if (result.event === 'success') {
           if (result.info.secure_url) {
-            setImageUrls(prevUrls => [...prevUrls, result.info.secure_url]);
+            setImageUrls(prevUrls => {
+              const newUrls = [...prevUrls, result.info.secure_url];
+              if (newUrls.length > 5) {
+                alert('Chỉ được tải lên tối đa 5 hình ảnh');
+                return prevUrls;
+              }
+              onUploadComplete(newUrls);
+              return newUrls;
+            });
           }
         }
       }
