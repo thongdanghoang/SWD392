@@ -182,7 +182,6 @@ function ChatList({currentUser}: ChatListProps): ReactElement {
         .get(`${AppRoutingConstants.CHAT_PATH}/rooms/${currentUser.id}`)
         .then(response => {
           const roomsData: Room[] = response.data;
-          console.log(response.data);
           setRooms(roomsData);
           roomsData.forEach(room => {
             const userIdToFetch =
@@ -190,7 +189,6 @@ function ChatList({currentUser}: ChatListProps): ReactElement {
                 ? room.buyerId
                 : room.sellerId;
             void fetchSellerInfo(userIdToFetch);
-            console.log(userIdToFetch);
           });
         })
         .catch(error => console.error('Error fetching rooms:', error));
