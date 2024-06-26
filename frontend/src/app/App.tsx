@@ -49,7 +49,7 @@ export default function App(): ReactElement {
                 <Route path="/products" element={<ProductList />}></Route>
                 <Route path="/products/:id" element={<ProductDetail />}></Route>
                 <Route path="/post-product" element={<PostProduct />}></Route>
-                <Route path='/user-profile' element={<UserProfile/>}></Route>
+                <Route path='/user-profile' element={<UserProfile currentUser={currentUser}/>}></Route>
                 <Route
                   path="/exchange-request/:id"
                   element={<ExchangeRequest />}
