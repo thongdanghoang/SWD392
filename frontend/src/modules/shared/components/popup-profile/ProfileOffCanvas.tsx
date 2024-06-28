@@ -32,7 +32,7 @@ export default function ProfileOffCanvas({
           </div>
           <div className="info">
             <div
-              className="full-name semibold-20"
+              className="full-name semibold-20 clickable"
               onClick={() => navigate('/user-profile')}
             >
               {currentUser?.firstName} {currentUser?.lastName}

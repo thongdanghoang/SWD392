@@ -1,8 +1,20 @@
-import {ReactElement} from 'react';
+import {ReactElement, useState} from 'react';
 import './UserProfile.scss';
-import UserProduct from './UserProduct.tsx';
+import UserProduct from './UserProduct';
+import {UserDto} from '../../models/userDto';
 
-export default function UserProfile(): ReactElement {
+export default function UserProfile({
+  currentUser
+}: {
+  currentUser: UserDto | null;
+}): ReactElement {
+  const [activeTab, setActiveTab] = useState<'selling' | 'sold'>('selling');
+
+  // Function to handle tab click
+  const handleTabClick = (tab: 'selling' | 'sold') => {
+    setActiveTab(tab);
+  };
+
   return (
     <div className="container user-profile">
       <div className="my-5 d-flex gap-4 flex-column">
@@ -18,24 +30,20 @@ export default function UserProfile(): ReactElement {
               </div>
               <div className="info-and-rating">
                 <div className="semibold-20 text-color-quaternary">
-                  {' '}
-                  Thống Đặng Hoàng
-                  {/* {currentProduct?.owner
-                            ? `${currentProduct?.owner.firstName} ${currentProduct?.owner.lastName}`
-                            : 'Người bán'} */}
+                  {currentUser?.firstName} {currentUser?.lastName}
                 </div>
-                <div className="rating d-flex gap-3">
+                <div className="rating d-flex gap-2 mt-1">
                   <div className="rate-point semibold-16 text-color-quaternary">
                     5.0
                   </div>
-                  <div className="stars d-flex gap-1">
+                  <div className="stars d-flex">
                     <i className="bi bi-star-fill text-color-secondary"></i>
                     <i className="bi bi-star-fill text-color-secondary"></i>
                     <i className="bi bi-star-fill text-color-secondary"></i>
                     <i className="bi bi-star-half text-color-secondary"></i>
                     <i className="bi bi-star text-color-secondary"></i>
                   </div>
-                  <div className="number-of-rates regular-14 text-color-quaternary">
+                  <div className="number-of-rates regular-14 text-color-quaternary mt-1">
                     (10)
                   </div>
                 </div>
@@ -43,13 +51,34 @@ export default function UserProfile(): ReactElement {
             </div>
           </div>
         </div>
+
         <div className="d-flex bold-25 text-color-quaternary justify-content-center">
-          <div className="col-6">Đang bán</div>
-          <div className="">Đã bán</div>
+          <div
+            className={`col-6 clickable tab ${activeTab === 'selling' ? 'active' : ''}`}
+            onClick={() => handleTabClick('selling')}
+          >
+            Đang bán
+          </div>
+          <div
+            className={`col-6 clickable tab ${activeTab === 'sold' ? 'active' : ''}`}
+            onClick={() => handleTabClick('sold')}
+          >
+            Đã bán
+          </div>
         </div>
       </div>
+
+      {/* Conditional Rendering */}
       <div>
-        <UserProduct />
+        {activeTab === 'selling' ? (
+          <UserProduct />
+        ) : (
+          <div>
+            <div className="regular-14 text-color-quaternary">
+              Bạn chưa bán được sản phẩm nào.
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
