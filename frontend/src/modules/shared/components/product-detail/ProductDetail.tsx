@@ -209,6 +209,9 @@ function ProductDetail({
                       <AppButton
                         variant="secondary"
                         children={`Xem trang cá nhân`}
+                        onClick={() =>
+                          navigate(`/seller-profile/${currentProduct?.id}`)
+                        }
                       />
                     </div>
                   </div>
