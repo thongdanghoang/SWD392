@@ -7,7 +7,7 @@
     border: 1px solid $app-primary;
     border-radius: 8px;
     background-color: #fff;
-    max-width: 500px;
+    max-width: 600px;
   }
 
   .avatar {
@@ -30,5 +30,10 @@
 
   .tab.inactive {
     color: #6c757d;
+  }
+  .actions {
+    button {
+      min-width: 150px !important;
+    }
   }
 }

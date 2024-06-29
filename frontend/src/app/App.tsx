@@ -17,6 +17,7 @@ import ExchangeRequest from '../modules/transactions/components/ExchangeRequest.
 import UserProfile from '../modules/shared/components/user-profile/UserProfile.tsx';
 import ExchangeDetail from '../modules/transactions/components/ExchangeDetail.tsx';
 import ChatList from '../modules/chat/ChatList.tsx';
+import SellerProfile from '../modules/shared/components/seller-profile/SellerProfile.tsx';
 
 export default function App(): ReactElement {
   const applicationService = useApplicationService();
@@ -53,7 +54,14 @@ export default function App(): ReactElement {
                   element={<ProductDetail currentUser={currentUser} />}
                 ></Route>
                 <Route path="/post-product" element={<PostProduct />}></Route>
-                <Route path="/user-profile" element={<UserProfile />}></Route>
+                <Route
+                  path="/user-profile"
+                  element={<UserProfile currentUser={currentUser} />}
+                ></Route>
+                <Route
+                  path="/seller-profile/:id"
+                  element={<SellerProfile currentUser={currentUser} />}
+                ></Route>
                 <Route
                   path="/chat"
                   element={<ChatList currentUser={currentUser} />}
