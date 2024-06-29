@@ -11,7 +11,7 @@ export default function UserProfile({
   const [activeTab, setActiveTab] = useState<'selling' | 'sold'>('selling');
 
   // Function to handle tab click
-  const handleTabClick = (tab: 'selling' | 'sold') => {
+  const handleTabClick = (tab: 'selling' | 'sold'): void => {
     setActiveTab(tab);
   };
 
