@@ -1,0 +1,11 @@
+@import "@assets/styles/variables";
+
+.edit-profile {
+    margin-top: 50px;
+  .box {
+    padding: 20px;
+    border: 1px solid $app-primary;
+    border-radius: 8px;
+    background-color: #fff;
+  }
+}

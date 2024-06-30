@@ -6,7 +6,7 @@ import {useNavigate} from 'react-router-dom';
 import {formatDistanceToNow} from 'date-fns';
 import {vi} from 'date-fns/locale';
 
-export default function ExchangeRequest(): ReactElement {
+export default function UserProduct(): ReactElement {
   const applicationService = useApplicationService();
 
   const navigate = useNavigate();
