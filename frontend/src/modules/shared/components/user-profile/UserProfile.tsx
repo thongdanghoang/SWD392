@@ -1,14 +1,16 @@
 import {ReactElement, useState} from 'react';
 import './UserProfile.scss';
-import UserProduct from './UserProduct';
 import {UserDto} from '../../models/userDto';
-
+import {useNavigate} from 'react-router-dom';
+import UserProduct from './UserProduct';
+import AppButton from '../buttons/AppButton.tsx';
 export default function UserProfile({
   currentUser
 }: {
   currentUser: UserDto | null;
 }): ReactElement {
   const [activeTab, setActiveTab] = useState<'selling' | 'sold'>('selling');
+  const navigate = useNavigate();
 
   // Function to handle tab click
   const handleTabClick = (tab: 'selling' | 'sold'): void => {
@@ -36,7 +38,7 @@ export default function UserProfile({
                   <div className="rate-point semibold-16 text-color-quaternary">
                     5.0
                   </div>
-                  <div className="stars d-flex">
+                  <div className="stars d-flex gap-1">
                     <i className="bi bi-star-fill text-color-secondary"></i>
                     <i className="bi bi-star-fill text-color-secondary"></i>
                     <i className="bi bi-star-fill text-color-secondary"></i>
@@ -49,6 +51,11 @@ export default function UserProfile({
                 </div>
               </div>
             </div>
+            <AppButton
+              variant="secondary"
+              onClick={() => navigate(`/edit-profile`)}
+              children={'Chỉnh sửa '}
+            />
           </div>
         </div>
 
