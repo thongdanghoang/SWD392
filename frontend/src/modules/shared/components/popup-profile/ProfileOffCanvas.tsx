@@ -86,7 +86,18 @@ export default function ProfileOffCanvas({
           Lịch sử giao dịch
         </div>
         <div className="list-title semibold-16 text-color-quaternary">Khác</div>
-        <div className="list-item regular-14  text-color-quaternary">
+        <div
+          className="list-item regular-14  text-color-quaternary"
+          onClick={(): void => {
+            if (applicationService.isRoleAdmin()) {
+              window.location.href =
+                'https://thongdanghoang.id.vn/auth/admin/SwapMe/console/';
+            } else {
+              window.location.href =
+                'https://thongdanghoang.id.vn/auth/realms/SwapMe/account/';
+            }
+          }}
+        >
           Cài đặt tài khoản
         </div>
         <div className="list-item regular-14  text-color-quaternary">
