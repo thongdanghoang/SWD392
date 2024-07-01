@@ -1,4 +1,25 @@
+.pf-v5-c-button.pf-m-danger {
+    color: white;
+}
+
+label,
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: var(--app-quaternary);
+}
+
 :where(:root) {
+    --app-primary: #C5EED7;
+    --app-secondary: #70E2A2;
+    --app-tertiary: #31B46A;
+    --app-quaternary: #1F7343;
+    --app-sub-color: #FF9FB4;
+    --app-white: #FFFFFF;
     --pf-v5-global--palette--black-100: #fafafa;
     --pf-v5-global--palette--black-150: #f5f5f5;
     --pf-v5-global--palette--black-200: #f0f0f0;
@@ -7,10 +28,10 @@
     --pf-v5-global--palette--black-500: #8a8d90;
     --pf-v5-global--palette--black-600: #6a6e73;
     --pf-v5-global--palette--black-700: #4f5255;
-    --pf-v5-global--palette--black-800: #3c3f42;
+    --pf-v5-global--palette--black-800: var(--app-secondary);
     --pf-v5-global--palette--black-850: #212427;
-    --pf-v5-global--palette--black-900: #151515;
-    --pf-v5-global--palette--black-1000: #030303;
+    --pf-v5-global--palette--black-900: red;
+    --pf-v5-global--palette--black-1000: red;
     --pf-v5-global--palette--blue-50: #e7f1fa;
     --pf-v5-global--palette--blue-100: #bee1f4;
     --pf-v5-global--palette--blue-200: #73bcf7;
@@ -26,7 +47,7 @@
     --pf-v5-global--palette--cyan-400: #005f60;
     --pf-v5-global--palette--cyan-500: #003737;
     --pf-v5-global--palette--cyan-600: #002323;
-    --pf-v5-global--palette--cyan-700: #000f0f;
+    --pf-v5-global--palette--cyan-700: red;
     --pf-v5-global--palette--gold-50: #fdf7e7;
     --pf-v5-global--palette--gold-100: #f9e0a2;
     --pf-v5-global--palette--gold-200: #f6d173;
@@ -82,47 +103,47 @@
     --pf-v5-global--palette--white: #fff;
     --pf-v5-global--BackgroundColor--100: #fff;
     --pf-v5-global--BackgroundColor--150: #fafafa;
-    --pf-v5-global--BackgroundColor--200: #f0f0f0;
+    --pf-v5-global--BackgroundColor--200: rgba(197, 238, 215, 0.2);
     --pf-v5-global--BackgroundColor--light-100: #fff;
     --pf-v5-global--BackgroundColor--light-200: #fafafa;
-    --pf-v5-global--BackgroundColor--light-300: #f0f0f0;
-    --pf-v5-global--BackgroundColor--dark-100: #151515;
-    --pf-v5-global--BackgroundColor--dark-200: #3c3f42;
-    --pf-v5-global--BackgroundColor--dark-300: #212427;
-    --pf-v5-global--BackgroundColor--dark-400: #4f5255;
+    --pf-v5-global--BackgroundColor--light-300: rgba(197, 238, 215, 0.5);
+    --pf-v5-global--BackgroundColor--dark-100: var(--app-primary);
+    --pf-v5-global--BackgroundColor--dark-200: var(--app-secondary);
+    --pf-v5-global--BackgroundColor--dark-300: rgba(197, 238, 215, 0.5);
+    --pf-v5-global--BackgroundColor--dark-400: var(--app-secondary);
     --pf-v5-global--BackgroundColor--dark-transparent-100: #0303039e;
     --pf-v5-global--BackgroundColor--dark-transparent-200: #03030352;
-    --pf-v5-global--Color--100: #151515;
-    --pf-v5-global--Color--200: #6a6e73;
-    --pf-v5-global--Color--300: #3c3f42;
-    --pf-v5-global--Color--400: #8a8d90;
-    --pf-v5-global--Color--light-100: #fff;
-    --pf-v5-global--Color--light-200: #f0f0f0;
+    --pf-v5-global--Color--100: var(--app-quaternary);
+    --pf-v5-global--Color--200: var(--app-secondary);
+    --pf-v5-global--Color--300: red;
+    --pf-v5-global--Color--400: red;
+    --pf-v5-global--Color--light-100: var(--app-quaternary);
+    --pf-v5-global--Color--light-200: var(--app-tertiary);
     --pf-v5-global--Color--light-300: #d2d2d2;
-    --pf-v5-global--Color--dark-100: #151515;
-    --pf-v5-global--Color--dark-200: #6a6e73;
-    --pf-v5-global--active-color--100: #06c;
+    --pf-v5-global--Color--dark-100: var(--app-quaternary);
+    --pf-v5-global--Color--dark-200: var(--app-secondary);
+    --pf-v5-global--active-color--100: var(--app-tertiary);
     --pf-v5-global--active-color--200: #bee1f4;
     --pf-v5-global--active-color--300: #2b9af3;
-    --pf-v5-global--active-color--400: #73bcf7;
-    --pf-v5-global--disabled-color--100: #6a6e73;
+    --pf-v5-global--active-color--400: var(--app-tertiary);
+    --pf-v5-global--disabled-color--100: var(--app-primary);
     --pf-v5-global--disabled-color--200: #d2d2d2;
     --pf-v5-global--disabled-color--300: #f0f0f0;
-    --pf-v5-global--primary-color--100: #06c;
-    --pf-v5-global--primary-color--200: #004080;
+    --pf-v5-global--primary-color--100: var(--app-primary);
+    --pf-v5-global--primary-color--200: var(--app-secondary);
     --pf-v5-global--primary-color--light-100: #73bcf7;
-    --pf-v5-global--primary-color--dark-100: #06c;
+    --pf-v5-global--primary-color--dark-100: var(--app-primary);
     --pf-v5-global--secondary-color--100: #6a6e73;
     --pf-v5-global--custom-color--100: #73c5c5;
     --pf-v5-global--custom-color--200: #009596;
     --pf-v5-global--custom-color--300: #003737;
     --pf-v5-global--success-color--100: #3e8635;
     --pf-v5-global--success-color--200: #1e4f18;
-    --pf-v5-global--info-color--100: #2b9af3;
-    --pf-v5-global--info-color--200: #002952;
+    --pf-v5-global--info-color--100: red;
+    --pf-v5-global--info-color--200: red;
     --pf-v5-global--warning-color--100: #f0ab00;
     --pf-v5-global--warning-color--200: #795600;
-    --pf-v5-global--danger-color--100: #c9190b;
+    --pf-v5-global--danger-color--100: #FF9FB4;
     --pf-v5-global--danger-color--200: #a30000;
     --pf-v5-global--danger-color--300: #470000;
     --pf-v5-global--BoxShadow--sm: 0 .0625rem .125rem 0 #0303031f, 0 0 .125rem 0 #0303030f;
@@ -176,12 +197,13 @@
     --pf-v5-global--height-breakpoint--lg: 48rem;
     --pf-v5-global--height-breakpoint--xl: 60rem;
     --pf-v5-global--height-breakpoint--2xl: 80rem;
-    --pf-v5-global--link--Color: #06c;
-    --pf-v5-global--link--Color--hover: #004080;
-    --pf-v5-global--link--Color--light: #2b9af3;
+    --pf-v5-global--link--Color: var(--app-tertiary);
+    --pf-v5-global--link--Color--hover: var(--app-quaternary);
+    --pf-v5-global--link--Color--light: var(--app-quaternary);
     --pf-v5-global--link--Color--light--hover: #73bcf7;
-    --pf-v5-global--link--Color--dark: #06c;
-    --pf-v5-global--link--Color--dark--hover: #004080;
+    --pf-v5-global--link--Color--dark: red;
+    --pf-v5-global--link--Color--dark: var(--app-tertiary);
+    --pf-v5-global--link--Color--dark--hover: var(--app-quaternary);
     --pf-v5-global--link--Color--visited: #40199a;
     --pf-v5-global--link--TextDecoration: none;
     --pf-v5-global--link--TextDecoration--hover: underline;
@@ -189,19 +211,19 @@
     --pf-v5-global--BorderWidth--md: 2px;
     --pf-v5-global--BorderWidth--lg: 3px;
     --pf-v5-global--BorderWidth--xl: 4px;
-    --pf-v5-global--BorderColor--100: #d2d2d2;
-    --pf-v5-global--BorderColor--200: #8a8d90;
-    --pf-v5-global--BorderColor--300: #f0f0f0;
-    --pf-v5-global--BorderColor--dark-100: #d2d2d2;
-    --pf-v5-global--BorderColor--light-100: #b8bbbe;
+    --pf-v5-global--BorderColor--100: var(--app-primary);
+    --pf-v5-global--BorderColor--200: var(--app-secondary);
+    --pf-v5-global--BorderColor--300: var(--app-tertiary);
+    --pf-v5-global--BorderColor--dark-100: var(--app-primary);
+    --pf-v5-global--BorderColor--light-100: var(--app-secondary);
     --pf-v5-global--BorderRadius--sm: 3px;
     --pf-v5-global--BorderRadius--lg: 30em;
-    --pf-v5-global--icon--Color--light: #6a6e73;
-    --pf-v5-global--icon--Color--dark: #151515;
+    --pf-v5-global--icon--Color--light: var(--app-secondary);
+    --pf-v5-global--icon--Color--dark: var(--app-quaternary);
     --pf-v5-global--icon--Color--light--light: #f0f0f0;
     --pf-v5-global--icon--Color--dark--light: #fff;
     --pf-v5-global--icon--Color--light--dark: #6a6e73;
-    --pf-v5-global--icon--Color--dark--dark: #151515;
+    --pf-v5-global--icon--Color--dark--dark: var(--app-quaternary);
     --pf-v5-global--icon--FontSize--sm: .75rem;
     --pf-v5-global--icon--FontSize--md: 1rem;
     --pf-v5-global--icon--FontSize--lg: 1.5rem;
@@ -233,4 +255,130 @@
     --pf-v5-global--target-size--MinWidth: 44px;
     --pf-v5-global--target-size--MinHeight: 44px;
     --pf-v5-global--inverse--multiplier: 1
+}
+
+:where(.pf-v5-theme-dark) {
+    --pf-v5-global--palette--black-50: #e0e0e0;
+    --pf-v5-global--palette--black-100: #c6c7c8;
+    --pf-v5-global--palette--black-200: #aaabac;
+    --pf-v5-global--palette--black-300: #868789;
+    --pf-v5-global--palette--black-400: #57585a;
+    --pf-v5-global--palette--black-500: #444548;
+    --pf-v5-global--palette--black-600: #36373a;
+    --pf-v5-global--palette--black-700: #26292d;
+    --pf-v5-global--palette--black-800: #1b1d21;
+    --pf-v5-global--palette--black-900: #0f1214;
+    --pf-v5-global--palette--red-9999: #fe5142;
+    --pf-v5-global--palette--red-8888: #ff7468;
+    --pf-v5-global--palette--blue-300: #1fa7f8;
+    --pf-v5-global--BackgroundColor--100: #1b1d21;
+    --pf-v5-global--BackgroundColor--150: #212427;
+    --pf-v5-global--BackgroundColor--200: #0f1214;
+    --pf-v5-global--BackgroundColor--300: #26292d;
+    --pf-v5-global--BackgroundColor--400: #36373a;
+    --pf-v5-global--BorderColor--100: #444548;
+    --pf-v5-global--BorderColor--200: #444548;
+    --pf-v5-global--BorderColor--300: #57585a;
+    --pf-v5-global--BorderColor--400: #aaabac;
+    --pf-v5-global--Color--100: #e0e0e0;
+    --pf-v5-global--Color--200: #aaabac;
+    --pf-v5-global--active-color--100: #1fa7f8;
+    --pf-v5-global--primary-color--100: #1fa7f8;
+    --pf-v5-global--primary-color--300: #06c;
+    --pf-v5-global--primary-color--400: #fff;
+    --pf-v5-global--custom-color--200: #73c5c5;
+    --pf-v5-global--success-color--100: #5ba352;
+    --pf-v5-global--warning-color--100: #f0ab00;
+    --pf-v5-global--warning-color--200: #f4c145;
+    --pf-v5-global--danger-color--100: #fe5142;
+    --pf-v5-global--danger-color--200: #ff7468;
+    --pf-v5-global--link--Color: #1fa7f8;
+    --pf-v5-global--link--Color--hover: #73bcf7;
+    --pf-v5-global--link--Color--visited: #a18fff;
+    --pf-v5-global--disabled-color--100: #868789;
+    --pf-v5-global--disabled-color--200: #444548;
+    --pf-v5-global--disabled-color--300: #aaabac;
+    --pf-v5-global--icon--Color--light: #aaabac;
+    --pf-v5-global--icon--Color--dark: #e0e0e0;
+    --pf-v5-global--Color--dark-100: #e0e0e0;
+    --pf-v5-global--Color--dark-200: #aaabac;
+    --pf-v5-global--Color--light-100: #e0e0e0;
+    --pf-v5-global--Color--light-200: #aaabac;
+    --pf-v5-global--Color--light-300: #3c3f42;
+    --pf-v5-global--BorderColor--dark-100: #444548;
+    --pf-v5-global--BorderColor--light-100: #444548;
+    --pf-v5-global--primary-color--light-100: #1fa7f8;
+    --pf-v5-global--primary-color--dark-100: #1fa7f8;
+    --pf-v5-global--link--Color--light: #1fa7f8;
+    --pf-v5-global--link--Color--light--hover: #73bcf7;
+    --pf-v5-global--link--Color--dark: #1fa7f8;
+    --pf-v5-global--link--Color--dark--hover: #73bcf7;
+    --pf-v5-global--icon--Color--light--light: #aaabac;
+    --pf-v5-global--icon--Color--dark--light: #e0e0e0;
+    --pf-v5-global--icon--Color--light--dark: #aaabac;
+    --pf-v5-global--icon--Color--dark--dark: #e0e0e0;
+    --pf-v5-global--BackgroundColor--light-100: #1b1d21;
+    --pf-v5-global--BackgroundColor--light-200: #0f1214;
+    --pf-v5-global--BackgroundColor--light-300: #26292d;
+    --pf-v5-global--BackgroundColor--dark-100: #1b1d21;
+    --pf-v5-global--BackgroundColor--dark-200: #0f1214;
+    --pf-v5-global--BackgroundColor--dark-300: #26292d;
+    --pf-v5-global--BackgroundColor--dark-400: #36373a;
+    --pf-v5-global--BoxShadow--sm: 0 .0625rem .125rem 0 #0303037a, 0 0 .125rem 0 #0303033d;
+    --pf-v5-global--BoxShadow--sm-top: 0 -.125rem .25rem -.0625rem #030303a3;
+    --pf-v5-global--BoxShadow--sm-right: .125rem 0 .25rem -.0625rem #030303a3;
+    --pf-v5-global--BoxShadow--sm-bottom: 0 .125rem .25rem -.0625rem #030303a3;
+    --pf-v5-global--BoxShadow--sm-left: -.125rem 0 .25rem -.0625rem #030303a3;
+    --pf-v5-global--BoxShadow--md: 0 .25rem .5rem 0rem #0303037a, 0 0 .25rem 0 #0303033d;
+    --pf-v5-global--BoxShadow--md-top: 0 -.5rem .5rem -.375rem #030303b8;
+    --pf-v5-global--BoxShadow--md-right: .5rem 0 .5rem -.375rem #030303b8;
+    --pf-v5-global--BoxShadow--md-bottom: 0 .5rem .5rem -.375rem #030303b8;
+    --pf-v5-global--BoxShadow--md-left: -.5rem 0 .5rem -.375rem #030303b8;
+    --pf-v5-global--BoxShadow--lg: 0 .5rem 1rem 0 #030303a3, 0 0 .375rem 0 #03030352;
+    --pf-v5-global--BoxShadow--lg-top: 0 -.75rem .75rem -.5rem #030303b8;
+    --pf-v5-global--BoxShadow--lg-right: .75rem 0 .75rem -.5rem #030303b8;
+    --pf-v5-global--BoxShadow--lg-bottom: 0 .75rem .75rem -.5rem #030303b8;
+    --pf-v5-global--BoxShadow--lg-left: -.75rem 0 .75rem -.5rem #030303b8;
+    --pf-v5-global--BoxShadow--xl: 0 1rem 2rem 0 #030303a3, 0 0 .5rem 0 #03030366;
+    --pf-v5-global--BoxShadow--xl-top: 0 -1rem 1rem -.5rem #030303cc;
+    --pf-v5-global--BoxShadow--xl-right: 1rem 0 1rem -.5rem #030303cc;
+    --pf-v5-global--BoxShadow--xl-bottom: 0 1rem 1rem -.5rem #030303cc;
+    --pf-v5-global--BoxShadow--xl-left: -1rem 0 1rem -.5rem #030303cc;
+    --pf-v5-global--BoxShadow--inset: inset 0 0 .625rem 0 #030303
+}
+
+.pf-v5-t-dark.pf-m-transparent {
+    background-color: #0000
+}
+
+.pf-v5-t-dark.pf-m-transparent-100 {
+    background-color: #0303036b
+}
+
+.pf-v5-t-dark.pf-m-transparent-200 {
+    background-color: #03030399
+}
+
+.pf-v5-t-dark.pf-m-opaque-100 {
+    background-color: #1b1d21
+}
+
+.pf-v5-t-dark.pf-m-opaque-200 {
+    background-color: #0f1214
+}
+
+.pf-v5-t-light.pf-m-transparent {
+    background-color: #0000
+}
+
+.pf-v5-t-light.pf-m-opaque-100 {
+    background-color: #fff
+}
+
+.pf-v5-t-light.pf-m-opaque-200 {
+    background-color: #c6c7c8
+}
+
+.pf-v5-t-light.pf-m-opaque-300 {
+    background-color: #aaabac
 }
