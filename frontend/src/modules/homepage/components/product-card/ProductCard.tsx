@@ -31,13 +31,15 @@ export default function ProductCard(product: ProductDto): ReactElement {
       <div className="product-image">
         <img src={product?.images?.[0]} alt={product.title} />
       </div>
-      <div className="product-info">
+      <div className="product-info mt-2">
         <div className="d-flex flex-column align-items-start">
-          <h2 className="product-title">{product.title}</h2>
-          <p className="product-price">
+          <h2 className="product-title text-color-tertiary semibold-16">
+            {product.title}
+          </h2>
+          <p className="product-price text-color-quaternary semibold-20">
             {formatToVietnameseCurrency(product.suggestedPrice)}
           </p>
-          <p className="product-creation-date">
+          <p className="product-creation-date text-color-tertiary regular-12">
             Đăng cách đây{' '}
             {formatDistanceToNow(new Date(product.creationDate), {
               addSuffix: true,

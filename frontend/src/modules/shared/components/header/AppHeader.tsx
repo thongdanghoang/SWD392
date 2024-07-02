@@ -20,6 +20,10 @@ export default function AppHeader({
   const applicationService = useApplicationService();
   const navigate = useNavigate();
   const [showNotifications, setShowNotifications] = useState(false);
+  const [searchCriteria, setSearchCriteria] = useState<string>('');
+  const handleSearchAction = (): void => {
+    navigate(`/products?q=${searchCriteria}`);
+  };
   const modalContext = useModal();
   if (!modalContext) {
     // handle the case where modalContext is null
@@ -106,13 +110,20 @@ export default function AppHeader({
         </div>
         <div className="d-flex align-items-center">
           <div className="search d-flex align-items-center gap-2 px-3">
-            <div className="search-btn clickable">
+            <div className="search-btn clickable" onClick={handleSearchAction}>
               <i className="search-icon bi bi-search"></i>
             </div>
             <input
               className="search-bar regular-14"
               type="text"
               placeholder="Search"
+              value={searchCriteria}
+              onChange={e => setSearchCriteria(e.target.value)}
+              onKeyDown={e => {
+                if (e.key === 'Enter') {
+                  handleSearchAction();
+                }
+              }}
             />
           </div>
         </div>
