@@ -27,7 +27,6 @@ export default function ExchangeDetail(): ReactElement {
           console.error(error);
         });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   // Fetch my products
@@ -46,7 +45,6 @@ export default function ExchangeDetail(): ReactElement {
           console.error(error);
         });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [myProductId]);
 
   const formatToVietnameseCurrency = (amount: number | undefined): string => {

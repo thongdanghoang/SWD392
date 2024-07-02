@@ -30,13 +30,36 @@ class ApplicationService {
   public isRoleUser(): boolean {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error
-    return this.getUserFromIAM().profile.roles.includes('swapme.user');
+    return this.getUserFromIAM().profile?.roles?.includes('swapme.user');
   }
 
   public isRoleAdmin(): boolean {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error
-    return this.getUserFromIAM().profile.roles.includes('swapme.admin');
+    return this.getUserFromIAM().profile?.roles?.includes('swapme.admin');
+  }
+
+  public checkAuthenticatedDoActionOrElseNavigateLoginPage(
+    fn: () => void
+  ): void {
+    if (this.isAuthenticated()) {
+      return fn();
+    }
+    return this.signIn();
+  }
+
+  public checkIsUserDoActionOrElseNavigateLoginPage(fn: () => void): void {
+    if (this.isRoleUser()) {
+      return fn();
+    }
+    return this.signIn();
+  }
+
+  public checkIsAdminDoActionOrElseNavigateLoginPage(fn: () => void): void {
+    if (this.isRoleAdmin()) {
+      return fn();
+    }
+    return this.signIn();
   }
 
   public async fetchCurrentUser(): Promise<UserDto> {

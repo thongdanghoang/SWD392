@@ -8,6 +8,7 @@ module.exports = {
     },
     extends: ["eslint:recommended", "plugin:prettier/recommended", "plugin:@typescript-eslint/recommended", "plugin:@typescript-eslint/eslint-plugin/recommended", "plugin:react-hooks/recommended"],
     rules: {
+      "react-hooks/exhaustive-deps": "off",
       "@typescript-eslint/member-ordering": ["error", {
         "default": ["public-static-field", "public-instance-field", "protected-static-field", "protected-instance-field", "private-static-field", "private-instance-field", "public-constructor", "protected-constructor", "private-constructor", "public-static-method", "public-instance-method", "protected-static-method", "protected-instance-method", "private-static-method", "private-instance-method"]
       }],

@@ -31,7 +31,6 @@ export default function UserProduct(): ReactElement {
           console.error(error);
         });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [applicationService.isAuthenticated()]);
 
   const formatToVietnameseCurrency = (amount: number): string => {

@@ -64,7 +64,6 @@ function ChatRoom({
     void fetchSellerInfo(idToFetch).then(sellerData => {
       setSellerName(`${sellerData.firstName} ${sellerData.lastName}`);
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [idToFetch]);
   useEffect(() => {
     applicationService
@@ -74,7 +73,6 @@ function ChatRoom({
         setMessages(response.data);
       })
       .catch(error => console.error('Error fetching } messages:', error));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roomId]);
 
   useEffect(() => {
@@ -193,7 +191,6 @@ function ChatList({currentUser}: ChatListProps): ReactElement {
         })
         .catch(error => console.error('Error fetching rooms:', error));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser?.id]);
 
   const fetchSellerInfo = async (userIdToFetch: string): Promise<any> => {

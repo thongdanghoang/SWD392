@@ -16,6 +16,10 @@ export default function ExchangeRequest(): ReactElement {
   const applicationService = useApplicationService();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    applicationService.checkIsUserDoActionOrElseNavigateLoginPage(() => {});
+  }, []);
+
   const [confirm, setConfirm] = useState<boolean>(false);
   const [selectedProductId, setSelectedProductId] = useState<string | null>(
     null
@@ -47,7 +51,6 @@ export default function ExchangeRequest(): ReactElement {
           console.error(error);
         });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   // Fetch my products
@@ -64,7 +67,6 @@ export default function ExchangeRequest(): ReactElement {
           console.error(error);
         });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [applicationService.isAuthenticated()]);
 
   const formatToVietnameseCurrency = (amount: number | undefined): string => {
