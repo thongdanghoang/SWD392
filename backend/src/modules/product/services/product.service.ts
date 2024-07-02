@@ -1,8 +1,13 @@
 import {Injectable} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
-import {Repository} from 'typeorm';
-import {ProductEntity} from '../entities/product.entity';
+import {Like, Repository} from 'typeorm';
+import {ProductEntity, ProductStatus} from '../entities/product.entity';
 import {CreateProductDto, UpdateProductDto} from '../dto/product.dto';
+import {
+  SearchCriteriaDto,
+  SearchResultDto,
+  defaultSearchCriteria
+} from '../../../global/model';
 
 @Injectable()
 export class ProductService {
@@ -11,8 +16,25 @@ export class ProductService {
     private readonly productRepository: Repository<ProductEntity>
   ) {}
 
-  async getAllProductsPublished(): Promise<ProductEntity[]> {
-    return await this.productRepository.find();
+  async searchProducts(
+    criteria: SearchCriteriaDto<string> = defaultSearchCriteria('')
+  ): Promise<SearchResultDto<ProductEntity>> {
+    const [results, total] = await this.productRepository.findAndCount({
+      where: [
+        {
+          title: Like(`%${criteria.criteria}%`),
+          status: ProductStatus.PUBLISHED
+        },
+        {
+          summary: Like(`%${criteria.criteria}%`),
+          status: ProductStatus.PUBLISHED
+        }
+      ],
+      skip: criteria.page.offset,
+      take: criteria.page.limit,
+      order: {creationDate: 'DESC'}
+    });
+    return {results, total};
   }
 
   async getProductsByOwnerIdCanBeExchanged(

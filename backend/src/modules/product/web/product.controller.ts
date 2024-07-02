@@ -1,4 +1,12 @@
-import {Body, Controller, Get, Param, Post, UseGuards} from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Param,
+  Post,
+  UseGuards
+} from '@nestjs/common';
 import {JwtAuthGuard} from '@5stones/nest-oidc';
 import {ProductService} from '../services/product.service';
 import {
@@ -11,6 +19,7 @@ import {ResponseData} from '../../../global/globalClass';
 import {HttpMessage, HttpStatus} from '../../../global/globalEnum';
 import {UsersService} from '../../user/users.service';
 import {UserDto} from '../../user/user.dto';
+import {SearchCriteriaDto, SearchResultDto} from '../../../global/model';
 
 @Controller('products')
 export class ProductController {
@@ -98,28 +107,25 @@ export class ProductController {
     }
   }
 
-  @Get()
-  async getAllProducts(): Promise<ResponseData<ProductDto[]>> {
+  @Post('/search')
+  @HttpCode(200)
+  async searchProducts(
+    @Body() criteria: SearchCriteriaDto<string>
+  ): Promise<SearchResultDto<ProductDto>> {
     try {
-      let products: ProductEntity[] =
-        await this.productService.getAllProductsPublished();
-      products = products.filter(
-        (product: ProductEntity): boolean =>
-          product.status === ProductStatus.PUBLISHED
-      );
-      return new ResponseData<ProductDto[]>(
-        products.map(
+      const searchResultEntity =
+        await this.productService.searchProducts(criteria);
+      return {
+        results: searchResultEntity.results.map(
           (product: ProductEntity): ProductDto => this.mapToProductDto(product)
         ),
-        HttpMessage.OK,
-        HttpStatus.OK
-      );
+        total: searchResultEntity.total
+      } as SearchResultDto<ProductDto>;
     } catch (error) {
-      return new ResponseData<ProductDto[]>(
-        null,
-        HttpMessage.INTERNAL_SERVER_ERROR,
-        HttpStatus.INTERNAL_SERVER_ERROR
-      );
+      return {
+        results: [],
+        total: 0
+      } as SearchResultDto<ProductDto>;
     }
   }
 
