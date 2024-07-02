@@ -1,14 +1,13 @@
-import {ReactElement, useState} from 'react';
+import {ReactElement, useContext, useState} from 'react';
 import './UserProfile.scss';
 import {UserDto} from '../../models/userDto';
 import {useNavigate} from 'react-router-dom';
 import UserProduct from './UserProduct';
 import AppButton from '../buttons/AppButton.tsx';
-export default function UserProfile({
-  currentUser
-}: {
-  currentUser: UserDto | null;
-}): ReactElement {
+import {UserContext} from '../../services/userContext.ts';
+
+export default function UserProfile(): ReactElement {
+  const currentUser: UserDto | null | undefined = useContext(UserContext)?.user;
   const [activeTab, setActiveTab] = useState<'selling' | 'sold'>('selling');
   const navigate = useNavigate();
 

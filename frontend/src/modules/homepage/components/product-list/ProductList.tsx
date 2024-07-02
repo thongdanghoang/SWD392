@@ -7,6 +7,7 @@ import {AppRoutingConstants} from '../../../shared/app-routing.constants.ts';
 import {useApplicationService} from '../../../shared/services/application.service.ts';
 import {SearchResultDto} from '../../../shared/models/model.ts';
 import AppButton from '../../../shared/components/buttons/AppButton.tsx';
+import {ApplicationConstants} from '../../../shared/applicationConstants.ts';
 
 const ProductList = (): React.ReactElement => {
   const [searchResult, setSearchResult] = useState<SearchResultDto<ProductDto>>(
@@ -17,8 +18,10 @@ const ProductList = (): React.ReactElement => {
   );
   const [queryParameters] = useSearchParams();
   const [error, setError] = useState<string | null>(null);
-  const [offset, setOffset] = useState<number>(0);
-  const limit: number = 4;
+  const [offset, setOffset] = useState<number>(
+    ApplicationConstants.DEFAULT_OFFSET
+  );
+  const limit: number = ApplicationConstants.DEFAULT_LIMIT;
   const applicationService = useApplicationService();
   const criteria: string = queryParameters.get('q') ?? '';
 
