@@ -50,14 +50,12 @@ const UploadWidget: React.FC<UploadWidgetProps> = ({
         }
       }
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cloudinaryWidget, setImageUrls]);
 
   useEffect(() => {
     if (imageUrls.length) {
       onUploadComplete(imageUrls);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [imageUrls]);
 
   return (

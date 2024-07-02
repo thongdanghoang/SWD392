@@ -23,7 +23,7 @@ export interface Room {
   // Other properties as needed
 }
 
-function ProductDetail({
+export default function ProductDetail({
   currentUser
 }: {
   currentUser: UserDto | null;
@@ -33,6 +33,14 @@ function ProductDetail({
   const {id} = useParams<{id: string}>();
   const [currentProduct, setCurrentProduct] =
     useState<ProductWithOwnerDTO | null>(null);
+
+  const handleExchangeRequestClick = (): void => {
+    if (currentProduct?.isMyProduct) {
+      // TODO: [thongdanghoang] should show a toast message
+      return navigate(`/`);
+    }
+    navigate(`/exchange-request/${currentProduct?.id}`);
+  };
 
   const handleChatClick = async (): Promise<void> => {
     const buyerId = currentUser?.id;
@@ -57,7 +65,6 @@ function ProductDetail({
           console.error(error);
         });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   const [liked, setLiked] = useState(false);
@@ -238,15 +245,19 @@ function ProductDetail({
                     variant="primary"
                     children={`Giao dịch ngay`}
                     onClick={() =>
-                      currentProduct?.isMyProduct
-                        ? null
-                        : navigate(`/exchange-request/${currentProduct?.id}`)
+                      applicationService.checkIsUserDoActionOrElseNavigateLoginPage(
+                        handleExchangeRequestClick
+                      )
                     }
                   />
                   <AppButton
                     variant="secondary"
                     children={`Chat với người này`}
-                    onClick={handleChatClick}
+                    onClick={() =>
+                      applicationService.checkAuthenticatedDoActionOrElseNavigateLoginPage(
+                        handleChatClick
+                      )
+                    }
                   />
                 </div>
               )}
@@ -384,5 +395,3 @@ function ProductDetail({
     </div>
   );
 }
-
-export default ProductDetail;

@@ -119,16 +119,14 @@ export default function AppHeader({
         <div className="search-and-actions d-flex align-items-center">
           <div className="actions d-flex flex-row">
             <div className="user-actions-detail d-flex align-items-center gap-4 px-5">
-              <div
-                className="dev-mode clickable"
-                onClick={() => navigate('/dev')}
-              >
-                <i className="bi bi-code-slash"></i>
-              </div>
               <div className="notification-wrapper">
                 <div
                   className="notification-button-wrapper clickable"
-                  onClick={() => setShowNotifications(!showNotifications)}
+                  onClick={() =>
+                    applicationService.checkIsUserDoActionOrElseNavigateLoginPage(
+                      () => setShowNotifications(!showNotifications)
+                    )
+                  }
                 >
                   <i className="fs-5 bi bi-bell"></i>
                 </div>
@@ -177,10 +175,24 @@ export default function AppHeader({
                   </div>
                 )}
               </div>
-              <div className="chat clickable" onClick={() => navigate('/chat')}>
+              <div
+                className="chat clickable"
+                onClick={() =>
+                  applicationService.checkIsUserDoActionOrElseNavigateLoginPage(
+                    () => navigate('/chat')
+                  )
+                }
+              >
                 <i className="fs-5 bi bi-chat-left-text"></i>
               </div>
-              <div className="cart clickable">
+              <div
+                className="cart clickable"
+                onClick={() =>
+                  applicationService.checkAuthenticatedDoActionOrElseNavigateLoginPage(
+                    () => {}
+                  )
+                }
+              >
                 <i className="fs-5 bi bi-bag"></i>
               </div>
               <div
@@ -201,9 +213,9 @@ export default function AppHeader({
             </div>
             <AppButton
               onClick={() =>
-                currentUser
-                  ? navigate(AppRoutingConstants.POST_PRODUCT)
-                  : applicationService.signIn()
+                applicationService.checkIsUserDoActionOrElseNavigateLoginPage(
+                  () => navigate(AppRoutingConstants.POST_PRODUCT)
+                )
               }
               variant="primary"
               children={`Đăng tin ngay`}
