@@ -1,6 +1,6 @@
 import './ProductDetail.scss';
 import AppButton from '../buttons/AppButton.tsx';
-import {ReactElement, useEffect, useState} from 'react';
+import {ReactElement, useContext, useEffect, useState} from 'react';
 import {useApplicationService} from '../../services/application.service.ts';
 import {AppRoutingConstants} from '../../app-routing.constants.ts';
 import {useNavigate, useParams} from 'react-router-dom';
@@ -10,6 +10,7 @@ import {
 } from '../../../homepage/model/productWithOwnerDTO.ts';
 import {UserDto} from '../../models/userDto.ts';
 import io from 'socket.io-client';
+import {UserContext} from '../../services/userContext.ts';
 
 // Replace with your NestJS server URL
 const socket = io('http://localhost:3001/chat', {
@@ -23,11 +24,8 @@ export interface Room {
   // Other properties as needed
 }
 
-export default function ProductDetail({
-  currentUser
-}: {
-  currentUser: UserDto | null;
-}): ReactElement {
+export default function ProductDetail(): ReactElement {
+  const currentUser: UserDto | null | undefined = useContext(UserContext)?.user;
   const navigate = useNavigate();
   const applicationService = useApplicationService();
   const {id} = useParams<{id: string}>();

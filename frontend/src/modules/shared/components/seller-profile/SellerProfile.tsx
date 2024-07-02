@@ -1,4 +1,4 @@
-import {ReactElement, useEffect, useState} from 'react';
+import {ReactElement, useContext, useEffect, useState} from 'react';
 import './SellerProfile.scss';
 import {useNavigate, useParams} from 'react-router-dom';
 import {ProductWithOwnerDTO} from '../../../homepage/model/productWithOwnerDTO';
@@ -9,17 +9,15 @@ import {UserDto} from '../../models/userDto';
 import io from 'socket.io-client';
 import {formatDistanceToNow} from 'date-fns';
 import {vi} from 'date-fns/locale';
+import {UserContext} from '../../services/userContext.ts';
 
 // Replace with your NestJS server URL
 const socket = io('http://localhost:3001/chat', {
   transports: ['websocket'] // Ensure WebSocket transport is used
 });
 
-export default function UserProfile({
-  currentUser
-}: {
-  currentUser: UserDto | null;
-}): ReactElement {
+export default function UserProfile(): ReactElement {
+  const currentUser: UserDto | null | undefined = useContext(UserContext)?.user;
   const applicationService = useApplicationService();
   const navigate = useNavigate();
 
