@@ -1,5 +1,5 @@
 import './App.scss';
-import {ReactElement, useEffect, useState} from 'react';
+import {ReactElement, useContext, useEffect} from 'react';
 import {Route, BrowserRouter as Router, Routes} from 'react-router-dom';
 import TestLoginComponent from '../modules/dev/TestLoginComponent.tsx';
 import AppHeader from '../modules/shared/components/header/AppHeader.tsx';
@@ -18,17 +18,19 @@ import UserProfile from '../modules/shared/components/user-profile/UserProfile.t
 import ExchangeDetail from '../modules/transactions/components/ExchangeDetail.tsx';
 import ChatList from '../modules/chat/ChatList.tsx';
 import SellerProfile from '../modules/shared/components/seller-profile/SellerProfile.tsx';
+import {UserProvider} from '../modules/shared/services/userProvider.tsx';
+import {UserContext} from '../modules/shared/services/userContext.ts';
 
 export default function App(): ReactElement {
   const applicationService = useApplicationService();
-  const [currentUser, setCurrentUser] = useState<UserDto | null>(null);
+  const setUser = useContext(UserContext)?.setUser ?? ((): void => {});
 
   useEffect(() => {
     if (applicationService.isAuthenticated()) {
       applicationService
         .fetchCurrentUser()
         .then((user: UserDto) => {
-          setCurrentUser(user);
+          setUser(user);
         })
         .catch(error => {
           console.error(error);
@@ -40,46 +42,42 @@ export default function App(): ReactElement {
       <LoadingProvider>
         <FullScreenSpinner />
         <ModalProvider>
-          <div className="app">
-            <div className="header">
-              <AppHeader currentUser={currentUser} />
+          <UserProvider>
+            <div className="app">
+              <div className="header">
+                <AppHeader />
+              </div>
+              <div className="body">
+                <Routes>
+                  <Route path="/" element={<HomepageComponent />}></Route>
+                  <Route path="/products" element={<ProductList />}></Route>
+                  <Route
+                    path="/products/:id"
+                    element={<ProductDetail />}
+                  ></Route>
+                  <Route path="/post-product" element={<PostProduct />}></Route>
+                  <Route path="/user-profile" element={<UserProfile />}></Route>
+                  <Route
+                    path="/seller-profile/:id"
+                    element={<SellerProfile />}
+                  ></Route>
+                  <Route path="/chat" element={<ChatList />}></Route>
+                  <Route
+                    path="/exchange-request/:id"
+                    element={<ExchangeRequest />}
+                  ></Route>
+                  <Route
+                    path="/exchange-detail/:id/:myProductId"
+                    element={<ExchangeDetail />}
+                  ></Route>
+                  <Route path="/dev" element={<TestLoginComponent />}></Route>
+                </Routes>
+              </div>
+              <div className="footer">
+                <AppFooter />
+              </div>
             </div>
-            <div className="body">
-              <Routes>
-                <Route path="/" element={<HomepageComponent />}></Route>
-                <Route path="/products" element={<ProductList />}></Route>
-                <Route
-                  path="/products/:id"
-                  element={<ProductDetail currentUser={currentUser} />}
-                ></Route>
-                <Route path="/post-product" element={<PostProduct />}></Route>
-                <Route
-                  path="/user-profile"
-                  element={<UserProfile currentUser={currentUser} />}
-                ></Route>
-                <Route
-                  path="/seller-profile/:id"
-                  element={<SellerProfile currentUser={currentUser} />}
-                ></Route>
-                <Route
-                  path="/chat"
-                  element={<ChatList currentUser={currentUser} />}
-                ></Route>
-                <Route
-                  path="/exchange-request/:id"
-                  element={<ExchangeRequest />}
-                ></Route>
-                <Route
-                  path="/exchange-detail/:id/:myProductId"
-                  element={<ExchangeDetail />}
-                ></Route>
-                <Route path="/dev" element={<TestLoginComponent />}></Route>
-              </Routes>
-            </div>
-            <div className="footer">
-              <AppFooter />
-            </div>
-          </div>
+          </UserProvider>
         </ModalProvider>
       </LoadingProvider>
     </Router>

@@ -1,6 +1,5 @@
 import './AppHeader.scss';
-import {ReactElement, useState} from 'react';
-import {UserDto} from '../../models/userDto.ts';
+import {ReactElement, useContext, useState} from 'react';
 import AppButton from '../buttons/AppButton.tsx';
 import {useNavigate} from 'react-router-dom';
 import ProfileOffCanvas from '../popup-profile/ProfileOffCanvas.tsx';
@@ -11,12 +10,11 @@ import {vi} from 'date-fns/locale';
 import {ExchangeResponseModal} from '../../../transactions/components/exchange-response-modal/ExchangeResponseModal.tsx';
 import {useModal} from '../modal/useModal.tsx';
 import {useApplicationService} from '../../services/application.service.ts';
+import {UserContext} from '../../services/userContext.ts';
+import {NotificationDto, UserDto} from '../../models/userDto.ts';
 
-export default function AppHeader({
-  currentUser
-}: {
-  currentUser: UserDto | null;
-}): ReactElement {
+export default function AppHeader(): ReactElement {
+  const user: UserDto | null | undefined = useContext(UserContext)?.user;
   const applicationService = useApplicationService();
   const navigate = useNavigate();
   const [showNotifications, setShowNotifications] = useState(false);
@@ -143,7 +141,7 @@ export default function AppHeader({
                 </div>
                 {showNotifications && (
                   <div className="list-group">
-                    {currentUser?.notifications.length !== 0 && (
+                    {user?.notifications.length !== 0 && (
                       <div className="list-group-item">
                         <div className="d-flex w-100 justify-content-between">
                           <div className="mb-1 semibold-20 text-color-tertiary">
@@ -152,7 +150,7 @@ export default function AppHeader({
                         </div>
                       </div>
                     )}
-                    {currentUser?.notifications.length === 0 && (
+                    {user?.notifications.length === 0 && (
                       <div className="list-group-item">
                         <div className="d-flex w-100 justify-content-between">
                           <div className="mb-1 semibold-20 text-color-tertiary">
@@ -161,28 +159,30 @@ export default function AppHeader({
                         </div>
                       </div>
                     )}
-                    {currentUser?.notifications.map((notification, index) => (
-                      <NotificationItem
-                        key={index}
-                        title={notification.title}
-                        time={formatDistanceToNow(
-                          new Date(notification.creationDate),
-                          {
-                            addSuffix: true,
-                            locale: vi
+                    {user?.notifications.map(
+                      (notification: NotificationDto, index: number) => (
+                        <NotificationItem
+                          key={index}
+                          title={notification.title}
+                          time={formatDistanceToNow(
+                            new Date(notification.creationDate),
+                            {
+                              addSuffix: true,
+                              locale: vi
+                            }
+                          )}
+                          content={notification.content}
+                          onClickFn={() =>
+                            showModal(
+                              ExchangeResponseModal,
+                              () => {},
+                              () => {},
+                              {exchangeId: notification.exchangeId}
+                            )
                           }
-                        )}
-                        content={notification.content}
-                        onClickFn={() =>
-                          showModal(
-                            ExchangeResponseModal,
-                            () => {},
-                            () => {},
-                            {exchangeId: notification.exchangeId}
-                          )
-                        }
-                      />
-                    ))}
+                        />
+                      )
+                    )}
                   </div>
                 )}
               </div>
@@ -208,19 +208,17 @@ export default function AppHeader({
               </div>
               <div
                 className="user-info d-flex flex-row align-items-center gap-2 btn"
-                data-bs-toggle={currentUser ? 'offcanvas' : undefined}
+                data-bs-toggle={user ? 'offcanvas' : undefined}
                 data-bs-target="#popup-profile"
                 aria-controls="popup-profile"
-                onClick={() => !currentUser && applicationService.signIn()}
+                onClick={() => !user && applicationService.signIn()}
               >
                 <i className="user-avatar fs-5 bi bi-person-circle"></i>
                 <div className="user-full-name regular-14">
-                  {currentUser
-                    ? `${currentUser.firstName} ${currentUser.lastName}`
-                    : 'Đăng Nhập'}
+                  {user ? `${user.firstName} ${user.lastName}` : 'Đăng Nhập'}
                 </div>
               </div>
-              <ProfileOffCanvas currentUser={currentUser} />
+              {user && <ProfileOffCanvas currentUser={user} />}
             </div>
             <AppButton
               onClick={() =>
