@@ -34,7 +34,6 @@ export default function App(): ReactElement {
           console.error(error);
         });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [applicationService.isAuthenticated()]);
   return (
     <Router>

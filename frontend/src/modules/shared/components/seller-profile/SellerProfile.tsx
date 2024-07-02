@@ -59,7 +59,6 @@ export default function UserProfile({
           console.error(error);
         });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, navigate]);
 
   // Fetch seller products by seller ID
@@ -79,7 +78,6 @@ export default function UserProfile({
           console.error(error);
         });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   // Function to handle tab click
