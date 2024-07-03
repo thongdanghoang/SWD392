@@ -12,6 +12,8 @@ import {ExchangeEntity} from './modules/transactions/entities/ExchangeEntity';
 import {NotificationEntity} from './modules/user/notification.entity';
 import {MongooseModule} from '@nestjs/mongoose';
 import {ChatModule} from './modules/chat/chat.module';
+import {CategoryModule} from './modules/category/category.module';
+import {CategoryEntity} from './modules/category/category.entity';
 
 @Module({
   imports: [
@@ -24,15 +26,22 @@ import {ChatModule} from './modules/chat/chat.module';
       port: 3306,
       username: 'root',
       password: 'root_P@ssW0rd',
-      database: 'swapme',
-      entities: [UserEntity, NotificationEntity, ProductEntity, ExchangeEntity],
+      database: 'swapme_dev',
+      entities: [
+        UserEntity,
+        NotificationEntity,
+        ProductEntity,
+        ExchangeEntity,
+        CategoryEntity
+      ],
       synchronize: true
     }),
     MongooseModule.forRoot('mongodb://127.0.0.1:27017/nest'), // Kết nối tới MongoDB
     ChatModule,
     UserModule,
     ProductModule,
-    TransactionsModule
+    TransactionsModule,
+    CategoryModule
   ],
   controllers: [AppController],
   providers: [AppService]

@@ -10,16 +10,19 @@ import {useNavigate} from 'react-router-dom';
 import {useModal} from '../../../shared/components/modal/useModal.tsx';
 import UploadWidget from './UploadWidget.tsx';
 import UploadWidgetVideo from './UploadVideo.tsx';
+import {CategoryDto} from 'src/modules/homepage/model/productWithOwnerDTO.ts';
 
 interface ProductDTO extends AddressDto {
   title: string;
   suggestedPrice: string;
   images: string[];
   video: string;
+  category: string;
 }
 
 export default function PostProduct(): ReactElement {
   const navigate = useNavigate();
+  const [categories, setCategories] = React.useState<CategoryDto[]>([]);
   const applicationService = useApplicationService();
   const [fullName, setFullName] = React.useState<string>('');
   const [product, setProduct] = React.useState<ProductDTO>({
@@ -30,7 +33,8 @@ export default function PostProduct(): ReactElement {
     wardCode: '',
     addressDetail: '',
     images: [],
-    video: ''
+    video: '',
+    category: ''
   });
   const modalContext = useModal();
   if (!modalContext) {
@@ -51,8 +55,8 @@ export default function PostProduct(): ReactElement {
   };
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    if (product.images.length === 0 || !product.video) {
-      alert('Vui lòng tải lên ít nhất 1 hình ảnh và 1 video');
+    if (product.images.length === 0) {
+      alert('Vui lòng tải lên ít nhất 1 hình ảnh ');
       return;
     }
     // Here you can handle the form submission.
@@ -69,12 +73,41 @@ export default function PostProduct(): ReactElement {
         }
       );
   };
+  const fetchCategories = (): void => {
+    applicationService
+      .createApiClient()
+      .get(`${AppRoutingConstants.CATEGORIES_PATH}`)
+      .then(response => {
+        setCategories(
+          response.data?.map((product: CategoryDto) => ({
+            ...product
+          }))
+        );
+      })
+      .catch(error => {
+        console.error('API error:', error);
+      });
+  };
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  useEffect(() => {
+    fetchCategories();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const handleUploadComplete = (imageUrls: string[]): void => {
     setProduct(prevProduct => ({...prevProduct, images: imageUrls}));
   };
 
   const handleUploadVideoComplete = (videoUrl: string): void => {
     setProduct(prevProduct => ({...prevProduct, video: videoUrl}));
+  };
+  const handleCategoryChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ): void => {
+    const selectedCategoryId: string = event.target.value;
+    setProduct(prevProduct => ({
+      ...prevProduct,
+      category: selectedCategoryId // Giả sử trường category lưu ID của category được chọn
+    }));
   };
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {}, [product]);
@@ -121,22 +154,14 @@ export default function PostProduct(): ReactElement {
           <select
             className="list-of-postings form-select"
             aria-label="Default select example"
+            onChange={handleCategoryChange}
           >
-            <option value="0" disabled>
-              Danh mục tin đăng
-            </option>
-            <option value="1">Thời trang nam</option>
-            <option value="2">Thời trang nữ</option>
-            <option value="3">Giày dép</option>
-            <option value="4">Phụ kiện & Trang sức</option>
-            <option value="5">Mỹ phẩm</option>
-            <option value="6">Đồ điện tử</option>
-            <option value="7">Đồ gia dụng</option>
-            <option value="8">Nội thất</option>
-            <option value="9">Sách</option>
-            <option value="10">Văn phòng phẩm</option>
-            <option value="11">Giải trí</option>
-            <option value="12">Thể thao</option>
+            <option value="">Chọn danh mục</option>
+            {categories.map(category => (
+              <option key={category.id} value={category.id}>
+                {category.title}
+              </option>
+            ))}
           </select>
           <div className="info_details d-flex flex-column gap-2">
             <div className="semibold-20 text-color-quaternary">
