@@ -1,7 +1,7 @@
 import './PostProduct.scss';
 import '@assets/styles/styles.scss';
 import {Form} from 'react-bootstrap';
-import React, {ReactElement, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import AppButton from '../../../shared/components/buttons/AppButton.tsx';
 import AddressFormModal, {AddressDto} from '../AddressFormModal.tsx';
 import {useApplicationService} from '../../../shared/services/application.service.ts';
@@ -14,19 +14,27 @@ import {CategoryDto} from 'src/modules/homepage/model/productWithOwnerDTO.ts';
 
 interface ProductDTO extends AddressDto {
   title: string;
+  isGiveAway: boolean;
   suggestedPrice: string;
+  provinceCode: string;
+  districtCode: string;
+  wardCode: string;
+  addressDetail: string;
   images: string[];
   video: string;
   category: string;
+  summary: string;
 }
 
-export default function PostProduct(): ReactElement {
+export default function PostProduct(): React.ReactElement {
   const navigate = useNavigate();
   const [categories, setCategories] = React.useState<CategoryDto[]>([]);
   const applicationService = useApplicationService();
-  const [fullName, setFullName] = React.useState<string>('');
+  const [imageErrorMessage, setImageErrorMessage] = React.useState<string>('');
+  const [fullAddressName, setFullAddressName] = React.useState<string>('');
   const [product, setProduct] = React.useState<ProductDTO>({
     title: '',
+    isGiveAway: false,
     suggestedPrice: '',
     provinceCode: '',
     districtCode: '',
@@ -34,8 +42,28 @@ export default function PostProduct(): ReactElement {
     addressDetail: '',
     images: [],
     video: '',
-    category: ''
+    category: '',
+    summary: ''
   });
+  const [validated, setValidated] = React.useState(false);
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
+    event.preventDefault();
+    event.stopPropagation();
+    const form = event.currentTarget;
+    if (product.images.length === 0) {
+      setImageErrorMessage('Vui lòng tải lên ít nhất 1 hình ảnh');
+    }
+    if (form.checkValidity() && product.images.length > 0) {
+      applicationService
+        .createApiClient()
+        .post(`${AppRoutingConstants.PRODUCTS_PATH}`, product)
+        .then((): void => {
+          navigate(`${AppRoutingConstants.HOMEPAGE}`);
+        })
+        .catch((error: any) => console.error(error));
+    }
+    setValidated(true);
+  };
   const modalContext = useModal();
   if (!modalContext) {
     // handle the case where modalContext is null
@@ -44,7 +72,7 @@ export default function PostProduct(): ReactElement {
   }
   const {showModal} = modalContext;
   const handleAddressFormModalSubmit = (data: any): void => {
-    setFullName(data.fullName);
+    setFullAddressName(data.fullName);
     setProduct({
       ...product,
       provinceCode: data.provinceCode,
@@ -52,26 +80,6 @@ export default function PostProduct(): ReactElement {
       wardCode: data.wardCode,
       addressDetail: data.addressDetail
     });
-  };
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
-    e.preventDefault();
-    if (product.images.length === 0) {
-      alert('Vui lòng tải lên ít nhất 1 hình ảnh ');
-      return;
-    }
-    // Here you can handle the form submission.
-    // The form data is in the state variables.
-    applicationService
-      .createApiClient()
-      .post(`${AppRoutingConstants.PRODUCTS_PATH}`, product)
-      .then(
-        (): void => {
-          navigate(`${AppRoutingConstants.HOMEPAGE}`);
-        },
-        error => {
-          console.error(error);
-        }
-      );
   };
   const fetchCategories = (): void => {
     applicationService
@@ -100,97 +108,108 @@ export default function PostProduct(): ReactElement {
   const handleUploadVideoComplete = (videoUrl: string): void => {
     setProduct(prevProduct => ({...prevProduct, video: videoUrl}));
   };
-  const handleCategoryChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ): void => {
-    const selectedCategoryId: string = event.target.value;
-    setProduct(prevProduct => ({
-      ...prevProduct,
-      category: selectedCategoryId // Giả sử trường category lưu ID của category được chọn
-    }));
-  };
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {}, [product]);
 
   return (
     <div className="container my-5">
-      <div className="row mb-3">
+      <div className="row ">
         <div className="col-4">
           <div className="semibold-20 text-color-quaternary">
             Hình ảnh và video sản phẩm
           </div>
         </div>
       </div>
-      <Form className="row" onSubmit={handleSubmit}>
+      <Form
+        className="row"
+        noValidate
+        validated={validated}
+        onSubmit={handleSubmit}
+      >
         <div className="upload col-4 gap-3 d-flex flex-column">
-          <div className="upload-images d-flex justify-content-center align-items-center">
-            <div className="row">
-              {product.images.map((url, index) => (
+          {product.images.length > 0 && (
+            <div className="row images d-flex p-3">
+              {product.images.map((url: string, index: number) => (
                 <div className="col-4" key={index}>
                   <img src={url} alt="Uploaded" className="img-fluid" />
                 </div>
               ))}
-              <UploadWidget onUploadComplete={handleUploadComplete} />
             </div>
-          </div>
-          <div className="upload-videos d-flex justify-content-center align-items-center">
-            <div className="row">
-              {product.video && (
-                <div className="col-6">
-                  <video
-                    src={product.video}
-                    controls
-                    className="img-fluid"
-                  ></video>
-                </div>
-              )}
-              <UploadWidgetVideo
-                onUploadVideoComplete={handleUploadVideoComplete}
-              />
+          )}
+          {imageErrorMessage && product.images.length === 0 && (
+            <div className="alert alert-danger mb-0 mt-4" role="alert">
+              {imageErrorMessage}
             </div>
-          </div>
+          )}
+          {product.images.length < 5 && (
+            <div className="upload-images d-flex justify-content-center align-items-center">
+              <div className="row">
+                <UploadWidget onUploadComplete={handleUploadComplete} />
+              </div>
+            </div>
+          )}
+          {product.video && (
+            <div className="product-video">
+              <video src={product.video} controls className="img-fluid"></video>
+            </div>
+          )}
+          {!product.video && (
+            <div className="upload-videos d-flex justify-content-center align-items-center">
+              <div className="row">
+                <UploadWidgetVideo
+                  onUploadVideoComplete={handleUploadVideoComplete}
+                />
+              </div>
+            </div>
+          )}
         </div>
         <div className="detail col-8 d-flex flex-column gap-4">
-          <select
-            className="list-of-postings form-select"
-            aria-label="Default select example"
-            onChange={handleCategoryChange}
-          >
-            <option value="">Chọn danh mục</option>
-            {categories.map(category => (
-              <option key={category.id} value={category.id}>
-                {category.title}
-              </option>
-            ))}
-          </select>
-          <div className="info_details d-flex flex-column gap-2">
+          <Form.Group controlId="formCategory">
+            <Form.Control
+              as="select"
+              required
+              className="list-of-postings form-select semibold-16 text-color-tertiary"
+              value={product.category} // Ensure this reflects the current category ID in your product state
+              onChange={e => setProduct({...product, category: e.target.value})} // Update the product state with the selected category ID
+            >
+              {categories.map(category => (
+                <option key={category.id} value={category.id}>
+                  {category.title}
+                </option>
+              ))}
+            </Form.Control>
+          </Form.Group>
+          <div className="info_details d-flex flex-column gap-3">
             <div className="semibold-20 text-color-quaternary">
               Thông tin chi tiết
             </div>
-            <div className="regular-12">Tình trạng</div>
-            <div className="form-check form-check-inline">
-              <input
-                className="form-check-input"
-                type="radio"
-                name="inlineRadioOptions"
-                id="inlineRadio1"
-                value="option1"
-              />
-              <label className="form-check-label" htmlFor="inlineRadio1">
-                Đã sử dụng
-              </label>
-            </div>
-            <div className="form-check form-check-inline">
-              <input
-                className="form-check-input"
-                type="radio"
-                name="inlineRadioOptions"
-                id="inlineRadio2"
-                value="option2"
-              />
-              <label className="form-check-label" htmlFor="inlineRadio2">
-                Mới
-              </label>
+            <div className="regular-12 text-color-tertiary">Tình trạng</div>
+            <div className="product-status">
+              <Form.Group>
+                <Form.Check
+                  inline
+                  className="semibold-16 text-color-tertiary"
+                  label="Đã sử dụng"
+                  name="inlineRadioOptions"
+                  type="radio"
+                  id="inlineRadio1"
+                  value="option1"
+                  required
+                />
+                <Form.Check
+                  inline
+                  className="semibold-16 text-color-tertiary"
+                  label="Mới"
+                  name="inlineRadioOptions"
+                  type="radio"
+                  id="inlineRadio2"
+                  value="option2"
+                  required
+                />
+                <Form.Control.Feedback type="invalid">
+                  Please select an option.
+                </Form.Control.Feedback>
+              </Form.Group>
             </div>
             <div className="form-check">
               <input
@@ -198,71 +217,104 @@ export default function PostProduct(): ReactElement {
                 type="checkbox"
                 value=""
                 id="flexCheckDefault"
+                onChange={(): void => {
+                  if (product.isGiveAway) {
+                    setProduct({
+                      ...product,
+                      isGiveAway: false,
+                      suggestedPrice: ''
+                    });
+                  } else {
+                    setProduct({
+                      ...product,
+                      isGiveAway: true,
+                      suggestedPrice: '0'
+                    });
+                  }
+                }}
               />
               <label
-                className="form-check-label regular-12"
+                className="form-check-label regular-12 text-color-tertiary"
                 htmlFor="flexCheckDefault"
               >
                 Tôi muốn cho tặng miễn phí
               </label>
             </div>
-            <Form.Group controlId="formProductSuggestedPrice" className="mb-3">
+            <Form.Group controlId="formProductSuggestedPrice" className="">
               <Form.Control
-                className="form-control regular-14"
+                className="form-control regular-14 text-color-tertiary"
                 type="number"
                 required
                 placeholder="Giá đề xuất"
+                min={10000}
+                disabled={product.isGiveAway}
                 value={product.suggestedPrice}
                 onChange={e =>
                   setProduct({...product, suggestedPrice: e.target.value})
                 }
               />
+              <Form.Control.Feedback type="invalid">
+                Vui lòng nhập giá đề xuất từ 10.000đ trở lên
+              </Form.Control.Feedback>
             </Form.Group>
           </div>
-
-          <div className="title-and-description d-flex flex-column gap-2">
+          <div className="title-and-description d-flex flex-column gap-3">
             <div className="post_title_detail semibold-20 text-color-quaternary">
-              Tiêu đề Tin đăng và Mô tả chi tiết
+              Tiêu đề tin đăng và Mô tả chi tiết
             </div>
             <Form.Group controlId="formProductTitle">
               <Form.Control
-                className="mb-3 regular-14"
+                className=" regular-14 text-color-tertiary"
                 type="text"
                 required
                 placeholder="Tiêu đề tin đăng"
                 value={product.title}
                 onChange={e => setProduct({...product, title: e.target.value})}
               ></Form.Control>
+              <Form.Control.Feedback type="invalid">
+                Vui lòng nhập tiêu đề tin đăng
+              </Form.Control.Feedback>
             </Form.Group>
-            <div className="mb-3">
-              <textarea
-                className="form-control regular-14"
-                id="exampleFormControlTextarea1"
+            <Form.Group controlId="formProductDescription">
+              <Form.Control
+                className=" regular-14 text-color-tertiary"
+                as="textarea"
                 rows={3}
+                required
                 placeholder="Mô tả chi tiết"
-              ></textarea>
+                onChange={e =>
+                  setProduct({...product, summary: e.target.value})
+                }
+                value={product.summary}
+              ></Form.Control>
+              <Form.Control.Feedback type="invalid">
+                Vui lòng nhập mô tả
+              </Form.Control.Feedback>
+            </Form.Group>
+          </div>
+          <div className="address d-flex flex-column gap-3">
+            <div className="semibold-20 text-color-quaternary">
+              Thông tin người bán
             </div>
-            <div className="address d-flex flex-column gap-2">
-              <div className="semibold-20 text-color-quaternary">
-                Thông tin người bán
-              </div>
-              <Form.Group controlId="formProductAddress" className="mb-3">
-                <Form.Control
-                  className="form-control regular-14 clickable"
-                  placeholder="Địa chỉ"
-                  required
-                  readOnly
-                  onClick={() =>
-                    showModal(AddressFormModal, handleAddressFormModalSubmit)
-                  }
-                  value={
-                    product.addressDetail
-                      ? `${product.addressDetail}, ${fullName}`
-                      : ''
-                  }
-                />
-              </Form.Group>
-            </div>
+            <Form.Group controlId="formProductAddress" className="">
+              <Form.Control
+                className="form-control regular-14 text-color-tertiary clickable"
+                placeholder="Địa chỉ"
+                required
+                onClick={() =>
+                  showModal(AddressFormModal, handleAddressFormModalSubmit)
+                }
+                value={
+                  product.addressDetail
+                    ? `${product.addressDetail}, ${fullAddressName}`
+                    : ''
+                }
+                onChange={(): void => {}}
+              />
+              <Form.Control.Feedback type="invalid">
+                Vui lòng nhập địa chỉ
+              </Form.Control.Feedback>
+            </Form.Group>
           </div>
           <div className="summit d-flex justify-content-between">
             <AppButton className="preview" variant={'secondary'}>

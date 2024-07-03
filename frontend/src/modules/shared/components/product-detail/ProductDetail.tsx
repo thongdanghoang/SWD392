@@ -4,10 +4,7 @@ import {ReactElement, useContext, useEffect, useState} from 'react';
 import {useApplicationService} from '../../services/application.service.ts';
 import {AppRoutingConstants} from '../../app-routing.constants.ts';
 import {useNavigate, useParams} from 'react-router-dom';
-import {
-  ProductWithOwnerDTO,
-  getProductStatusDisplay
-} from '../../../homepage/model/productWithOwnerDTO.ts';
+import {ProductWithOwnerDTO} from '../../../homepage/model/productWithOwnerDTO.ts';
 import {UserDto} from '../../models/userDto.ts';
 import io from 'socket.io-client';
 import {UserContext} from '../../services/userContext.ts';
@@ -120,6 +117,14 @@ export default function ProductDetail(): ReactElement {
                 </div>
                 <div className="d-flex align-items-center gap-2">
                   <div className="semibold-14 text-color-quaternary">
+                    Tình trạng:
+                  </div>
+                  <div className="regular-14 text-color-tertiary">
+                    Đã sử dụng
+                  </div>
+                </div>
+                <div className="d-flex align-items-center gap-2">
+                  <div className="semibold-14 text-color-quaternary">
                     Số điện thoại:
                   </div>
                   <div className="regular-14 text-color-tertiary">
@@ -134,41 +139,11 @@ export default function ProductDetail(): ReactElement {
                     Phường 13, Quận Bình Thạnh, Tp Hồ Chí Minh
                   </div>
                 </div>
-                <div className="d-flex align-items-center gap-2">
-                  <div className="semibold-14 text-color-quaternary">
-                    Xuất xứ:
-                  </div>
-                  <div className="regular-14 text-color-tertiary">Hàn Quốc</div>
-                </div>
-                <div className="d-flex align-items-center gap-2">
-                  <div className="semibold-14 text-color-quaternary">
-                    Thông tin sử dụng:
-                  </div>
-                  <div className="regular-14 text-color-tertiary">
-                    In trên bao bì
-                  </div>
-                </div>
-                <div className="d-flex align-items-center gap-2">
-                  <div className="semibold-14 text-color-quaternary">
-                    Tình trạng:
-                  </div>
-                  <div className="regular-14 text-color-tertiary">
-                    {getProductStatusDisplay(currentProduct?.status)}
-                  </div>
-                </div>
-                <div className="d-flex align-items-center gap-2">
-                  <div className="semibold-14 text-color-quaternary">
-                    Chính sách bảo hành:
-                  </div>
-                  <div className="regular-14 text-color-tertiary">
-                    Bảo hành chính hãng
-                  </div>
-                </div>
-                <div className="d-flex align-items-center gap-4">
+                <div className="d-flex align-items-center gap-4 d-none">
                   <div className="regular-14 text-color-tertiary">
                     Chia sẻ tin đăng này cho bạn bè:
                   </div>
-                  <i className="text-color-quaternary fs-5 bi bi-facebook "></i>
+                  <i className="text-color-quaternary fs-5 bi bi-facebook"></i>
                   <i className="text-color-quaternary fs-5 bi bi-twitter "></i>
                   <i className="text-color-quaternary fs-5 bi bi-instagram "></i>
                   <i className="text-color-quaternary fs-5 bi bi-share-fill"></i>
