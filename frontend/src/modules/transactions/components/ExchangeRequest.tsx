@@ -100,14 +100,9 @@ export default function ExchangeRequest(): ReactElement {
 
   const handleExchangeRequestByProduct = (): void => {
     if (id && selectedProductId) {
-      const exchangeRequest: ExchangeRequestDto = {
-        productId: id,
-        exchangeByMoney: false,
-        productToExchangeId: selectedProductId
-      };
       applicationService
         .createApiClient()
-        .post(AppRoutingConstants.EXCHANGE_REQUESTS_PATH, exchangeRequest)
+        .post(AppRoutingConstants.EXCHANGE_REQUESTS_PATH)
         .then((): void => {
           navigate(`/exchange-detail/${id}/${selectedProductId}`);
         })
