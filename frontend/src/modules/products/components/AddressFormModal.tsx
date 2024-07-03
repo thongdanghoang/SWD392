@@ -48,6 +48,18 @@ const AddressFormModal = ({hideModal, onSubmit}: ModalProps): ReactElement => {
   const [districts, setDistricts] = useState<District[]>([]);
   const [selectedDistrict, setSelectedDistrict] = useState<string>('');
   const [wards, setWards] = useState<Ward[]>([]);
+  const [validated, setValidated] = useState(false);
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
+    event.preventDefault();
+    event.stopPropagation();
+    const form = event.currentTarget;
+    if (form.checkValidity() && onSubmit) {
+      formData.fullName = getWardByCode(formData.wardCode).fullName;
+      onSubmit(formData);
+      hideModal();
+    }
+    setValidated(true);
+  };
 
   useEffect(() => {
     setFormProvinces(getProvinces());
@@ -65,15 +77,6 @@ const AddressFormModal = ({hideModal, onSubmit}: ModalProps): ReactElement => {
     }
   }, [selectedDistrict]);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
-    e.preventDefault();
-    if (onSubmit) {
-      formData.fullName = getWardByCode(formData.wardCode).fullName;
-      onSubmit(formData);
-      hideModal();
-    }
-  };
-
   return (
     <Modal show onHide={hideModal}>
       <Modal.Header className="justify-content-center">
@@ -81,11 +84,11 @@ const AddressFormModal = ({hideModal, onSubmit}: ModalProps): ReactElement => {
           Địa chỉ
         </Modal.Title>
       </Modal.Header>
-      <Form onSubmit={handleSubmit}>
+      <Form noValidate validated={validated} onSubmit={handleSubmit}>
         <Modal.Body className="d-flex flex-column gap-4">
           <Form.Group controlId="formProvince">
             <Form.Control
-              className="form-select"
+              className="form-select semibold-16 text-color-quaternary"
               as="select"
               required
               value={selectedProvince}
@@ -103,10 +106,13 @@ const AddressFormModal = ({hideModal, onSubmit}: ModalProps): ReactElement => {
                 </option>
               ))}
             </Form.Control>
+            <Form.Control.Feedback type="invalid">
+              Vui lòng chọn tỉnh, thành phố
+            </Form.Control.Feedback>
           </Form.Group>
           <Form.Group controlId="formDistrict">
             <Form.Control
-              className="form-select"
+              className="form-select semibold-16 text-color-quaternary"
               as="select"
               required
               value={selectedDistrict}
@@ -124,10 +130,13 @@ const AddressFormModal = ({hideModal, onSubmit}: ModalProps): ReactElement => {
                 </option>
               ))}
             </Form.Control>
+            <Form.Control.Feedback type="invalid">
+              Vui lòng chọn quận, huyện, thị xã
+            </Form.Control.Feedback>
           </Form.Group>
           <Form.Group controlId="formWard">
             <Form.Control
-              className="form-select"
+              className="form-select semibold-16 text-color-quaternary"
               as="select"
               required
               value={formData.wardCode}
@@ -144,15 +153,20 @@ const AddressFormModal = ({hideModal, onSubmit}: ModalProps): ReactElement => {
                 </option>
               ))}
             </Form.Control>
+            <Form.Control.Feedback type="invalid">
+              Vui lòng chọn phường, xã, thị trấn
+            </Form.Control.Feedback>
           </Form.Group>
           <Form.Group controlId="formDetailedAddress">
             <Form.Control
+              className="semibold-16 text-color-quaternary"
               type="text"
               required
+              pattern={'^(?=.*\\S).+$'}
               maxLength={100}
               placeholder="Địa chỉ chi tiết"
               onChange={e =>
-                setFormData({...formData, addressDetail: e.target.value})
+                setFormData({...formData, addressDetail: e.target.value.trim()})
               }
             />
             <Form.Control.Feedback type="invalid">
@@ -161,9 +175,6 @@ const AddressFormModal = ({hideModal, onSubmit}: ModalProps): ReactElement => {
           </Form.Group>
         </Modal.Body>
         <Modal.Footer>
-          {/* <AppButton variant="secondary" onClick={hideModal}>*/}
-          {/*  Đóng*/}
-          {/* </AppButton>*/}
           <AppButton className="flex-grow-1" variant="primary" type="submit">
             Xong
           </AppButton>
