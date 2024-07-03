@@ -37,7 +37,8 @@ export class ProductController {
       const newProduct = await this.productService.createProduct({
         ...createProductDto,
         owner: this.userService.getCurrentUser().id,
-        createdBy: this.userService.getCurrentUser().firstName,
+        createdBy: `${this.userService.getCurrentUser().firstName} ${this.userService.getCurrentUser().lastName}`,
+        modifiedBy: `${this.userService.getCurrentUser().firstName} ${this.userService.getCurrentUser().lastName}`,
         status: ProductStatus.PUBLISHED
       });
       return new ResponseData(
