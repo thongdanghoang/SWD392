@@ -14,10 +14,12 @@ import {UserContext} from '../../../shared/services/userContext.ts';
 import {getWardByCode} from 'vn-local-plus';
 import {ProductDTO} from '../../models/product.dto.ts';
 import UploadWidgetVideo from './UploadVideo.tsx';
+import {CategoryDto} from 'src/modules/homepage/model/productWithOwnerDTO.ts';
 
 export default function PostProduct(): React.ReactElement {
   const currentUser: UserDto | null | undefined = useContext(UserContext)?.user;
   const navigate = useNavigate();
+  const [categories, setCategories] = React.useState<CategoryDto[]>([]);
   const applicationService = useApplicationService();
   const [imageErrorMessage, setImageErrorMessage] = React.useState<string>('');
   const [fullAddressName, setFullAddressName] = React.useState<string>('');
@@ -32,8 +34,8 @@ export default function PostProduct(): React.ReactElement {
     addressDetail: '',
     images: [],
     video: '',
-    // category: '',
-    summary: ''
+    summary: '',
+    category: ''
   });
   useEffect((): void => {
     if (currentUser?.addressDetail) {
@@ -83,6 +85,26 @@ export default function PostProduct(): React.ReactElement {
       addressDetail: data.addressDetail
     });
   };
+  const fetchCategories = (): void => {
+    applicationService
+      .createApiClient()
+      .get(`${AppRoutingConstants.CATEGORIES_PATH}`)
+      .then(response => {
+        setCategories(
+          response.data?.map((product: CategoryDto) => ({
+            ...product
+          }))
+        );
+      })
+      .catch(error => {
+        console.error('API error:', error);
+      });
+  };
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  useEffect(() => {
+    fetchCategories();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const handleUploadComplete = (imageUrls: string[]): void => {
     setProduct(prevProduct => ({...prevProduct, images: imageUrls}));
   };
@@ -149,23 +171,14 @@ export default function PostProduct(): React.ReactElement {
               as="select"
               required
               className="list-of-postings form-select semibold-16 text-color-tertiary"
-              // value={product.category}
-              // onChange={e => setProduct({...product, category: e.target.value})}
+              value={product.category} // Ensure this reflects the current category ID in your product state
+              onChange={e => setProduct({...product, category: e.target.value})} // Update the product state with the selected category ID
             >
-              <option value="1">Thời trang nam</option>
-              <option value="2">Thời trang nữ</option>
-              <option value="3">Giày dép</option>
-              <option value="4">Phụ kiện & Trang sức</option>
-              <option value="5">Mỹ phẩm</option>
-              <option value="6">Đồ điện tử</option>
-              <option value="7">Đồ gia dụng</option>
-              <option value="8">Đồ chơi</option>
-              <option value="9">Đồ dùng sinh hoạt</option>
-              <option value="10">Sách</option>
-              <option value="11">Thú cưng</option>
-              <option value="12">Văn phòng phẩm</option>
-              <option value="13">Thực phẩm</option>
-              <option value="14">Khác</option>
+              {categories.map(category => (
+                <option key={category.id} value={category.id}>
+                  {category.title}
+                </option>
+              ))}
             </Form.Control>
           </Form.Group>
           <div className="info_details d-flex flex-column gap-3">
