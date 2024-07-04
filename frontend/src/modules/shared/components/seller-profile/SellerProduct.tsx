@@ -17,7 +17,9 @@ export default function SellerProduct(): ReactElement {
   };
 
   // Fetch my products
-  const [sellerProduct, setSellerProducts] = useState<ProductWithOwnerDTO[]>([]);
+  const [sellerProduct, setSellerProducts] = useState<ProductWithOwnerDTO[]>(
+    []
+  );
   useEffect(() => {
     if (applicationService.isAuthenticated()) {
       applicationService
