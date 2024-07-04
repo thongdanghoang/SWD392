@@ -61,13 +61,13 @@ export default function SellerProduct(): ReactElement {
                       alt={product.title}
                     />
                     <div className="card-body">
-                      <h5 className="card-title product-title">
+                      <h5 className="card-title product-title semibold-20 text-color-tertiary">
                         {product.title}
                       </h5>
-                      <p className="card-text product-price">
+                      <p className="card-text product-price bold-32 text-color-quaternary">
                         {formatToVietnameseCurrency(product.suggestedPrice)}
                       </p>
-                      <p className="card-text regular-12 product-creation-date">
+                      <p className="card-text regular-12 product-creation-date text-color-tertiary">
                         Đăng cách đây{' '}
                         {formatDistanceToNow(new Date(product.creationDate), {
                           addSuffix: true,
