@@ -1,0 +1,70 @@
+@import "@assets/styles/variables";
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  .popup-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    position: relative;
+    width: auto;
+    text-align: left;
+  }
+
+  .product-info {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+  }
+
+  .product-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    margin-right: 15px;
+  }
+
+  .box {
+    background-color: $app-primary;
+    border-radius: 25px;
+  }
+
+  .star.filled {
+    color: $app-tertiary;
+  }
+
+  .star {
+    font-size: 25px;
+    cursor: pointer;
+    color: #ccc;
+    margin: 0 5px;
+  }
+
+  textarea {
+    margin-top: 10px;
+    width: 98%;
+    height: 50px;
+    padding: 10px;
+    display: block;
+    border: 1px solid #ccc;
+    border-radius: 25px;
+    text-indent: 10px;
+  }
+
+  .submit-button {
+    display: block;
+    margin: 20px auto 0;
+    margin-right: 0px;
+    padding: 10px 20px;
+    border-radius: 20px;
+  }
+}
