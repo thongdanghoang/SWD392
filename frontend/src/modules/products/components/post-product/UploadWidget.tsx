@@ -50,14 +50,12 @@ const UploadWidget: React.FC<UploadWidgetProps> = ({
         }
       }
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cloudinaryWidget, setImageUrls]);
 
   useEffect(() => {
     if (imageUrls.length) {
       onUploadComplete(imageUrls);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [imageUrls]);
 
   return (
@@ -105,7 +103,7 @@ const UploadWidget: React.FC<UploadWidgetProps> = ({
           </svg>
         </label>
         <div className="regular-14 text-color-secondary">
-          Đăng từ 1 tới 5 hình
+          Đăng tối đa 5 hình ảnh
         </div>
       </div>
     </div>

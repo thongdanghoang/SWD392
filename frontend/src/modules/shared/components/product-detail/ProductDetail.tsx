@@ -1,15 +1,13 @@
 import './ProductDetail.scss';
 import AppButton from '../buttons/AppButton.tsx';
-import {ReactElement, useEffect, useState} from 'react';
+import {ReactElement, useContext, useEffect, useState} from 'react';
 import {useApplicationService} from '../../services/application.service.ts';
 import {AppRoutingConstants} from '../../app-routing.constants.ts';
 import {useNavigate, useParams} from 'react-router-dom';
-import {
-  ProductWithOwnerDTO,
-  getProductStatusDisplay
-} from '../../../homepage/model/productWithOwnerDTO.ts';
+import {ProductWithOwnerDTO} from '../../../homepage/model/productWithOwnerDTO.ts';
 import {UserDto} from '../../models/userDto.ts';
 import io from 'socket.io-client';
+import {UserContext} from '../../services/userContext.ts';
 
 // Replace with your NestJS server URL
 const socket = io('http://localhost:3001/chat', {
@@ -23,16 +21,21 @@ export interface Room {
   // Other properties as needed
 }
 
-function ProductDetail({
-  currentUser
-}: {
-  currentUser: UserDto | null;
-}): ReactElement {
+export default function ProductDetail(): ReactElement {
+  const currentUser: UserDto | null | undefined = useContext(UserContext)?.user;
   const navigate = useNavigate();
   const applicationService = useApplicationService();
   const {id} = useParams<{id: string}>();
   const [currentProduct, setCurrentProduct] =
     useState<ProductWithOwnerDTO | null>(null);
+
+  const handleExchangeRequestClick = (): void => {
+    if (currentProduct?.isMyProduct) {
+      // TODO: [thongdanghoang] should show a toast message
+      return navigate(`/`);
+    }
+    navigate(`/exchange-request/${currentProduct?.id}`);
+  };
 
   const handleChatClick = async (): Promise<void> => {
     const buyerId = currentUser?.id;
@@ -57,7 +60,6 @@ function ProductDetail({
           console.error(error);
         });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   const [liked, setLiked] = useState(false);
@@ -115,6 +117,14 @@ function ProductDetail({
                 </div>
                 <div className="d-flex align-items-center gap-2">
                   <div className="semibold-14 text-color-quaternary">
+                    Tình trạng:
+                  </div>
+                  <div className="regular-14 text-color-tertiary">
+                    Đã sử dụng
+                  </div>
+                </div>
+                <div className="d-flex align-items-center gap-2">
+                  <div className="semibold-14 text-color-quaternary">
                     Số điện thoại:
                   </div>
                   <div className="regular-14 text-color-tertiary">
@@ -129,41 +139,11 @@ function ProductDetail({
                     Phường 13, Quận Bình Thạnh, Tp Hồ Chí Minh
                   </div>
                 </div>
-                <div className="d-flex align-items-center gap-2">
-                  <div className="semibold-14 text-color-quaternary">
-                    Xuất xứ:
-                  </div>
-                  <div className="regular-14 text-color-tertiary">Hàn Quốc</div>
-                </div>
-                <div className="d-flex align-items-center gap-2">
-                  <div className="semibold-14 text-color-quaternary">
-                    Thông tin sử dụng:
-                  </div>
-                  <div className="regular-14 text-color-tertiary">
-                    In trên bao bì
-                  </div>
-                </div>
-                <div className="d-flex align-items-center gap-2">
-                  <div className="semibold-14 text-color-quaternary">
-                    Tình trạng:
-                  </div>
-                  <div className="regular-14 text-color-tertiary">
-                    {getProductStatusDisplay(currentProduct?.status)}
-                  </div>
-                </div>
-                <div className="d-flex align-items-center gap-2">
-                  <div className="semibold-14 text-color-quaternary">
-                    Chính sách bảo hành:
-                  </div>
-                  <div className="regular-14 text-color-tertiary">
-                    Bảo hành chính hãng
-                  </div>
-                </div>
-                <div className="d-flex align-items-center gap-4">
+                <div className="d-flex align-items-center gap-4 d-none">
                   <div className="regular-14 text-color-tertiary">
                     Chia sẻ tin đăng này cho bạn bè:
                   </div>
-                  <i className="text-color-quaternary fs-5 bi bi-facebook "></i>
+                  <i className="text-color-quaternary fs-5 bi bi-facebook"></i>
                   <i className="text-color-quaternary fs-5 bi bi-twitter "></i>
                   <i className="text-color-quaternary fs-5 bi bi-instagram "></i>
                   <i className="text-color-quaternary fs-5 bi bi-share-fill"></i>
@@ -238,15 +218,19 @@ function ProductDetail({
                     variant="primary"
                     children={`Giao dịch ngay`}
                     onClick={() =>
-                      currentProduct?.isMyProduct
-                        ? null
-                        : navigate(`/exchange-request/${currentProduct?.id}`)
+                      applicationService.checkIsUserDoActionOrElseNavigateLoginPage(
+                        handleExchangeRequestClick
+                      )
                     }
                   />
                   <AppButton
                     variant="secondary"
                     children={`Chat với người này`}
-                    onClick={handleChatClick}
+                    onClick={() =>
+                      applicationService.checkAuthenticatedDoActionOrElseNavigateLoginPage(
+                        handleChatClick
+                      )
+                    }
                   />
                 </div>
               )}
@@ -384,5 +368,3 @@ function ProductDetail({
     </div>
   );
 }
-
-export default ProductDetail;

@@ -1,9 +1,10 @@
-import React, {ReactElement, useEffect, useState} from 'react';
+import React, {ReactElement, useContext, useEffect, useState} from 'react';
 import io from 'socket.io-client';
 import {useApplicationService} from '../shared/services/application.service.ts';
 import './ChatList.scss';
 import {UserDto} from 'src/modules/shared/models/userDto.ts';
 import {AppRoutingConstants} from '../shared/app-routing.constants.ts';
+import {UserContext} from '../shared/services/userContext.ts';
 
 const socket = io('http://localhost:3001/chat', {
   transports: ['websocket'],
@@ -16,10 +17,6 @@ interface Room {
   sellerId: string;
   lastMessage: string;
   lastMessageTime: string;
-}
-
-interface ChatListProps {
-  currentUser: UserDto | null;
 }
 
 interface Message {
@@ -64,7 +61,6 @@ function ChatRoom({
     void fetchSellerInfo(idToFetch).then(sellerData => {
       setSellerName(`${sellerData.firstName} ${sellerData.lastName}`);
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [idToFetch]);
   useEffect(() => {
     applicationService
@@ -74,7 +70,6 @@ function ChatRoom({
         setMessages(response.data);
       })
       .catch(error => console.error('Error fetching } messages:', error));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roomId]);
 
   useEffect(() => {
@@ -169,7 +164,8 @@ function ChatRoom({
   );
 }
 
-function ChatList({currentUser}: ChatListProps): ReactElement {
+function ChatList(): ReactElement {
+  const currentUser: UserDto | null | undefined = useContext(UserContext)?.user;
   const applicationService = useApplicationService();
   const [rooms, setRooms] = useState<Room[]>([]);
   const [sellers, setSellers] = useState<Record<string, User>>({});
@@ -193,7 +189,6 @@ function ChatList({currentUser}: ChatListProps): ReactElement {
         })
         .catch(error => console.error('Error fetching rooms:', error));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser?.id]);
 
   const fetchSellerInfo = async (userIdToFetch: string): Promise<any> => {

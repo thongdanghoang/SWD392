@@ -6,6 +6,7 @@ import {
   useStartLoading,
   useStopLoading
 } from '../components/loading/LoadingUtils.tsx';
+import {User} from 'oidc-client-ts';
 
 class ApplicationService {
   private readonly auth: AuthContextProps;
@@ -20,6 +21,45 @@ class ApplicationService {
     this.auth = auth;
     this.startLoading = startLoading;
     this.stopLoading = stopLoading;
+  }
+
+  public getUserFromIAM(): User {
+    return this.auth.userData ?? ({} as User);
+  }
+
+  public isRoleUser(): boolean {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    return this.getUserFromIAM().profile?.roles?.includes('swapme.user');
+  }
+
+  public isRoleAdmin(): boolean {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    return this.getUserFromIAM().profile?.roles?.includes('swapme.admin');
+  }
+
+  public checkAuthenticatedDoActionOrElseNavigateLoginPage(
+    fn: () => void
+  ): void {
+    if (this.isAuthenticated()) {
+      return fn();
+    }
+    return this.signIn();
+  }
+
+  public checkIsUserDoActionOrElseNavigateLoginPage(fn: () => void): void {
+    if (this.isRoleUser()) {
+      return fn();
+    }
+    return this.signIn();
+  }
+
+  public checkIsAdminDoActionOrElseNavigateLoginPage(fn: () => void): void {
+    if (this.isRoleAdmin()) {
+      return fn();
+    }
+    return this.signIn();
   }
 
   public async fetchCurrentUser(): Promise<UserDto> {

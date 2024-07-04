@@ -1,5 +1,4 @@
-@import '@assets/styles/styles';
-
+@import "@assets/styles/styles";
 
 .exchange-info {
   .form-check {
@@ -17,9 +16,7 @@
   }
 }
 
-
 .select-products {
-
   .search {
     background-color: $app-white;
     min-width: 400px;
@@ -35,7 +32,7 @@
       background-color: transparent;
       border: none;
       outline: none;
-      color: $app-secondary;
+      color: $app-tertiary;
     }
   }
 
