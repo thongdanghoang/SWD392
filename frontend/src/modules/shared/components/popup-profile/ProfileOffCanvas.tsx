@@ -23,7 +23,10 @@ export default function ProfileOffCanvas({
     >
       <div className="offcanvas-header p-4 m-0 gap-3 flex-column align-items-baseline">
         <div className="reviewer d-flex gap-4">
-          <div className="avatar">
+          <div
+            className="avatar clickable"
+            onClick={() => navigate('/user-profile')}
+          >
             <img
               className="avatar"
               src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
@@ -83,7 +86,18 @@ export default function ProfileOffCanvas({
           Lịch sử giao dịch
         </div>
         <div className="list-title semibold-16 text-color-quaternary">Khác</div>
-        <div className="list-item regular-14  text-color-quaternary">
+        <div
+          className="list-item regular-14  text-color-quaternary"
+          onClick={(): void => {
+            if (applicationService.isRoleAdmin()) {
+              window.location.href =
+                'https://thongdanghoang.id.vn/auth/admin/SwapMe/console/';
+            } else {
+              window.location.href =
+                'https://thongdanghoang.id.vn/auth/realms/SwapMe/account/';
+            }
+          }}
+        >
           Cài đặt tài khoản
         </div>
         <div className="list-item regular-14  text-color-quaternary">

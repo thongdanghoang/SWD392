@@ -55,13 +55,11 @@ export default function SellerProfile({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, navigate]);
 
-
   // Function to handle tab click
   const [activeTab, setActiveTab] = useState<'selling' | 'sold'>('selling');
   const handleTabClick = (tab: 'selling' | 'sold'): void => {
     setActiveTab(tab);
   };
-
 
   return (
     <div className="container seller-profile">
@@ -135,7 +133,7 @@ export default function SellerProfile({
       {/* Conditional Rendering */}
       <div>
         {activeTab === 'selling' ? (
-         <UserProduct/>
+          <UserProduct />
         ) : (
           <div>
             <div className="regular-14 text-color-quaternary">

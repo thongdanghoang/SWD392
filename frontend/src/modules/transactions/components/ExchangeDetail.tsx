@@ -5,10 +5,46 @@ import {useNavigate, useParams} from 'react-router-dom';
 import {ProductWithOwnerDTO} from '../../homepage/model/productWithOwnerDTO.ts';
 import {AppRoutingConstants} from '../../shared/app-routing.constants.ts';
 import AppButton from '../../shared/components/buttons/AppButton.tsx';
+import io from 'socket.io-client';
+import {UserDto} from '../../shared/models/userDto.ts';
 
-export default function ExchangeDetail(): ReactElement {
+interface ExchangeRequestDto {
+  productId: string;
+}
+
+// Replace with your NestJS server URL
+const socket = io('http://localhost:3001/chat', {
+  transports: ['websocket'] // Ensure WebSocket transport is used
+});
+
+export default function ExchangeDetail({
+  currentUser
+}: {
+  currentUser: UserDto | null;
+}): ReactElement {
   const applicationService = useApplicationService();
   const navigate = useNavigate();
+
+  const handleExchangeRequestByProduct = (): void => {
+    if (id) {
+      const exchangeRequest: ExchangeRequestDto = {
+        productId: id
+      };
+      applicationService
+        .createApiClient()
+        .post(AppRoutingConstants.EXCHANGE_REQUESTS_PATH, exchangeRequest)
+        .then((): void => {
+          const buyerId = currentUser?.id;
+          const sellerId = currentProduct?.owner.id;
+          socket.emit('createRoom', {buyerId, sellerId}, (): void => {
+            navigate(`/chat`);
+          });
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    }
+  };
 
   // Fetch product detail by id
   const {id} = useParams<{id: string}>();
@@ -27,7 +63,6 @@ export default function ExchangeDetail(): ReactElement {
           console.error(error);
         });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   // Fetch my products
@@ -46,7 +81,6 @@ export default function ExchangeDetail(): ReactElement {
           console.error(error);
         });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [myProductId]);
 
   const formatToVietnameseCurrency = (amount: number | undefined): string => {
@@ -166,24 +200,17 @@ export default function ExchangeDetail(): ReactElement {
           <div className="actions d-flex justify-content-end gap-5 mt-5">
             <AppButton
               className="button"
-              variant={'secondary'}
-              onClick={() => navigate(AppRoutingConstants.HOMEPAGE)}
-            >
-              Chat với người giao dịch
-            </AppButton>
-            <AppButton
-              className="button"
               variant={'tertiary'}
-              onClick={() => navigate(AppRoutingConstants.EXCHANGE_REJECT_PATH)}
+              onClick={() => navigate(AppRoutingConstants.HOMEPAGE)}
             >
-              Hủy giao dịch
+              Trở về trang chủ
             </AppButton>
             <AppButton
               className="button"
-              variant={'primary'}
-              onClick={() => navigate(AppRoutingConstants.HOMEPAGE)}
+              variant={'secondary'}
+              onClick={handleExchangeRequestByProduct}
             >
-              Giao dịch thành công!
+              Tạo giao dịch
             </AppButton>
           </div>
         </div>

@@ -46,14 +46,12 @@ const UploadWidgetVideo: React.FC<UploadWidgetVideoProps> = ({
         }
       }
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cloudinaryWidget, setVideoUrl]);
 
   useEffect(() => {
     if (videoUrl.length) {
       onUploadVideoComplete(videoUrl);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [videoUrl]);
 
   return (

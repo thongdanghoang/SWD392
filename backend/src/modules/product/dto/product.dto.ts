@@ -3,14 +3,21 @@ import {UserDto} from '../../user/user.dto';
 import {PartialType} from '@nestjs/swagger';
 
 export class CreateProductDto {
-  status: ProductStatus;
   title: string;
+  isGiveAway: boolean;
   suggestedPrice: number;
+  summary: string;
+  provinceCode: string;
+  districtCode: string;
+  wardCode: string;
+  addressDetail: string;
+  images: string[];
+  video: string;
+  category: number;
   owner: number;
   createdBy: string;
-  summary?: string;
-  images?: string[];
-  category?: number;
+  modifiedBy: string;
+  status: ProductStatus;
 }
 
 export class UpdateProductDto extends PartialType(ProductEntity) {}
