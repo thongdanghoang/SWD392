@@ -6,7 +6,7 @@ import {useNavigate} from 'react-router-dom';
 import {formatDistanceToNow} from 'date-fns';
 import {vi} from 'date-fns/locale';
 
-export default function UserProduct(): ReactElement {
+export default function SellerProduct(): ReactElement {
   const applicationService = useApplicationService();
   const navigate = useNavigate();
 
@@ -17,14 +17,14 @@ export default function UserProduct(): ReactElement {
   };
 
   // Fetch my products
-  const [myProducts, setMyProducts] = useState<ProductWithOwnerDTO[]>([]);
+  const [sellerProduct, setSellerProducts] = useState<ProductWithOwnerDTO[]>([]);
   useEffect(() => {
     if (applicationService.isAuthenticated()) {
       applicationService
         .createApiClient()
-        .get(AppRoutingConstants.MY_PRODUCTS_PATH)
+        .get(AppRoutingConstants.SELLER_PRODUCTS_PATH)
         .then(response => {
-          setMyProducts(response.data.data ?? []);
+          setSellerProducts(response.data.data ?? []);
         })
         .catch(error => {
           console.error(error);
@@ -45,9 +45,9 @@ export default function UserProduct(): ReactElement {
     <div className="container">
       <div className="d-flex gap-4 flex-column">
         <div className="user-product d-flex gap-3">
-          {myProducts.length > 0 ? (
+          {sellerProduct.length > 0 ? (
             <div className="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
-              {myProducts.map((product: ProductWithOwnerDTO) => (
+              {sellerProduct.map((product: ProductWithOwnerDTO) => (
                 <div key={product.id} className="col">
                   <div
                     className="card product-card clickable"

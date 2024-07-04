@@ -7,27 +7,20 @@ import {AppRoutingConstants} from '../../app-routing.constants';
 import AppButton from '../buttons/AppButton';
 import {UserDto} from '../../models/userDto';
 import io from 'socket.io-client';
-import {formatDistanceToNow} from 'date-fns';
-import {vi} from 'date-fns/locale';
+import UserProduct from './SellerProduct';
 
 // Replace with your NestJS server URL
 const socket = io('http://localhost:3001/chat', {
   transports: ['websocket'] // Ensure WebSocket transport is used
 });
 
-export default function UserProfile({
+export default function SellerProfile({
   currentUser
 }: {
   currentUser: UserDto | null;
 }): ReactElement {
   const applicationService = useApplicationService();
   const navigate = useNavigate();
-
-  const navigateToDetail = (id: string) => {
-    return (): void => {
-      navigate(`/products/${id}`);
-    };
-  };
 
   const handleChatClick = async (): Promise<void> => {
     const buyerId = currentUser?.id;
@@ -62,25 +55,6 @@ export default function UserProfile({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, navigate]);
 
-  // Fetch seller products by seller ID
-  const [sellerProducts, setSellerProducts] = useState<ProductWithOwnerDTO[]>(
-    []
-  );
-
-  useEffect((): void => {
-    if (id) {
-      applicationService
-        .createApiClient()
-        .get(`${AppRoutingConstants.PRODUCTS_PATH}/${id}`)
-        .then(response => {
-          setSellerProducts(response.data.data ?? []);
-        })
-        .catch(error => {
-          console.error(error);
-        });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
 
   // Function to handle tab click
   const [activeTab, setActiveTab] = useState<'selling' | 'sold'>('selling');
@@ -88,16 +62,9 @@ export default function UserProfile({
     setActiveTab(tab);
   };
 
-  const formatToVietnameseCurrency = (amount: number): string => {
-    const formatter = new Intl.NumberFormat('vi-VN', {
-      style: 'currency',
-      currency: 'VND'
-    });
-    return formatter.format(amount);
-  };
 
   return (
-    <div className="container user-profile">
+    <div className="container seller-profile">
       <div className="my-5 d-flex gap-4 flex-column">
         <div className="box">
           <div className="owner d-flex justify-content-between">
@@ -168,53 +135,7 @@ export default function UserProfile({
       {/* Conditional Rendering */}
       <div>
         {activeTab === 'selling' ? (
-          <div>
-            <div className="d-flex gap-4 flex-column">
-              <div className="exchange-info d-flex gap-3">
-                {sellerProducts.length > 0 ? (
-                  <div className="my-products d-flex justify-content-start gap-3">
-                    {sellerProducts?.map((product: ProductWithOwnerDTO) => (
-                      <li
-                        key={product.id}
-                        className="product-card clickable"
-                        onClick={navigateToDetail(product.id)}
-                      >
-                        <div className="product-image">
-                          <img src={product.images[0]} alt={product.title} />
-                        </div>
-                        <div className="product-info">
-                          <div className="d-flex flex-column align-items-start">
-                            <h2 className="product-title">{product.title}</h2>
-                            <p className="product-price">
-                              {formatToVietnameseCurrency(
-                                product.suggestedPrice
-                              )}
-                            </p>
-                            <p className="product-creation-date">
-                              Đăng cách đây{' '}
-                              {formatDistanceToNow(
-                                new Date(product.creationDate),
-                                {
-                                  addSuffix: true,
-                                  locale: vi
-                                }
-                              )}{' '}
-                            </p>
-                          </div>
-                        </div>
-                      </li>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="my-products d-flex justify-content-center align-items-center">
-                    <div className="regular-14 text-color-quaternary">
-                      Người này chưa có sản phẩm nào để giao dịch
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
+         <UserProduct/>
         ) : (
           <div>
             <div className="regular-14 text-color-quaternary">

@@ -12,6 +12,7 @@ export class AppRoutingConstants {
   // Product
   public static readonly PRODUCTS_PATH: string = `${AppRoutingConstants.BASE_URL}/products`;
   public static readonly MY_PRODUCTS_PATH: string = `${AppRoutingConstants.BASE_URL}/products/my-products`;
+  public static readonly SELLER_PRODUCTS_PATH: string = `${AppRoutingConstants.BASE_URL}/products/seller-products`;
 
   // Transaction - Exchange
   public static readonly EXCHANGE_REQUESTS_PATH: string = `${AppRoutingConstants.BASE_URL}/exchanges/request`;
