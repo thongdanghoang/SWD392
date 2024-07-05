@@ -18,10 +18,6 @@ export default function ExchangeRequest(): ReactElement {
   const applicationService = useApplicationService();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    applicationService.checkIsUserDoActionOrElseNavigateLoginPage(() => {});
-  }, []);
-
   const [confirm, setConfirm] = useState<boolean>(false);
   const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
   const handleProductChange = (
@@ -65,7 +61,7 @@ export default function ExchangeRequest(): ReactElement {
     if (applicationService.isAuthenticated()) {
       applicationService
         .createApiClient()
-        .get(AppRoutingConstants.MY_PRODUCTS_PATH)
+        .get(AppRoutingConstants.MY_PRODUCTS_CAN_BE_EXCHANGE_PATH)
         .then(response => {
           setMyProducts(response.data.data ?? []);
         })

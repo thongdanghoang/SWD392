@@ -98,16 +98,16 @@ export default function ProfileOffCanvas({
             }
           }}
         >
-          Cài đặt tài khoản
-        </div>
-        <div className="list-item regular-14  text-color-quaternary">
-          Trợ giúp
-        </div>
-        <div className="list-item regular-14  text-color-quaternary">
-          Đóng góp ý kiến
+          Trung tâm bảo mật
         </div>
         <div
-          className="list-item regular-14  text-color-quaternary"
+          className="list-item regular-14 text-color-quaternary"
+          onClick={() => navigate('/user/dashboard')}
+        >
+          Bảng điều khiển người dùng
+        </div>
+        <div
+          className="list-item regular-14 text-color-quaternary"
           onClick={() => applicationService.signOutRedirect()}
         >
           Đăng xuất

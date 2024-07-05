@@ -65,6 +65,33 @@ export class ProductController {
             this.userService.getCurrentUser().id
           )
           .then((products: ProductEntity[]): ProductDto[] =>
+            products.map(
+              (product: ProductEntity): ProductDto =>
+                this.mapToProductDto(product)
+            )
+          ),
+        HttpMessage.OK,
+        HttpStatus.OK
+      );
+    } catch (error) {
+      return new ResponseData<ProductDto[]>(
+        null,
+        HttpMessage.INTERNAL_SERVER_ERROR,
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
+    }
+  }
+
+  @Get('/for-exchange')
+  @UseGuards(JwtAuthGuard)
+  async getMyProductsForExchange(): Promise<ResponseData<ProductDto[]>> {
+    try {
+      return new ResponseData<ProductDto[]>(
+        await this.productService
+          .getProductsByOwnerIdCanBeExchanged(
+            this.userService.getCurrentUser().id
+          )
+          .then((products: ProductEntity[]): ProductDto[] =>
             products
               .filter(
                 (product: ProductEntity): boolean =>

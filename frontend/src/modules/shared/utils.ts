@@ -8,5 +8,5 @@ export const formatToVietnameseCurrency = (
     });
     return formatter.format(amount);
   }
-  return '';
+  return 'Cho tặng';
 };

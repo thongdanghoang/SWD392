@@ -7,6 +7,7 @@ export class AppRoutingConstants {
   public static readonly HOMEPAGE: string = '/';
   public static readonly EXCHANGE: string = '/exchanges';
   public static readonly POST_PRODUCT: string = `/post-product`;
+  public static readonly PRODUCTS: string = `/products`;
   // User
   public static readonly CURRENT_USER_PATH: string = `${AppRoutingConstants.BASE_URL}/user`;
   public static readonly LOGOUT_PATH: string = `${AppRoutingConstants.BASE_URL}/user/logout`;
@@ -14,13 +15,17 @@ export class AppRoutingConstants {
   // Product
   public static readonly PRODUCTS_PATH: string = `${AppRoutingConstants.BASE_URL}/products`;
   public static readonly MY_PRODUCTS_PATH: string = `${AppRoutingConstants.BASE_URL}/products/my-products`;
+  public static readonly MY_PRODUCTS_CAN_BE_EXCHANGE_PATH: string = `${AppRoutingConstants.BASE_URL}/products/for-exchange`;
 
   // Transaction - Exchange
-  public static readonly EXCHANGE_REQUESTS_PATH: string = `${AppRoutingConstants.BASE_URL}/exchanges/request`;
-  public static readonly EXCHANGE_ACCEPT_PATH: string = `${AppRoutingConstants.BASE_URL}${AppRoutingConstants.EXCHANGE}/accept`;
-  public static readonly EXCHANGE_REJECT_PATH: string = `${AppRoutingConstants.BASE_URL}${AppRoutingConstants.EXCHANGE}/reject`;
-  public static readonly EXCHANGE_DETAIL_PATH: string = `${AppRoutingConstants.BASE_URL}${AppRoutingConstants.EXCHANGE}`;
+  public static readonly EXCHANGE_PATH: string = `${AppRoutingConstants.BASE_URL}/exchanges`;
+  public static readonly EXCHANGE_REQUESTS_PATH: string = `${AppRoutingConstants.BASE_URL}/exchanges-requests`;
+  public static readonly EXCHANGE_ACCEPT_PATH: string = `${AppRoutingConstants.BASE_URL}/exchanges-requests/accept`;
+  public static readonly EXCHANGE_REJECT_PATH: string = `${AppRoutingConstants.BASE_URL}/exchanges-requests/reject`;
 
   // Chat
   public static readonly CHAT_PATH: string = `${AppRoutingConstants.BASE_URL}/chat`;
+
+  // Not found
+  public static readonly NOT_FOUND_PATH: string = '/';
 }

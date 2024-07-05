@@ -63,4 +63,8 @@ export class ProductService {
   async getProductDetails(id: number): Promise<ProductEntity> {
     return this.productRepository.findOneBy({id});
   }
+
+  async updateProductStatus(id: number, status: ProductStatus): Promise<void> {
+    await this.productRepository.update(id, {status});
+  }
 }

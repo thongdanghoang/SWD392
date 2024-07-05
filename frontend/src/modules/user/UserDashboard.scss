@@ -1,0 +1,32 @@
+@import "@assets/styles/variables";
+@import "@assets/styles/typography";
+
+.user-dashboard {
+  .user-avatar,
+  .user-profile,
+  .user-posts,
+  .exchange-histories {
+    border: 1px solid $app-primary;
+    border-radius: 8px;
+  }
+
+  .exchange-histories {
+    .histories {
+      .table-hover > tbody > tr:hover > * {
+        cursor: pointer;
+        background-color: rgba($app-primary, 0.01);
+      }
+
+      th {
+        @include font-style(500, 14px, 150%);
+        color: $app-quaternary;
+        background-color: $app-primary;
+      }
+
+      td {
+        @include font-style(400, 14px, 150%);
+        color: $app-tertiary;
+      }
+    }
+  }
+}
