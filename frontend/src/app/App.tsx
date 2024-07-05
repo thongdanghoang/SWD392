@@ -20,6 +20,7 @@ import ChatList from '../modules/chat/ChatList.tsx';
 import SellerProfile from '../modules/shared/components/seller-profile/SellerProfile.tsx';
 import {UserProvider} from '../modules/shared/services/userProvider.tsx';
 import {UserContext} from '../modules/shared/services/userContext.ts';
+import UserDashboard from '../modules/user/UserDashboard.tsx';
 
 export default function App(): ReactElement {
   const applicationService = useApplicationService();
@@ -70,7 +71,12 @@ export default function App(): ReactElement {
                     path="/exchange-detail/:id"
                     element={<ExchangeDetail />}
                   ></Route>
+                  <Route
+                    path="/user/dashboard"
+                    element={<UserDashboard />}
+                  ></Route>
                   <Route path="/dev" element={<TestLoginComponent />}></Route>
+                  <Route path="*" element={<div>Not Found</div>}></Route>
                 </Routes>
               </div>
               <div className="footer">

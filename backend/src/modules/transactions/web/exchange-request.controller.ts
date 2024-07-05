@@ -1,4 +1,13 @@
-import {Body, Controller, Get, Param, Post, UseGuards} from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpException,
+  HttpStatus,
+  Param,
+  Post,
+  UseGuards
+} from '@nestjs/common';
 import {JwtAuthGuard} from '@5stones/nest-oidc';
 import {ProductService} from '../../product/services/product.service';
 import {UsersService} from '../../user/users.service';
@@ -16,7 +25,7 @@ import {
 } from '../../user/notification.entity';
 import {ExchangeDetailDto} from '../dto/exchange-detail.dto';
 
-@Controller('exchanges')
+@Controller('exchanges-requests')
 @UseGuards(JwtAuthGuard)
 export class ExchangeRequestController {
   constructor(
@@ -25,69 +34,76 @@ export class ExchangeRequestController {
     private readonly service: ExchangeRequestService
   ) {}
 
-  @Get('/:id')
-  async getExchangeDetail(@Param('id') id: number): Promise<ExchangeDetailDto> {
-    try {
-      return await this.service.getExchangeRequest(id);
-    } catch (error) {
-      return error;
-    }
-  }
-
   @Post('/accept/:exchangeId')
   async acceptExchangeRequest(
     @Param('exchangeId') exchangeId: number
-  ): Promise<ExchangeEntity> {
+  ): Promise<ExchangeDetailDto> {
     const exchangeRequest: ExchangeEntity =
       await this.service.getExchangeRequest(exchangeId);
     exchangeRequest.status = ExchangeStatus.ACCEPTED;
     void this.productService
       .getProductDetails(exchangeRequest.productRequest)
-      .then((product: ProductEntity) => {
+      .then((product: ProductEntity): void => {
         product.status = ProductStatus.EXCHANGED;
         void this.productService.updateProduct(product);
       });
-    exchangeRequest.productsToBeExchanged.forEach(
-      (productId: string): void =>
-        void this.productService
-          .getProductDetails(Number(productId))
-          .then((product: ProductEntity) => {
-            product.status = ProductStatus.EXCHANGED;
-            void this.productService.updateProduct(product);
-          })
-    );
-    return this.saveExchangeRequestAndUpdateNotifications(exchangeRequest);
+    return Promise.all(
+      exchangeRequest.productsToBeExchanged
+        .map((productId: number): number => productId)
+        .map(async (productId: number): Promise<void> => {
+          return this.productService.updateProductStatus(
+            productId,
+            ProductStatus.EXCHANGED
+          );
+        })
+    )
+      .then(
+        (): Promise<ExchangeEntity> =>
+          this.saveExchangeRequestAndUpdateNotifications(exchangeRequest)
+      )
+      .catch((error: Error): never => {
+        console.error(error);
+        throw new HttpException(
+          'Expectation Failed',
+          HttpStatus.EXPECTATION_FAILED
+        );
+      });
   }
 
-  @Post('/reject/:exchangeId')
+  @Post('/reject/:id')
   async rejectExchangeRequest(
-    @Param('exchangeId') exchangeId: number
-  ): Promise<ExchangeEntity> {
+    @Param('id') exchangeId: number
+  ): Promise<ExchangeDetailDto> {
     const exchangeRequest: ExchangeEntity =
       await this.service.getExchangeRequest(exchangeId);
     exchangeRequest.status = ExchangeStatus.REJECTED;
-    void this.productService
-      .getProductDetails(exchangeRequest.productRequest)
-      .then((product: ProductEntity) => {
-        product.status = ProductStatus.PUBLISHED;
-        void this.productService.updateProduct(product);
+    return Promise.all(
+      exchangeRequest.productsToBeExchanged
+        .map((productId: number): number => productId)
+        .map(async (productId: number): Promise<void> => {
+          return this.productService.updateProductStatus(
+            productId,
+            ProductStatus.PUBLISHED
+          );
+        })
+    )
+      .then(
+        (): Promise<ExchangeEntity> =>
+          this.saveExchangeRequestAndUpdateNotifications(exchangeRequest)
+      )
+      .catch((error: Error): never => {
+        console.error(error);
+        throw new HttpException(
+          'Expectation Failed',
+          HttpStatus.EXPECTATION_FAILED
+        );
       });
-    exchangeRequest.productsToBeExchanged.forEach(
-      (productId: string): void =>
-        void this.productService
-          .getProductDetails(Number(productId))
-          .then((product: ProductEntity) => {
-            product.status = ProductStatus.PUBLISHED;
-            void this.productService.updateProduct(product);
-          })
-    );
-    return this.saveExchangeRequestAndUpdateNotifications(exchangeRequest);
   }
 
-  @Post('/request')
+  @Post()
   async create(
     @Body() exchangeRequestBody: ExchangeRequestBodyDto
-  ): Promise<ExchangeEntity> {
+  ): Promise<ExchangeDetailDto> {
     const currentUser: UserEntity = this.userService.getCurrentUser();
     const productExchanged: ProductEntity =
       await this.productService.getProductDetails(
@@ -98,16 +114,36 @@ export class ExchangeRequestController {
       productExchanged,
       exchangeRequestBody
     );
-    return await this.service
-      .createExchangeRequest(exchangeRequest)
-      .then((exchangeRequest: ExchangeEntity) => {
-        void this.sendNotificationToOwner(
-          currentUser,
-          productExchanged,
-          exchangeRequest
-        );
-        return exchangeRequest;
-      });
+
+    const createdExchangeRequest =
+      await this.service.createExchangeRequest(exchangeRequest);
+
+    // Set status for products to exchange
+    await this.setStatusForProductsToExchange(
+      exchangeRequestBody.productsToExchangeId
+    );
+
+    // After successfully creating the exchange request, send the notification
+    await this.sendNotificationToOwner(
+      currentUser,
+      productExchanged,
+      createdExchangeRequest
+    );
+
+    // Return the created exchange request
+    return createdExchangeRequest;
+  }
+
+  @Get('/:id')
+  async getExchangeDetail(@Param('id') id: number): Promise<ExchangeDetailDto> {
+    try {
+      return await this.service.getExchangeRequest(id);
+    } catch (error) {
+      throw new HttpException(
+        'Expectation Failed',
+        HttpStatus.EXPECTATION_FAILED
+      );
+    }
   }
 
   private async saveExchangeRequestAndUpdateNotifications(
@@ -116,10 +152,9 @@ export class ExchangeRequestController {
     return await this.service
       .save(exchangeRequest)
       .then((exchangeRequest: ExchangeEntity) => {
-        // clear notifications
         const currentUser: UserEntity = this.userService.getCurrentUser();
         currentUser.notifications = currentUser.notifications.filter(
-          (notification: NotificationEntity) =>
+          (notification: NotificationEntity): boolean =>
             notification.exchangeId !== exchangeRequest.id
         );
         void this.userService.save(currentUser);
@@ -133,10 +168,14 @@ export class ExchangeRequestController {
     exchangeRequestBody: ExchangeRequestBodyDto
   ): Promise<ExchangeEntity> {
     let exchangeRequest: ExchangeEntity = {
+      userRequest: currentUser.id,
       createdBy: currentUser.firstName,
       modifiedBy: currentUser.firstName,
       status: ExchangeStatus.PENDING,
       productRequest: productExchanged.id,
+      targetUser: (
+        await this.productService.getProductDetails(productExchanged.id)
+      ).owner,
       productsToBeExchanged: []
     };
     if (exchangeRequestBody.exchangeByMoney) {
@@ -145,20 +184,45 @@ export class ExchangeRequestController {
         exchangeMoney: 0
       };
     } else {
-      const productsToExchange: ProductEntity[] = await Promise.all(
-        exchangeRequestBody.productsToExchangeId.map(
-          async (productId: number) =>
-            await this.productService.getProductDetails(productId)
-        )
+      exchangeRequest = await this.processExchangeRequestByProducts(
+        exchangeRequestBody,
+        exchangeRequest
       );
-      exchangeRequest = {
-        ...exchangeRequest,
-        productsToBeExchanged: productsToExchange.map(
-          (product: ProductEntity) => product.id.toString()
-        )
-      };
     }
     return exchangeRequest;
+  }
+
+  private async processExchangeRequestByProducts(
+    exchangeRequestBody: ExchangeRequestBodyDto,
+    exchangeRequest: ExchangeEntity
+  ): Promise<ExchangeEntity> {
+    const productsToExchange: ProductEntity[] = await Promise.all(
+      exchangeRequestBody.productsToExchangeId.map(
+        async (productId: number) =>
+          await this.productService.getProductDetails(productId)
+      )
+    );
+    return {
+      ...exchangeRequest,
+      exchangeMoney: 0,
+      productsToBeExchanged: productsToExchange.map(
+        (product: ProductEntity) => product.id
+      )
+    };
+  }
+
+  private async setStatusForProductsToExchange(
+    productsToExchangeId: number[]
+  ): Promise<void> {
+    productsToExchangeId.forEach(
+      (productId: number): void =>
+        void this.productService
+          .getProductDetails(productId)
+          .then((product: ProductEntity) => {
+            product.status = ProductStatus.EXCHANGING;
+            void this.productService.updateProduct(product);
+          })
+    );
   }
 
   private async sendNotificationToOwner(

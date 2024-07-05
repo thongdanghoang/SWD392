@@ -10,7 +10,8 @@ import {
 export enum ExchangeStatus {
   PENDING = 'PENDING',
   ACCEPTED = 'ACCEPTED',
-  REJECTED = 'REJECTED'
+  REJECTED = 'REJECTED',
+  EXCHANGING = 'EXCHANGING'
 }
 
 @Entity('exchange')
@@ -50,15 +51,25 @@ export class ExchangeEntity {
   productRequest: number;
 
   @Column({
-    name: 'products_to_exchange',
-    type: 'text',
-    nullable: false,
-    transformer: {
-      to: (value: string[]) => JSON.stringify(value),
-      from: (value: string) => JSON.parse(value)
-    }
+    name: 'user_request',
+    type: 'uuid',
+    nullable: false
   })
-  productsToBeExchanged: string[];
+  userRequest: number;
+
+  @Column({
+    name: 'products_to_be_exchanged',
+    type: 'json',
+    nullable: false
+  })
+  productsToBeExchanged: number[];
+
+  @Column({
+    name: 'target_user',
+    type: 'uuid',
+    nullable: false
+  })
+  targetUser: number;
 
   @Column({
     name: 'exchange_by_money',

@@ -1,20 +1,22 @@
 import './ExchangeDetail.scss';
 import AppButton from '../../shared/components/buttons/AppButton.tsx';
-import {ReactElement, useEffect, useState} from 'react';
-import {useParams} from 'react-router-dom';
+import {ReactElement, useContext, useEffect, useState} from 'react';
+import {useNavigate, useParams} from 'react-router-dom';
 import {useApplicationService} from '../../shared/services/application.service.ts';
 import {ProductWithOwnerDTO} from '../../homepage/model/productWithOwnerDTO.ts';
 import {AppRoutingConstants} from '../../shared/app-routing.constants.ts';
 import {ExchangeRequestDto, getExchangeStatusText} from '../models/model.ts';
 import {formatToVietnameseCurrency} from '../../shared/utils.ts';
 import {getWardByCode} from 'vn-local-plus';
+import {UserDto} from '../../shared/models/userDto.ts';
+import {UserContext} from '../../shared/services/userContext.ts';
 
 export default function ExchangeDetail(): ReactElement {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
+  const currentUser: UserDto | null | undefined = useContext(UserContext)?.user;
   const applicationService = useApplicationService();
   const exchangeDetailId = useParams<{id: string}>().id;
-  const [exchangeDetail, setExchangeDetail] =
-    useState<ExchangeRequestDto | null>(null);
+  const [exchangeDetail, setExchangeDetail] = useState<ExchangeRequestDto>();
   const [productsToBeExchanged, setProductsToBeExchanged] = useState<
     ProductWithOwnerDTO[]
   >([]);
@@ -24,16 +26,24 @@ export default function ExchangeDetail(): ReactElement {
 
   // fetch exchange detail by id
   useEffect((): void => {
-    if (exchangeDetailId && applicationService.isAuthenticated()) {
+    if (exchangeDetailId && currentUser) {
       applicationService
         .createApiClient()
-        .get(`${AppRoutingConstants.EXCHANGE_DETAIL_PATH}/${exchangeDetailId}`)
-        .then(response => setExchangeDetail(response.data))
+        .get(
+          `${AppRoutingConstants.EXCHANGE_REQUESTS_PATH}/${exchangeDetailId}`
+        )
+        .then(response => {
+          if (response.data) {
+            setExchangeDetail(response.data);
+          } else {
+            navigate(AppRoutingConstants.NOT_FOUND_PATH);
+          }
+        })
         .catch(error => {
           console.error(error);
         });
     }
-  }, [exchangeDetailId, applicationService.isAuthenticated()]);
+  }, [exchangeDetailId, currentUser]);
 
   // after fetch exchange detail, we can fetch product will be exchanged
   useEffect((): void => {
