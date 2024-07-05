@@ -8,9 +8,11 @@ import {ProductWithOwnerDTO} from '../../../homepage/model/productWithOwnerDTO.t
 import {UserDto} from '../../models/userDto.ts';
 import io from 'socket.io-client';
 import {UserContext} from '../../services/userContext.ts';
+import {formatToVietnameseCurrency} from '../../utils.ts';
+import {getWardByCode} from 'vn-local-plus';
 
 // Replace with your NestJS server URL
-const socket = io('http://localhost:3001/chat', {
+const socket = io(AppRoutingConstants.CHAT_GATEWAY_URL, {
   transports: ['websocket'] // Ensure WebSocket transport is used
 });
 
@@ -50,11 +52,7 @@ export default function ProductDetail(): ReactElement {
         .createApiClient()
         .get(`${AppRoutingConstants.PRODUCTS_PATH}/${id}`)
         .then(response => {
-          setCurrentProduct({
-            ...response.data.data,
-            summary:
-              'Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nulla nibh diam, blandit vel consequat nec, ultrices et ipsum. Nulla varius magna a consequat pulvinar. '
-          });
+          setCurrentProduct(response.data.data);
         })
         .catch(error => {
           console.error(error);
@@ -68,17 +66,6 @@ export default function ProductDetail(): ReactElement {
     setLiked(!liked);
   };
 
-  const formatToVietnameseCurrency = (amount: number | undefined): string => {
-    if (amount) {
-      const formatter = new Intl.NumberFormat('vi-VN', {
-        style: 'currency',
-        currency: 'VND'
-      });
-      return formatter.format(amount);
-    }
-    return '';
-  };
-
   return (
     <div className="product-detail container">
       <section>
@@ -86,7 +73,7 @@ export default function ProductDetail(): ReactElement {
           <div className="row gx-4 align-items-start">
             <div className="col-6">
               <img
-                className="card-img"
+                className="card-img mb-4"
                 src={currentProduct?.images[0]}
                 alt="Product image"
               />
@@ -108,7 +95,11 @@ export default function ProductDetail(): ReactElement {
                 </div>
                 <div className="suggested-price">
                   <div className="semibold-20 text-color-tertiary">
-                    {formatToVietnameseCurrency(currentProduct?.suggestedPrice)}
+                    {currentProduct?.isGiveAway
+                      ? 'Cho tặng miễn phí'
+                      : formatToVietnameseCurrency(
+                          currentProduct?.suggestedPrice
+                        )}
                   </div>
                   <hr />
                 </div>
@@ -136,7 +127,8 @@ export default function ProductDetail(): ReactElement {
                     Địa chỉ:
                   </div>
                   <div className="regular-14 text-color-tertiary">
-                    Phường 13, Quận Bình Thạnh, Tp Hồ Chí Minh
+                    {currentProduct &&
+                      `${currentProduct.addressDetail}, ${getWardByCode(currentProduct.wardCode).fullName}`}
                   </div>
                 </div>
                 <div className="d-flex align-items-center gap-4 d-none">
@@ -281,85 +273,6 @@ export default function ProductDetail(): ReactElement {
                   className="ms-2"
                   children={`Đăng tin ngay!`}
                 />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="py-4 bg-light">
-        <div className="container px-4 px-lg-5">
-          <div className="d-flex justify-content-between align-items-center">
-            <h2 className="fw-bolder mb-4">Tin đăng tương tự</h2>
-            <a className="fw-bold">Xem thêm{'->'} </a>
-          </div>
-          <div className="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-            <div className="col mb-5">
-              <div className="card h-100">
-                <img
-                  className="card-img-top card-img"
-                  src="https://orion.vn/media/qwuesoiv/cestbon-5p-creamcheese-mockup.png"
-                  alt="..."
-                />
-                <div className="card-body p-4">
-                  <div className="text-left">
-                    <h5 className="small">C'est Bon Sốt Kem Phô Mai 8P</h5>
-                    $2
-                  </div>
-                  <div className="text-left small">Đăng cách đây 1 tiếng</div>
-                </div>
-                <div className="card-footer p-1 pt-0 border-top-0 bg-transparent"></div>
-              </div>
-            </div>
-            <div className="col mb-5">
-              <div className="card h-100">
-                <img
-                  className="card-img-top card-img"
-                  src="https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-lnfsywolz0jeb2"
-                  alt="..."
-                />
-                <div className="card-body p-4">
-                  <div className="text-left">
-                    <h5 className="small">Bông đất sét theo yêu cầu</h5>
-                    $10
-                  </div>
-                  <div className="text-left small">Đăng cách đây 1 tiếng</div>
-                </div>
-                <div className="card-footer p-1 pt-0 border-top-0 bg-transparent"></div>
-              </div>
-            </div>
-            <div className="col mb-5">
-              <div className="card h-100">
-                <img
-                  className="card-img-top card-img"
-                  src="https://sbooks.vn/wp-content/uploads/2023/05/1-26.png"
-                  alt="..."
-                />
-                <div className="card-body p-4">
-                  <div className="text-left">
-                    <h5 className="small">Sách đắc nhân tâm</h5>
-                    $5
-                  </div>
-                  <div className="text-left small">Đăng cách đây 1 tiếng</div>
-                </div>
-                <div className="card-footer p-1 pt-0 border-top-0 bg-transparent"></div>
-              </div>
-            </div>
-            <div className="col mb-5">
-              <div className="card h-100">
-                <img
-                  className="card-img-top card-img"
-                  src="https://123wow.vn/cdn/shop/products/1q8RDtfv4GuU5IB6cP4ohTs9KN4aXXKml.jpg?v=1659170828"
-                  alt="..."
-                />
-                <div className="card-body p-4">
-                  <div className="text-left">
-                    <h5 className="small">Sách trẻ em 3 quyển</h5>
-                    $10
-                  </div>
-                  <div className="text-left small">Đăng cách đây 1 tiếng</div>
-                </div>
-                <div className="card-footer p-1 pt-0 border-top-0 bg-transparent"></div>
               </div>
             </div>
           </div>

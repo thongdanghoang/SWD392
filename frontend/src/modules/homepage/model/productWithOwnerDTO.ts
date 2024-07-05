@@ -8,7 +8,12 @@ export interface ProductWithOwnerDTO {
   creationDate: Date;
   lastModificationDate: Date;
   title: string;
+  isGiveAway: boolean;
   summary: string;
+  provinceCode: string;
+  districtCode: string;
+  wardCode: string;
+  addressDetail: string;
   suggestedPrice: number;
   category: string;
   status: ProductStatus;
@@ -26,6 +31,7 @@ export interface ProductDto {
   creationDate: Date;
   lastModificationDate: Date;
   title: string;
+  isGiveAway: boolean;
   summary: string;
   suggestedPrice: number;
   category: string;

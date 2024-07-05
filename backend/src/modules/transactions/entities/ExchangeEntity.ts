@@ -50,11 +50,15 @@ export class ExchangeEntity {
   productRequest: number;
 
   @Column({
-    name: 'product_to_exchange',
-    type: 'uuid',
-    nullable: true
+    name: 'products_to_exchange',
+    type: 'text',
+    nullable: false,
+    transformer: {
+      to: (value: string[]) => JSON.stringify(value),
+      from: (value: string) => JSON.parse(value)
+    }
   })
-  productToBeExchanged?: number;
+  productsToBeExchanged: string[];
 
   @Column({
     name: 'exchange_by_money',

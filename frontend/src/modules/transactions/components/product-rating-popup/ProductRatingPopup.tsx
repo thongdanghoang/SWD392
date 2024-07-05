@@ -4,6 +4,8 @@ import './ProductRatingPopup.scss';
 import {ProductWithOwnerDTO} from '../../../homepage/model/productWithOwnerDTO';
 import AppButton from '../../../shared/components/buttons/AppButton';
 import {UserDto} from '../../../shared/models/userDto';
+import {formatToVietnameseCurrency} from '../../../shared/utils.ts';
+import {getWardByCode} from 'vn-local-plus';
 
 interface ProductRatingPopupProps {
   show: boolean;
@@ -35,17 +37,6 @@ const ProductRatingPopup: React.FC<ProductRatingPopupProps> = ({
   if (!show) {
     return null;
   }
-
-  const formatToVietnameseCurrency = (amount: number | undefined): string => {
-    if (amount) {
-      const formatter = new Intl.NumberFormat('vi-VN', {
-        style: 'currency',
-        currency: 'VND'
-      });
-      return formatter.format(amount);
-    }
-    return '';
-  };
 
   return (
     <div className="popup-overlay" onClick={onClose}>
@@ -87,7 +78,8 @@ const ProductRatingPopup: React.FC<ProductRatingPopupProps> = ({
                     Địa chỉ:
                   </div>
                   <div className="regular-14 text-color-tertiary">
-                    Phường 13, Quận Bình Thạnh, Tp Hồ Chí Minh
+                    {currentProduct &&
+                      `${currentProduct.addressDetail}, ${getWardByCode(currentProduct.wardCode).fullName}`}
                   </div>
                 </div>
               </div>

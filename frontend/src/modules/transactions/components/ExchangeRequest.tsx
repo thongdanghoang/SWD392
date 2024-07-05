@@ -5,6 +5,8 @@ import {useNavigate, useParams} from 'react-router-dom';
 import {ProductWithOwnerDTO} from '../../homepage/model/productWithOwnerDTO.ts';
 import {AppRoutingConstants} from '../../shared/app-routing.constants.ts';
 import AppButton from '../../shared/components/buttons/AppButton.tsx';
+import {formatToVietnameseCurrency} from '../../shared/utils.ts';
+import {getWardByCode} from 'vn-local-plus';
 
 interface ExchangeRequestDto {
   productId: string;
@@ -21,24 +23,28 @@ export default function ExchangeRequest(): ReactElement {
   }, []);
 
   const [confirm, setConfirm] = useState<boolean>(false);
-  const [selectedProductId, setSelectedProductId] = useState<string | null>(
-    null
-  );
+  const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
   const handleProductChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ): void => {
-    setSelectedProductId(event.target.value);
+    if (event.target.checked) {
+      setSelectedProducts([...selectedProducts, event.target.value]);
+    } else {
+      setSelectedProducts(
+        selectedProducts.filter(productId => productId !== event.target.value)
+      );
+    }
   };
 
   // Fetch product detail by id
-  const {id} = useParams<{id: string}>();
+  const currentProductId = useParams<{id: string}>().id;
   const [currentProduct, setCurrentProduct] =
     useState<ProductWithOwnerDTO | null>(null);
   useEffect((): void => {
-    if (id) {
+    if (currentProductId) {
       applicationService
         .createApiClient()
-        .get(`${AppRoutingConstants.PRODUCTS_PATH}/${id}`)
+        .get(`${AppRoutingConstants.PRODUCTS_PATH}/${currentProductId}`)
         .then(response => {
           if (response.data.data.isMyProduct) {
             console.error('You cannot exchange your own product');
@@ -51,7 +57,7 @@ export default function ExchangeRequest(): ReactElement {
           console.error(error);
         });
     }
-  }, [id]);
+  }, [currentProductId]);
 
   // Fetch my products
   const [myProducts, setMyProducts] = useState<ProductWithOwnerDTO[]>([]);
@@ -69,21 +75,10 @@ export default function ExchangeRequest(): ReactElement {
     }
   }, [applicationService.isAuthenticated()]);
 
-  const formatToVietnameseCurrency = (amount: number | undefined): string => {
-    if (amount) {
-      const formatter = new Intl.NumberFormat('vi-VN', {
-        style: 'currency',
-        currency: 'VND'
-      });
-      return formatter.format(amount);
-    }
-    return '';
-  };
-
   const handleExchangeRequestByMoney = (): void => {
-    if (id) {
+    if (currentProductId) {
       const exchangeRequest: ExchangeRequestDto = {
-        productId: id,
+        productId: currentProductId,
         exchangeByMoney: true
       };
       applicationService
@@ -98,13 +93,17 @@ export default function ExchangeRequest(): ReactElement {
     }
   };
 
-  const handleExchangeRequestByProduct = (): void => {
-    if (id && selectedProductId) {
+  const handleExchangeRequestByProducts = (): void => {
+    if (currentProductId && selectedProducts.length > 0) {
       applicationService
         .createApiClient()
-        .post(AppRoutingConstants.EXCHANGE_REQUESTS_PATH)
-        .then((): void => {
-          navigate(`/exchange-detail/${id}/${selectedProductId}`);
+        .post(AppRoutingConstants.EXCHANGE_REQUESTS_PATH, {
+          productId: currentProductId,
+          exchangeByMoney: false,
+          productsToExchangeId: selectedProducts
+        })
+        .then(response => {
+          navigate(`/exchange-detail/${response.data.id}`);
         })
         .catch(error => {
           console.error(error);
@@ -154,7 +153,8 @@ export default function ExchangeRequest(): ReactElement {
                 {'Địa chỉ:'}
               </div>
               <div className="value regular-14 text-color-tertiary">
-                Phường 13, Quận Bình Thạnh, Tp Hồ Chí Minh
+                {currentProduct &&
+                  `${currentProduct.addressDetail}, ${getWardByCode(currentProduct.wardCode).fullName}`}
               </div>
             </div>
           </div>
@@ -192,7 +192,7 @@ export default function ExchangeRequest(): ReactElement {
             {myProducts?.map((product: ProductWithOwnerDTO) => (
               <label
                 key={product.id}
-                className={`my-product-item d-flex align-items-center clickable ${selectedProductId === product.id ? 'selected' : ''}`}
+                className={`my-product-item d-flex align-items-center clickable ${selectedProducts.includes(product.id) ? 'selected' : ''}`}
               >
                 <div className="product-detail flex-1 d-flex gap-3 align-items-center">
                   <img
@@ -211,21 +211,13 @@ export default function ExchangeRequest(): ReactElement {
                 </div>
                 <div className="form-check me-3">
                   <input
-                    className="form-check-input d-none" // Hide the default radio button
-                    type="radio"
+                    className="form-check-input"
+                    type="checkbox"
                     id={`product-${product.id}`}
                     name="product"
                     value={product.id}
                     onChange={handleProductChange}
                   />
-                  <label
-                    className="form-check-label d-flex align-items-center"
-                    htmlFor={`product-${product.id}`}
-                  >
-                    <span className="custom-radio me-2">
-                      <span className="inner"></span>
-                    </span>
-                  </label>
                 </div>
               </label>
             ))}
@@ -257,8 +249,8 @@ export default function ExchangeRequest(): ReactElement {
           <AppButton
             className="button"
             variant={'primary'}
-            disabled={!confirm || !selectedProductId}
-            onClick={handleExchangeRequestByProduct}
+            disabled={!confirm || selectedProducts.length === 0}
+            onClick={handleExchangeRequestByProducts}
           >
             Giao dịch bằng sản phẩm
           </AppButton>

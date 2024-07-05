@@ -6,7 +6,7 @@ import {UserDto} from 'src/modules/shared/models/userDto.ts';
 import {AppRoutingConstants} from '../shared/app-routing.constants.ts';
 import {UserContext} from '../shared/services/userContext.ts';
 
-const socket = io('http://localhost:3001/chat', {
+const socket = io(AppRoutingConstants.CHAT_GATEWAY_URL, {
   transports: ['websocket'],
   autoConnect: true
 });
