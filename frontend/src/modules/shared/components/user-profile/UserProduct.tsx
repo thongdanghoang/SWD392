@@ -5,6 +5,7 @@ import {AppRoutingConstants} from '../../app-routing.constants.ts';
 import {useNavigate} from 'react-router-dom';
 import {formatDistanceToNow} from 'date-fns';
 import {vi} from 'date-fns/locale';
+import {formatToVietnameseCurrency} from '../../utils.ts';
 
 export default function UserProduct(): ReactElement {
   const applicationService = useApplicationService();
@@ -32,14 +33,6 @@ export default function UserProduct(): ReactElement {
         });
     }
   }, [applicationService.isAuthenticated()]);
-
-  const formatToVietnameseCurrency = (amount: number): string => {
-    const formatter = new Intl.NumberFormat('vi-VN', {
-      style: 'currency',
-      currency: 'VND'
-    });
-    return formatter.format(amount);
-  };
 
   return (
     <div className="container">

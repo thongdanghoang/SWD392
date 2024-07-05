@@ -1,4 +1,4 @@
-import {Body, Controller, Param, Post, UseGuards} from '@nestjs/common';
+import {Body, Controller, Get, Param, Post, UseGuards} from '@nestjs/common';
 import {JwtAuthGuard} from '@5stones/nest-oidc';
 import {ProductService} from '../../product/services/product.service';
 import {UsersService} from '../../user/users.service';
@@ -14,6 +14,7 @@ import {
   NotificationEntity,
   NotificationType
 } from '../../user/notification.entity';
+import {ExchangeDetailDto} from '../dto/exchange-detail.dto';
 
 @Controller('exchanges')
 @UseGuards(JwtAuthGuard)
@@ -23,6 +24,15 @@ export class ExchangeRequestController {
     private readonly userService: UsersService,
     private readonly service: ExchangeRequestService
   ) {}
+
+  @Get('/:id')
+  async getExchangeDetail(@Param('id') id: number): Promise<ExchangeDetailDto> {
+    try {
+      return await this.service.getExchangeRequest(id);
+    } catch (error) {
+      return error;
+    }
+  }
 
   @Post('/accept/:exchangeId')
   async acceptExchangeRequest(
@@ -34,17 +44,18 @@ export class ExchangeRequestController {
     void this.productService
       .getProductDetails(exchangeRequest.productRequest)
       .then((product: ProductEntity) => {
-        product.status = ProductStatus.REMOVED;
+        product.status = ProductStatus.EXCHANGED;
         void this.productService.updateProduct(product);
       });
-    if (exchangeRequest.productToBeExchanged) {
-      void this.productService
-        .getProductDetails(exchangeRequest.productToBeExchanged)
-        .then((product: ProductEntity) => {
-          product.status = ProductStatus.REMOVED;
-          void this.productService.updateProduct(product);
-        });
-    }
+    exchangeRequest.productsToBeExchanged.forEach(
+      (productId: string): void =>
+        void this.productService
+          .getProductDetails(Number(productId))
+          .then((product: ProductEntity) => {
+            product.status = ProductStatus.EXCHANGED;
+            void this.productService.updateProduct(product);
+          })
+    );
     return this.saveExchangeRequestAndUpdateNotifications(exchangeRequest);
   }
 
@@ -61,14 +72,15 @@ export class ExchangeRequestController {
         product.status = ProductStatus.PUBLISHED;
         void this.productService.updateProduct(product);
       });
-    if (exchangeRequest.productToBeExchanged) {
-      void this.productService
-        .getProductDetails(exchangeRequest.productToBeExchanged)
-        .then((product: ProductEntity) => {
-          product.status = ProductStatus.PUBLISHED;
-          void this.productService.updateProduct(product);
-        });
-    }
+    exchangeRequest.productsToBeExchanged.forEach(
+      (productId: string): void =>
+        void this.productService
+          .getProductDetails(Number(productId))
+          .then((product: ProductEntity) => {
+            product.status = ProductStatus.PUBLISHED;
+            void this.productService.updateProduct(product);
+          })
+    );
     return this.saveExchangeRequestAndUpdateNotifications(exchangeRequest);
   }
 
@@ -86,7 +98,6 @@ export class ExchangeRequestController {
       productExchanged,
       exchangeRequestBody
     );
-
     return await this.service
       .createExchangeRequest(exchangeRequest)
       .then((exchangeRequest: ExchangeEntity) => {
@@ -97,26 +108,6 @@ export class ExchangeRequestController {
         );
         return exchangeRequest;
       });
-  }
-
-  private async changeStatusOfProductToExchanging(
-    productRequestId: number,
-    productToExchangeId?: number
-  ): Promise<void> {
-    void this.productService
-      .getProductDetails(productRequestId)
-      .then((product: ProductEntity) => {
-        product.status = ProductStatus.EXCHANGING;
-        void this.productService.updateProduct(product);
-      });
-    if (productToExchangeId) {
-      void this.productService
-        .getProductDetails(productToExchangeId)
-        .then((product: ProductEntity) => {
-          product.status = ProductStatus.EXCHANGING;
-          void this.productService.updateProduct(product);
-        });
-    }
   }
 
   private async saveExchangeRequestAndUpdateNotifications(
@@ -145,7 +136,8 @@ export class ExchangeRequestController {
       createdBy: currentUser.firstName,
       modifiedBy: currentUser.firstName,
       status: ExchangeStatus.PENDING,
-      productRequest: productExchanged.id
+      productRequest: productExchanged.id,
+      productsToBeExchanged: []
     };
     if (exchangeRequestBody.exchangeByMoney) {
       exchangeRequest = {
@@ -153,13 +145,17 @@ export class ExchangeRequestController {
         exchangeMoney: 0
       };
     } else {
-      const productToExchange: ProductEntity =
-        await this.productService.getProductDetails(
-          exchangeRequestBody.productToExchangeId
-        );
+      const productsToExchange: ProductEntity[] = await Promise.all(
+        exchangeRequestBody.productsToExchangeId.map(
+          async (productId: number) =>
+            await this.productService.getProductDetails(productId)
+        )
+      );
       exchangeRequest = {
         ...exchangeRequest,
-        productToBeExchanged: productToExchange.id
+        productsToBeExchanged: productsToExchange.map(
+          (product: ProductEntity) => product.id.toString()
+        )
       };
     }
     return exchangeRequest;

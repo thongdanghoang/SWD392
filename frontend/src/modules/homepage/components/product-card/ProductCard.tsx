@@ -4,6 +4,7 @@ import {vi} from 'date-fns/locale';
 import {ReactElement} from 'react';
 import {ProductDto} from '../../model/productWithOwnerDTO.ts';
 import {useNavigate} from 'react-router-dom';
+import {formatToVietnameseCurrency} from '../../../shared/utils.ts';
 
 export default function ProductCard(product: ProductDto): ReactElement {
   const navigate = useNavigate();
@@ -12,14 +13,6 @@ export default function ProductCard(product: ProductDto): ReactElement {
     return (): void => {
       navigate(`/products/${id}`);
     };
-  };
-
-  const formatToVietnameseCurrency = (amount: number): string => {
-    const formatter = new Intl.NumberFormat('vi-VN', {
-      style: 'currency',
-      currency: 'VND'
-    });
-    return formatter.format(amount);
   };
 
   return (
@@ -33,11 +26,13 @@ export default function ProductCard(product: ProductDto): ReactElement {
       </div>
       <div className="product-info mt-2">
         <div className="d-flex flex-column align-items-start">
-          <h2 className="product-title text-color-tertiary semibold-16">
+          <div className="product-title text-color-tertiary semibold-16">
             {product.title}
-          </h2>
+          </div>
           <p className="product-price text-color-quaternary semibold-20">
-            {formatToVietnameseCurrency(product.suggestedPrice)}
+            {product?.isGiveAway
+              ? 'Cho tặng miễn phí'
+              : formatToVietnameseCurrency(product?.suggestedPrice)}
           </p>
           <p className="product-creation-date text-color-tertiary regular-12">
             Đăng cách đây{' '}

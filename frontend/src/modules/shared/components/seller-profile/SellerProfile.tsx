@@ -10,9 +10,10 @@ import io from 'socket.io-client';
 import {formatDistanceToNow} from 'date-fns';
 import {vi} from 'date-fns/locale';
 import {UserContext} from '../../services/userContext.ts';
+import {formatToVietnameseCurrency} from '../../utils.ts';
 
 // Replace with your NestJS server URL
-const socket = io('http://localhost:3001/chat', {
+const socket = io(AppRoutingConstants.CHAT_GATEWAY_URL, {
   transports: ['websocket'] // Ensure WebSocket transport is used
 });
 
@@ -82,14 +83,6 @@ export default function UserProfile(): ReactElement {
   const [activeTab, setActiveTab] = useState<'selling' | 'sold'>('selling');
   const handleTabClick = (tab: 'selling' | 'sold'): void => {
     setActiveTab(tab);
-  };
-
-  const formatToVietnameseCurrency = (amount: number): string => {
-    const formatter = new Intl.NumberFormat('vi-VN', {
-      style: 'currency',
-      currency: 'VND'
-    });
-    return formatter.format(amount);
   };
 
   return (

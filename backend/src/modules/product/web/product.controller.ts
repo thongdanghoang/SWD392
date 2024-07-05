@@ -137,6 +137,7 @@ export class ProductController {
       createdBy: product.createdBy,
       lastModificationDate: product.lastModificationDate,
       title: product.title,
+      isGiveAway: product.isGiveAway,
       summary: product.summary,
       images: product.images,
       video: product.video,
@@ -160,7 +161,12 @@ export class ProductController {
       createdBy: product.createdBy,
       lastModificationDate: product.lastModificationDate,
       title: product.title,
+      isGiveAway: product.isGiveAway,
       summary: product.summary,
+      wardCode: product.wardCode,
+      districtCode: product.districtCode,
+      provinceCode: product.provinceCode,
+      addressDetail: product.addressDetail,
       images: product.images,
       video: product.video,
       suggestedPrice: product.suggestedPrice,
@@ -170,15 +176,19 @@ export class ProductController {
       isMyProduct: this.userService.getCurrentUser()
         ? product.owner === this.userService.getCurrentUser()?.id
         : false,
-      owner: {
-        id: owner.id,
-        version: owner.version,
-        firstName: owner.firstName,
-        lastName: owner.lastName,
-        email: owner.email,
-        phone: owner.phone,
-        status: owner.status
-      } as UserDto
+      owner: this.mapToUserOwnerDto(owner)
     } as ProductWithOwnerDTO;
+  }
+
+  private mapToUserOwnerDto(owner: UserDto): UserDto {
+    return {
+      id: owner.id,
+      version: owner.version,
+      firstName: owner.firstName,
+      lastName: owner.lastName,
+      email: owner.email,
+      phone: owner.phone,
+      status: owner.status
+    } as UserDto;
   }
 }
