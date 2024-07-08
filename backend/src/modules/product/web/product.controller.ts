@@ -140,6 +140,7 @@ export class ProductController {
       summary: product.summary,
       images: product.images,
       video: product.video,
+      category: product.category,
       suggestedPrice: product.suggestedPrice,
       modifiedBy: product.modifiedBy,
       creationDate: product.creationDate,
