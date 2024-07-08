@@ -104,10 +104,8 @@ export default function PostProduct(): React.ReactElement {
         console.error('API error:', error);
       });
   };
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     fetchCategories();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const handleUploadComplete = (imageUrls: string[]): void => {
     setProduct(prevProduct => ({...prevProduct, images: imageUrls}));
@@ -116,7 +114,11 @@ export default function PostProduct(): React.ReactElement {
   const handleUploadVideoComplete = (videoUrl: string): void => {
     setProduct(prevProduct => ({...prevProduct, video: videoUrl}));
   };
+<<<<<<< HEAD
   // eslint-disable-next-line react-hooks/rules-of-hooks
+=======
+
+>>>>>>> d92c416 (SWD-44)
   useEffect(() => {}, [product]);
 
   return (
@@ -177,8 +179,13 @@ export default function PostProduct(): React.ReactElement {
               as="select"
               required
               className="list-of-postings form-select semibold-16 text-color-tertiary"
+<<<<<<< HEAD
               value={product.category} // Ensure this reflects the current category ID in your product state
               onChange={e => setProduct({...product, category: e.target.value})} // Update the product state with the selected category ID
+=======
+              value={product.category}
+              onChange={e => setProduct({...product, category: e.target.value})}
+>>>>>>> d92c416 (SWD-44)
             >
               {categories.map(category => (
                 <option key={category.id} value={category.id}>

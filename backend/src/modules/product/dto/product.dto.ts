@@ -58,6 +58,7 @@ export interface ProductDto {
   summary: string;
   images: string[];
   video: string;
+  category: number;
   suggestedPrice: number;
   isMyProduct: boolean;
 }
