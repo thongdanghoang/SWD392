@@ -27,7 +27,7 @@ const UploadWidgetVideo: React.FC<UploadWidgetVideoProps> = ({
         cloudName,
         uploadPreset,
         folders: 'swd392',
-        sources: ['local', 'url', 'camera'],
+        sources: ['local'],
         multiple: true,
         maxFiles: 1,
         resourceType: 'video'
