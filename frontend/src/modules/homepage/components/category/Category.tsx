@@ -29,7 +29,6 @@ const Category = (): React.ReactElement => {
 
   useEffect(() => {
     fetchCategories();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (error) {
