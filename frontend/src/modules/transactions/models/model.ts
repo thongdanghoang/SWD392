@@ -28,6 +28,8 @@ export interface ExchangeRequestDto {
   lastModificationDate?: Date;
   status: ExchangeStatusDto;
   productRequest: number;
+  userRequest: number;
   productsToBeExchanged: string[];
+  targetUser: number;
   exchangeMoney?: number;
 }

@@ -114,22 +114,23 @@ export class ExchangeRequestController {
       productExchanged,
       exchangeRequestBody
     );
-    const createdExchangeRequest: ExchangeEntity =
-      await this.service.createExchangeRequest(exchangeRequest);
+    try {
+      const createdExchangeRequest: ExchangeEntity =
+        await this.service.createExchangeRequest(exchangeRequest);
+      await Promise.all([
+        this.setStatusForProductsToExchange(exchangeRequestBody),
+        this.sendNotificationToOwner(
+          currentUser,
+          productExchanged,
+          createdExchangeRequest
+        )
+      ]);
 
-    await Promise.all([
-      this.setStatusForProductsToExchange(
-        exchangeRequestBody.productsToExchangeId
-      ),
-      this.sendNotificationToOwner(
-        currentUser,
-        productExchanged,
-        createdExchangeRequest
-      )
-    ]);
-
-    // Return the created exchange request
-    return createdExchangeRequest;
+      // Return the created exchange request
+      return createdExchangeRequest;
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   @Get('/:id')
@@ -173,8 +174,7 @@ export class ExchangeRequestController {
       productRequest: productExchanged.id,
       targetUser: (
         await this.productService.getProductDetails(productExchanged.id)
-      ).owner,
-      productsToBeExchanged: []
+      ).owner
     };
     if (exchangeRequestBody.exchangeByMoney) {
       exchangeRequest = {
@@ -210,17 +210,19 @@ export class ExchangeRequestController {
   }
 
   private async setStatusForProductsToExchange(
-    productsToExchangeId: number[]
+    exchangeRequestBody: ExchangeRequestBodyDto
   ): Promise<void> {
-    productsToExchangeId.forEach(
-      (productId: number): void =>
-        void this.productService
-          .getProductDetails(productId)
-          .then((product: ProductEntity) => {
-            product.status = ProductStatus.EXCHANGING;
-            void this.productService.updateProduct(product);
-          })
-    );
+    if (!exchangeRequestBody.exchangeByMoney) {
+      exchangeRequestBody.productsToExchangeId.forEach(
+        (productId: number): void =>
+          void this.productService
+            .getProductDetails(productId)
+            .then((product: ProductEntity): void => {
+              product.status = ProductStatus.EXCHANGING;
+              void this.productService.updateProduct(product);
+            })
+      );
+    }
   }
 
   private async sendNotificationToOwner(

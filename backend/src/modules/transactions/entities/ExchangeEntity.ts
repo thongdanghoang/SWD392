@@ -59,9 +59,9 @@ export class ExchangeEntity {
   @Column({
     name: 'products_to_be_exchanged',
     type: 'json',
-    nullable: false
+    nullable: true
   })
-  productsToBeExchanged: number[];
+  productsToBeExchanged?: number[];
 
   @Column({
     name: 'target_user',

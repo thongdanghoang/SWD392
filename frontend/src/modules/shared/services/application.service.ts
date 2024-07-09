@@ -64,7 +64,7 @@ class ApplicationService {
 
   public async fetchCurrentUser(): Promise<UserDto> {
     const apiClient: AxiosInstance = this.createApiClient();
-    const response = await apiClient.get(AppRoutingConstants.CURRENT_USER_PATH);
+    const response = await apiClient.get(AppRoutingConstants.USER_PATH);
     return response.data;
   }
 
