@@ -10,7 +10,7 @@ export class ExchangeDetailDto {
   status: ExchangeStatus;
   productRequest: number;
   userRequest: number;
-  productsToBeExchanged: number[];
+  productsToBeExchanged?: number[];
   targetUser: number;
   exchangeMoney?: number;
 }
