@@ -114,21 +114,19 @@ export class ExchangeRequestController {
       productExchanged,
       exchangeRequestBody
     );
-
-    const createdExchangeRequest =
+    const createdExchangeRequest: ExchangeEntity =
       await this.service.createExchangeRequest(exchangeRequest);
 
-    // Set status for products to exchange
-    await this.setStatusForProductsToExchange(
-      exchangeRequestBody.productsToExchangeId
-    );
-
-    // After successfully creating the exchange request, send the notification
-    await this.sendNotificationToOwner(
-      currentUser,
-      productExchanged,
-      createdExchangeRequest
-    );
+    await Promise.all([
+      this.setStatusForProductsToExchange(
+        exchangeRequestBody.productsToExchangeId
+      ),
+      this.sendNotificationToOwner(
+        currentUser,
+        productExchanged,
+        createdExchangeRequest
+      )
+    ]);
 
     // Return the created exchange request
     return createdExchangeRequest;

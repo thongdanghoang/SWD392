@@ -5,7 +5,11 @@ import {useNavigate, useParams} from 'react-router-dom';
 import {useApplicationService} from '../../shared/services/application.service.ts';
 import {ProductWithOwnerDTO} from '../../homepage/model/productWithOwnerDTO.ts';
 import {AppRoutingConstants} from '../../shared/app-routing.constants.ts';
-import {ExchangeRequestDto, getExchangeStatusText} from '../models/model.ts';
+import {
+  ExchangeRequestDto,
+  ExchangeStatusDto,
+  getExchangeStatusText
+} from '../models/model.ts';
 import {formatToVietnameseCurrency} from '../../shared/utils.ts';
 import {getWardByCode} from 'vn-local-plus';
 import {UserDto} from '../../shared/models/userDto.ts';
@@ -20,9 +24,8 @@ export default function ExchangeDetail(): ReactElement {
   const [productsToBeExchanged, setProductsToBeExchanged] = useState<
     ProductWithOwnerDTO[]
   >([]);
-  const [myProducts, setMyProducts] = useState<ProductWithOwnerDTO | null>(
-    null
-  );
+  const [productTarget, setProductTarget] =
+    useState<ProductWithOwnerDTO | null>(null);
 
   // fetch exchange detail by id
   useEffect((): void => {
@@ -54,7 +57,7 @@ export default function ExchangeDetail(): ReactElement {
           `${AppRoutingConstants.PRODUCTS_PATH}/${exchangeDetail.productRequest}`
         )
         .then(response => {
-          setMyProducts(response.data.data);
+          setProductTarget(response.data.data);
         })
         .catch(error => {
           console.error(error);
@@ -81,6 +84,21 @@ export default function ExchangeDetail(): ReactElement {
       });
     }
   }, [exchangeDetail]);
+
+  const handleReject = (): void => {
+    applicationService
+      .createApiClient()
+      .post(`${AppRoutingConstants.EXCHANGE_REJECT_PATH}/${exchangeDetail?.id}`)
+      .then(() => window.location.reload())
+      .catch(error => console.error(error));
+  };
+  const handleAccept = (): void => {
+    applicationService
+      .createApiClient()
+      .post(`${AppRoutingConstants.EXCHANGE_ACCEPT_PATH}/${exchangeDetail?.id}`)
+      .then(() => window.location.reload())
+      .catch(error => console.error(error));
+  };
 
   return (
     <div className="container my-5 d-flex gap-4 flex-column exchange-detail">
@@ -116,7 +134,9 @@ export default function ExchangeDetail(): ReactElement {
             {/* thông tin người bán */}
             <div className="col-6 d-flex flex-column gap-3 seller-information">
               <div className="semibold-16 text-color-quaternary">
-                {`${productsToBeExchanged[0]?.owner?.firstName} ${productsToBeExchanged[0]?.owner?.lastName}`}
+                {productsToBeExchanged[0]?.isMyProduct
+                  ? 'Bạn'
+                  : `${productsToBeExchanged[0]?.owner?.firstName} ${productsToBeExchanged[0]?.owner?.lastName}`}
               </div>
               <div className="phone-number d-flex gap-1">
                 <div className="label semibold-14 text-color-quaternary">
@@ -138,7 +158,11 @@ export default function ExchangeDetail(): ReactElement {
 
               <div className="d-flex flex-column gap-2">
                 {productsToBeExchanged.map((product, index) => (
-                  <div key={index} className="d-flex mt-2">
+                  <div
+                    key={index}
+                    className="d-flex mt-2 clickable"
+                    onClick={() => navigate(`/products/${product?.id}`)}
+                  >
                     <div className="product-image">
                       <img
                         src={product.images[0]}
@@ -152,10 +176,15 @@ export default function ExchangeDetail(): ReactElement {
                         {product.title}
                       </div>
                       <div className="owner-full-name regular-14 text-color-quaternary text-color-tertiary">
-                        {`Được đăng bởi ${product.owner?.firstName} ${product.owner?.lastName}`}
+                        {`Được đăng bởi `}
+                        {product.isMyProduct
+                          ? 'bạn'
+                          : `${product.owner?.firstName} ${product.owner?.lastName}`}
                       </div>
                       <div className="price semibold-20 text-color-tertiary">
-                        {formatToVietnameseCurrency(product.suggestedPrice)}
+                        {product.isGiveAway
+                          ? 'Tặng'
+                          : formatToVietnameseCurrency(product.suggestedPrice)}
                       </div>
                     </div>
                   </div>
@@ -165,7 +194,9 @@ export default function ExchangeDetail(): ReactElement {
             {/* Thông tin người mua */}
             <div className="col-6 d-flex flex-column gap-3 buyer-information">
               <div className="owner-full-name label bold-25 text-color-quaternary">
-                {`Bạn`}
+                {productTarget?.isMyProduct
+                  ? 'Bạn'
+                  : `${productTarget?.owner?.firstName} ${productTarget?.owner?.lastName}`}
               </div>
               <div className="phone-number d-flex gap-1">
                 <div className="label semibold-14 text-color-quaternary">
@@ -180,14 +211,17 @@ export default function ExchangeDetail(): ReactElement {
                   {'Địa chỉ:'}
                 </div>
                 <div className="value regular-14 text-color-tertiary">
-                  {myProducts &&
-                    `${myProducts.addressDetail}, ${getWardByCode(myProducts.wardCode).fullName}`}
+                  {productTarget &&
+                    `${productTarget.addressDetail}, ${getWardByCode(productTarget.wardCode).fullName}`}
                 </div>
               </div>
-              <div className="d-flex mt-2">
+              <div
+                className="d-flex mt-2 clickable"
+                onClick={() => navigate(`/products/${productTarget?.id}`)}
+              >
                 <div className="product-image">
                   <img
-                    src={myProducts?.images[0]}
+                    src={productTarget?.images[0]}
                     alt="product"
                     width={100}
                     height={100}
@@ -195,27 +229,44 @@ export default function ExchangeDetail(): ReactElement {
                 </div>
                 <div className="flex-column ms-3 gap-1">
                   <div className="title bold-25 text-color-quaternary">
-                    {myProducts?.title}
+                    {productTarget?.title}
                   </div>
                   <div className="owner-full-name regular-14 text-color-quaternary text-color-tertiary">
-                    {`Được đăng bởi bạn`}
+                    {`Được đăng bởi `}
+                    {productTarget?.isMyProduct
+                      ? 'bạn'
+                      : `${productTarget?.owner?.firstName} ${productTarget?.owner?.lastName}`}
                   </div>
                   <div className="price semibold-20 text-color-tertiary">
-                    {formatToVietnameseCurrency(myProducts?.suggestedPrice)}
+                    {productTarget?.isGiveAway
+                      ? 'Tặng'
+                      : formatToVietnameseCurrency(
+                          productTarget?.suggestedPrice
+                        )}
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          {/* button */}
-          <div className="actions d-flex justify-content-end gap-5 mt-5">
-            <AppButton className="button" variant={'tertiary'}>
-              Trở về trang chủ
-            </AppButton>
-            <AppButton className="button" variant={'secondary'}>
-              Tạo giao dịch
-            </AppButton>
-          </div>
+          {productTarget?.isMyProduct &&
+            exchangeDetail?.status === ExchangeStatusDto.PENDING && (
+              <div className="actions d-flex justify-content-end gap-5 mt-lg-4">
+                <AppButton
+                  className="button"
+                  variant={'tertiary'}
+                  onClick={handleReject}
+                >
+                  Từ chối giao dịch
+                </AppButton>
+                <AppButton
+                  className="button"
+                  variant={'secondary'}
+                  onClick={handleAccept}
+                >
+                  Đồng ý giao dịch
+                </AppButton>
+              </div>
+            )}
         </div>
       </div>
     </div>

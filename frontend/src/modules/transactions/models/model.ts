@@ -1,8 +1,7 @@
 export enum ExchangeStatusDto {
   PENDING = 'PENDING',
   ACCEPTED = 'ACCEPTED',
-  REJECTED = 'REJECTED',
-  EXCHANGING = 'EXCHANGING'
+  REJECTED = 'REJECTED'
 }
 
 export function getExchangeStatusText(
@@ -15,8 +14,6 @@ export function getExchangeStatusText(
       return 'Đã được chấp nhận';
     case ExchangeStatusDto.REJECTED:
       return 'Đã bị từ chối';
-    case ExchangeStatusDto.EXCHANGING:
-      return 'Đang giao dịch';
     default:
       return '';
   }

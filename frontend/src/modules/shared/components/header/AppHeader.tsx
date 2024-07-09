@@ -7,7 +7,6 @@ import {AppRoutingConstants} from '../../app-routing.constants.ts';
 import NotificationItem from '../notification-item/NotificationItem.tsx';
 import {formatDistanceToNow} from 'date-fns';
 import {vi} from 'date-fns/locale';
-import {ExchangeResponseModal} from '../../../transactions/components/exchange-response-modal/ExchangeResponseModal.tsx';
 import {useModal} from '../modal/useModal.tsx';
 import {useApplicationService} from '../../services/application.service.ts';
 import {UserContext} from '../../services/userContext.ts';
@@ -28,7 +27,6 @@ export default function AppHeader(): ReactElement {
     // for example, you could return a loading spinner
     return <div>Loading...</div>;
   }
-  const {showModal} = modalContext;
   return (
     <div className="app-header position-sticky">
       <div className="container py-3 d-flex justify-content-between">
@@ -137,7 +135,11 @@ export default function AppHeader(): ReactElement {
                     )
                   }
                 >
-                  <i className="fs-5 bi bi-bell"></i>
+                  {user?.notifications.length !== 0 ? (
+                    <i className="fs-5 bi bi-bell-fill"></i>
+                  ) : (
+                    <i className="fs-5 bi bi-bell"></i>
+                  )}
                 </div>
                 {showNotifications && (
                   <div className="list-group">
@@ -172,14 +174,12 @@ export default function AppHeader(): ReactElement {
                             }
                           )}
                           content={notification.content}
-                          onClickFn={() =>
-                            showModal(
-                              ExchangeResponseModal,
-                              () => {},
-                              () => {},
-                              {exchangeId: notification.exchangeId}
-                            )
-                          }
+                          onClickFn={() => {
+                            setShowNotifications(false);
+                            navigate(
+                              `/exchange-detail/${notification.exchangeId}`
+                            );
+                          }}
                         />
                       )
                     )}

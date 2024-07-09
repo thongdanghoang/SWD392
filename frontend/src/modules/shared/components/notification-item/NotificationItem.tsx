@@ -19,11 +19,13 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
       onClick={onClickFn}
     >
       <div className="d-flex w-100 justify-content-between">
-        <h5 className="mb-1">{title}</h5>
-        <small className="text-body-secondary">{time}</small>
+        <div className="mb-1 semibold-16 text-color-quaternary">{title}</div>
+        <div className="text-color-tertiary regular-12">{time}</div>
       </div>
-      <p className="mb-1">{content}</p>
-      <small className="text-body-secondary">Xem chi tiết giao dịch.</small>
+      <div className="mb-1 regular-14 text-color-tertiary">{content}</div>
+      <div className="regular-12 text-color-quaternary">
+        Nhấn để xem chi tiết giao dịch.
+      </div>
     </div>
   );
 };
