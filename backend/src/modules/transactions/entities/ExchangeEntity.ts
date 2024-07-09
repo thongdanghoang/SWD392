@@ -10,8 +10,7 @@ import {
 export enum ExchangeStatus {
   PENDING = 'PENDING',
   ACCEPTED = 'ACCEPTED',
-  REJECTED = 'REJECTED',
-  EXCHANGING = 'EXCHANGING'
+  REJECTED = 'REJECTED'
 }
 
 @Entity('exchange')

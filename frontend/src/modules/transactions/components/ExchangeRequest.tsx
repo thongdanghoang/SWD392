@@ -7,6 +7,8 @@ import {AppRoutingConstants} from '../../shared/app-routing.constants.ts';
 import AppButton from '../../shared/components/buttons/AppButton.tsx';
 import {formatToVietnameseCurrency} from '../../shared/utils.ts';
 import {getWardByCode} from 'vn-local-plus';
+import {useModal} from '../../shared/components/modal/useModal.tsx';
+import {ExchangeProductConfirmationModal} from './ExchangeProductConfirmationModal.tsx';
 
 interface ExchangeRequestDto {
   productId: string;
@@ -18,7 +20,7 @@ export default function ExchangeRequest(): ReactElement {
   const applicationService = useApplicationService();
   const navigate = useNavigate();
 
-  const [confirm, setConfirm] = useState<boolean>(false);
+  const [confirmExchange, setConfirmExchange] = useState<boolean>(false);
   const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
   const handleProductChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -89,22 +91,37 @@ export default function ExchangeRequest(): ReactElement {
     }
   };
 
+  const modalContext = useModal();
+  if (!modalContext) {
+    // handle the case where modalContext is null
+    // for example, you could return a loading spinner
+    return <div>Loading...</div>;
+  }
+  const {showModal} = modalContext;
   const handleExchangeRequestByProducts = (): void => {
-    if (currentProductId && selectedProducts.length > 0) {
-      applicationService
-        .createApiClient()
-        .post(AppRoutingConstants.EXCHANGE_REQUESTS_PATH, {
-          productId: currentProductId,
-          exchangeByMoney: false,
-          productsToExchangeId: selectedProducts
-        })
-        .then(response => {
-          navigate(`/exchange-detail/${response.data.id}`);
-        })
-        .catch(error => {
-          console.error(error);
-        });
-    }
+    applicationService
+      .createApiClient()
+      .post(AppRoutingConstants.EXCHANGE_REQUESTS_PATH, {
+        productId: currentProductId,
+        exchangeByMoney: false,
+        productsToExchangeId: selectedProducts
+      })
+      .then(response => {
+        navigate(`/exchange-detail/${response.data.id}`);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
+  const getDifferentPrice = (): string => {
+    const totalPriceOfSelectedProducts = myProducts
+      .filter(product => selectedProducts.includes(product.id))
+      .reduce((total, product) => total + product.suggestedPrice, 0);
+    return currentProduct
+      ? formatToVietnameseCurrency(
+          totalPriceOfSelectedProducts - currentProduct.suggestedPrice
+        )
+      : '';
   };
 
   return (
@@ -160,7 +177,7 @@ export default function ExchangeRequest(): ReactElement {
             className="form-check-input mt-0"
             type="checkbox"
             value="confirm"
-            onChange={() => setConfirm(!confirm)}
+            onChange={() => setConfirmExchange(!confirmExchange)}
             id="flexCheckDefault"
           />
           <label
@@ -237,7 +254,7 @@ export default function ExchangeRequest(): ReactElement {
           <AppButton
             className="button"
             variant={'primary'}
-            disabled={!confirm}
+            disabled={!confirmExchange}
             onClick={handleExchangeRequestByMoney}
           >
             Giao dịch bằng tiền
@@ -245,8 +262,15 @@ export default function ExchangeRequest(): ReactElement {
           <AppButton
             className="button"
             variant={'primary'}
-            disabled={!confirm || selectedProducts.length === 0}
-            onClick={handleExchangeRequestByProducts}
+            disabled={!confirmExchange || selectedProducts.length === 0}
+            onClick={() =>
+              showModal(
+                ExchangeProductConfirmationModal,
+                handleExchangeRequestByProducts,
+                () => {},
+                {differentPrice: getDifferentPrice()}
+              )
+            }
           >
             Giao dịch bằng sản phẩm
           </AppButton>
