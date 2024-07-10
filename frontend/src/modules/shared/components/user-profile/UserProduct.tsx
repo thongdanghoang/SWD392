@@ -1,10 +1,10 @@
-import { ReactElement, useEffect, useState } from 'react';
-import { useApplicationService } from '../../services/application.service.ts';
-import { ProductWithOwnerDTO } from '../../../homepage/model/productWithOwnerDTO.ts';
-import { AppRoutingConstants } from '../../app-routing.constants.ts';
-import { useNavigate } from 'react-router-dom';
-import { formatDistanceToNow } from 'date-fns';
-import { vi } from 'date-fns/locale';
+import {ReactElement, useEffect, useState} from 'react';
+import {useApplicationService} from '../../services/application.service.ts';
+import {ProductWithOwnerDTO} from '../../../homepage/model/productWithOwnerDTO.ts';
+import {AppRoutingConstants} from '../../app-routing.constants.ts';
+import {useNavigate} from 'react-router-dom';
+import {formatDistanceToNow} from 'date-fns';
+import {vi} from 'date-fns/locale';
 import {formatToVietnameseCurrency} from '../../utils.ts';
 
 export default function UserProduct(): ReactElement {
