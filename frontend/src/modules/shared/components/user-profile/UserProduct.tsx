@@ -1,15 +1,14 @@
-import {ReactElement, useEffect, useState} from 'react';
-import {useApplicationService} from '../../services/application.service.ts';
-import {ProductWithOwnerDTO} from '../../../homepage/model/productWithOwnerDTO.ts';
-import {AppRoutingConstants} from '../../app-routing.constants.ts';
-import {useNavigate} from 'react-router-dom';
-import {formatDistanceToNow} from 'date-fns';
-import {vi} from 'date-fns/locale';
+import { ReactElement, useEffect, useState } from 'react';
+import { useApplicationService } from '../../services/application.service.ts';
+import { ProductWithOwnerDTO } from '../../../homepage/model/productWithOwnerDTO.ts';
+import { AppRoutingConstants } from '../../app-routing.constants.ts';
+import { useNavigate } from 'react-router-dom';
+import { formatDistanceToNow } from 'date-fns';
+import { vi } from 'date-fns/locale';
 import {formatToVietnameseCurrency} from '../../utils.ts';
 
 export default function UserProduct(): ReactElement {
   const applicationService = useApplicationService();
-
   const navigate = useNavigate();
 
   const navigateToDetail = (id: string) => {
@@ -32,6 +31,7 @@ export default function UserProduct(): ReactElement {
           console.error(error);
         });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [applicationService.isAuthenticated()]);
 
   return (
@@ -39,32 +39,35 @@ export default function UserProduct(): ReactElement {
       <div className="d-flex gap-4 flex-column">
         <div className="exchange-info d-flex gap-3">
           {myProducts.length > 0 && (
-            <div className="my-products d-flex justify-content-start gap-3">
+            <div className="row row-cols-1 row-cols-md-2 row-cols-lg-4">
               {myProducts?.map((product: ProductWithOwnerDTO) => (
-                <li
-                  key={product.id}
-                  className="product-card clickable"
-                  onClick={navigateToDetail(product.id)}
-                >
-                  <div className="product-image">
-                    <img src={product.images[0]} alt={product.title} />
-                  </div>
-                  <div className="product-info">
-                    <div className="d-flex flex-column align-items-start">
-                      <h2 className="product-title">{product.title}</h2>
-                      <p className="product-price">
+                <div key={product.id} className="col">
+                  <div
+                    className="card product-card clickable"
+                    onClick={navigateToDetail(product.id)}
+                  >
+                    <img
+                      src={product.images[0]}
+                      className="card-img-top"
+                      alt={product.title}
+                    />
+                    <div className="card-body">
+                      <h5 className="card-title product-title semibold-20 text-color-tertiary">
+                        {product.title}
+                      </h5>
+                      <p className="card-text product-price semibold-20 text-color-quaternary">
                         {formatToVietnameseCurrency(product.suggestedPrice)}
                       </p>
-                      <p className="product-creation-date">
+                      <p className="card-text product-creation-date regular-12 text-color-tertiary">
                         Đăng cách đây{' '}
                         {formatDistanceToNow(new Date(product.creationDate), {
                           addSuffix: true,
                           locale: vi
-                        })}{' '}
+                        })}
                       </p>
                     </div>
                   </div>
-                </li>
+                </div>
               ))}
             </div>
           )}
