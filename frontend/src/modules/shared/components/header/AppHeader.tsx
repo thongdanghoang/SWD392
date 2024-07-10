@@ -161,8 +161,13 @@ export default function AppHeader(): ReactElement {
                         </div>
                       </div>
                     )}
-                    {user?.notifications.map(
-                      (notification: NotificationDto, index: number) => (
+                    {user?.notifications
+                      .sort(
+                        (a: NotificationDto, b: NotificationDto) =>
+                          new Date(b.creationDate).getTime() -
+                          new Date(a.creationDate).getTime()
+                      )
+                      .map((notification: NotificationDto, index: number) => (
                         <NotificationItem
                           key={index}
                           title={notification.title}
@@ -181,8 +186,7 @@ export default function AppHeader(): ReactElement {
                             );
                           }}
                         />
-                      )
-                    )}
+                      ))}
                   </div>
                 )}
               </div>
