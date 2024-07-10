@@ -68,34 +68,31 @@ export default function ExchangeDetail(): ReactElement {
 
   // and we fetch products request to exchange
   useEffect((): void => {
+    if (applicationService.isAuthenticated()) {
+      applicationService
+        .createApiClient()
+        .get(`${AppRoutingConstants.USER_PATH}/${exchangeDetail?.userRequest}`)
+        .then(response => setUserRequestDto(response.data))
+        .catch(error => console.error(error));
+    }
     if (exchangeDetail?.productsToBeExchanged) {
+      const productsToBeExchanged: ProductWithOwnerDTO[] = [];
       exchangeDetail.productsToBeExchanged.forEach(
         (productId: string): void => {
           applicationService
             .createApiClient()
             .get(`${AppRoutingConstants.PRODUCTS_PATH}/${productId}`)
             .then(response => {
-              setProductsToBeExchanged(prevState => [
-                ...prevState,
-                response.data.data
-              ]);
+              productsToBeExchanged.push(response.data.data);
             })
             .catch(error => {
               console.error(error);
             });
         }
       );
+      setProductsToBeExchanged(productsToBeExchanged);
     } else {
       setProductsToBeExchanged([]);
-      if (applicationService.isAuthenticated()) {
-        applicationService
-          .createApiClient()
-          .get(
-            `${AppRoutingConstants.USER_PATH}/${exchangeDetail?.userRequest}`
-          )
-          .then(response => setUserRequestDto(response.data))
-          .catch(error => console.error(error));
-      }
     }
   }, [exchangeDetail]);
 

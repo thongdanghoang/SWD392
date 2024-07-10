@@ -41,33 +41,24 @@ export class ExchangeRequestController {
     const exchangeRequest: ExchangeEntity =
       await this.service.getExchangeRequest(exchangeId);
     exchangeRequest.status = ExchangeStatus.ACCEPTED;
-    void this.productService
-      .getProductDetails(exchangeRequest.productRequest)
-      .then((product: ProductEntity): void => {
-        product.status = ProductStatus.EXCHANGED;
-        void this.productService.updateProduct(product);
-      });
-    return Promise.all(
-      exchangeRequest.productsToBeExchanged
-        .map((productId: number): number => productId)
-        .map(async (productId: number): Promise<void> => {
-          return this.productService.updateProductStatus(
-            productId,
-            ProductStatus.EXCHANGED
-          );
-        })
-    )
-      .then(
-        (): Promise<ExchangeEntity> =>
-          this.saveExchangeRequestAndUpdateNotifications(exchangeRequest)
-      )
-      .catch((error: Error): never => {
-        console.error(error);
-        throw new HttpException(
-          'Expectation Failed',
-          HttpStatus.EXPECTATION_FAILED
-        );
-      });
+    await this.updateProductStatus(
+      exchangeRequest.productRequest,
+      ProductStatus.EXCHANGED
+    );
+    await this.rejectOtherTransactions(
+      exchangeId,
+      exchangeRequest.productRequest
+    );
+    if (
+      !exchangeRequest.productsToBeExchanged ||
+      exchangeRequest.productsToBeExchanged.length === 0
+    ) {
+      return this.saveExchangeRequestAndUpdateNotifications(exchangeRequest);
+    }
+    return this.setStatusToProductsRequestAndSaveExchangeRequestAndUpdateNotifications(
+      exchangeRequest,
+      ProductStatus.EXCHANGED
+    );
   }
 
   @Post('/reject/:id')
@@ -77,27 +68,16 @@ export class ExchangeRequestController {
     const exchangeRequest: ExchangeEntity =
       await this.service.getExchangeRequest(exchangeId);
     exchangeRequest.status = ExchangeStatus.REJECTED;
-    return Promise.all(
-      exchangeRequest.productsToBeExchanged
-        .map((productId: number): number => productId)
-        .map(async (productId: number): Promise<void> => {
-          return this.productService.updateProductStatus(
-            productId,
-            ProductStatus.PUBLISHED
-          );
-        })
-    )
-      .then(
-        (): Promise<ExchangeEntity> =>
-          this.saveExchangeRequestAndUpdateNotifications(exchangeRequest)
-      )
-      .catch((error: Error): never => {
-        console.error(error);
-        throw new HttpException(
-          'Expectation Failed',
-          HttpStatus.EXPECTATION_FAILED
-        );
-      });
+    if (
+      !exchangeRequest.productsToBeExchanged ||
+      exchangeRequest.productsToBeExchanged.length === 0
+    ) {
+      return this.saveExchangeRequestAndUpdateNotifications(exchangeRequest);
+    }
+    return this.setStatusToProductsRequestAndSaveExchangeRequestAndUpdateNotifications(
+      exchangeRequest,
+      ProductStatus.PUBLISHED
+    );
   }
 
   @Post()
@@ -138,6 +118,63 @@ export class ExchangeRequestController {
     try {
       return await this.service.getExchangeRequest(id);
     } catch (error) {
+      throw new HttpException(
+        'Expectation Failed',
+        HttpStatus.EXPECTATION_FAILED
+      );
+    }
+  }
+
+  private async updateProductStatus(
+    productId: number,
+    status: ProductStatus
+  ): Promise<void> {
+    const product: ProductEntity =
+      await this.productService.getProductDetails(productId);
+    product.status = status;
+    await this.productService.updateProduct(product);
+  }
+
+  private async rejectOtherTransactions(
+    exchangeId: number,
+    productRequestId: number
+  ): Promise<void> {
+    const exchangeRequests: ExchangeEntity[] =
+      await this.service.getExchangeRequestsWithProduct(productRequestId);
+    for (const exchangeRequest of exchangeRequests) {
+      if (exchangeRequest.id !== exchangeId) {
+        exchangeRequest.status = ExchangeStatus.REJECTED;
+        if (
+          !exchangeRequest.productsToBeExchanged ||
+          exchangeRequest.productsToBeExchanged.length === 0
+        ) {
+          void this.saveExchangeRequestAndUpdateNotifications(exchangeRequest);
+        }
+        void this.setStatusToProductsRequestAndSaveExchangeRequestAndUpdateNotifications(
+          exchangeRequest,
+          ProductStatus.PUBLISHED
+        );
+      }
+    }
+  }
+
+  private async setStatusToProductsRequestAndSaveExchangeRequestAndUpdateNotifications(
+    exchangeRequest: ExchangeEntity,
+    status: ProductStatus
+  ): Promise<ExchangeEntity> {
+    try {
+      await Promise.all(
+        exchangeRequest.productsToBeExchanged
+          .map((productId: number): number => productId)
+          .map(async (productId: number): Promise<void> => {
+            return this.productService.updateProductStatus(productId, status);
+          })
+      );
+      return await this.saveExchangeRequestAndUpdateNotifications(
+        exchangeRequest
+      );
+    } catch (error) {
+      console.error(error);
       throw new HttpException(
         'Expectation Failed',
         HttpStatus.EXPECTATION_FAILED
