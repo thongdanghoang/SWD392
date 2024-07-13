@@ -27,11 +27,22 @@ export default function ProfileOffCanvas({
             className="avatar clickable"
             onClick={() => navigate('/user-profile')}
           >
-            <img
-              className="avatar"
-              src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
-              alt="avatar"
-            />
+            {currentUser?.avatar ? (
+              <img
+                src={currentUser.avatar}
+                alt="avatar"
+                width={60}
+                height={60}
+                className="user-avatar"
+                style={{borderRadius: '50%'}}
+              />
+            ) : (
+              <img
+                className="avatar"
+                src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+                alt="avatar"
+              />
+            )}
           </div>
           <div className="info">
             <div
