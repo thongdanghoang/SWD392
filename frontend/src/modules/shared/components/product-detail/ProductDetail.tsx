@@ -148,11 +148,22 @@ export default function ProductDetail(): ReactElement {
                   <div className="owner d-flex justify-content-between">
                     <div className="owner-info d-flex gap-3">
                       <div className="avatar">
-                        <img
-                          className="avatar"
-                          src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
-                          alt="avatar"
-                        />
+                        {currentProduct?.owner?.avatar ? (
+                          <img
+                            src={currentProduct?.owner?.avatar}
+                            alt="avatar"
+                            width={60}
+                            height={60}
+                            className="user-avatar"
+                            style={{borderRadius: '50%'}}
+                          />
+                        ) : (
+                          <img
+                            className="avatar"
+                            src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+                            alt="avatar"
+                          />
+                        )}
                       </div>
                       <div className="info-and-rating">
                         <div className="semibold-20 text-color-quaternary">

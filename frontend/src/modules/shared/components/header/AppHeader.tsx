@@ -135,7 +135,7 @@ export default function AppHeader(): ReactElement {
                     )
                   }
                 >
-                  {user?.notifications.length !== 0 ? (
+                  {user?.notifications && user?.notifications.length > 0 ? (
                     <i className="fs-5 bi bi-bell-fill"></i>
                   ) : (
                     <i className="fs-5 bi bi-bell"></i>
@@ -217,7 +217,17 @@ export default function AppHeader(): ReactElement {
                 aria-controls="popup-profile"
                 onClick={() => !user && applicationService.signIn()}
               >
-                <i className="user-avatar fs-5 bi bi-person-circle"></i>
+                {user?.avatar ? (
+                  <img
+                    src={user.avatar}
+                    alt="avatar"
+                    width={20}
+                    height={20}
+                    className="user-avatar"
+                  />
+                ) : (
+                  <i className="bi bi-person-circle fs-5"></i>
+                )}
                 <div className="user-full-name regular-14">
                   {user ? `${user.firstName} ${user.lastName}` : 'Đăng Nhập'}
                 </div>

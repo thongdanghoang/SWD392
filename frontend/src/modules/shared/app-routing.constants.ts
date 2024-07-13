@@ -11,6 +11,7 @@ export class AppRoutingConstants {
   // User
   public static readonly USER_PATH: string = `${AppRoutingConstants.BASE_URL}/user`;
   public static readonly LOGOUT_PATH: string = `${AppRoutingConstants.BASE_URL}/user/logout`;
+  public static readonly UPDATE_AVATAR_PATH: string = `${AppRoutingConstants.BASE_URL}/user/avatar`;
 
   // Product
   public static readonly PRODUCTS_PATH: string = `${AppRoutingConstants.BASE_URL}/products`;

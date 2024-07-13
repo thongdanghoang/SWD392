@@ -13,6 +13,7 @@ export class UserDto {
   version: number;
   firstName: string;
   lastName: string;
+  avatar: string;
   email: string;
   phone: string;
   status: UserStatus;

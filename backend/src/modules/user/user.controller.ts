@@ -1,4 +1,4 @@
-import {Controller, Get, Param, UseGuards} from '@nestjs/common';
+import {Body, Controller, Get, Param, Post, UseGuards} from '@nestjs/common';
 import {JwtAuthGuard} from '@5stones/nest-oidc';
 import {UsersService} from './users.service';
 import {UserEntity} from './user.entity';
@@ -21,5 +21,14 @@ export class UsersController {
   @Get(':id')
   getUserById(@Param('id') id: number): Promise<UserEntity | null> {
     return this.usersService.findById(id);
+  }
+
+  @Post('avatar')
+  updateAvatar(@Body() avatar: {avatarUrl: string}): Promise<UserEntity> {
+    const updated: UserEntity = {
+      ...this.usersService.getCurrentUser(),
+      avatar: avatar.avatarUrl
+    };
+    return this.usersService.save(updated);
   }
 }

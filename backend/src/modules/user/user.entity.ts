@@ -29,6 +29,9 @@ export class UserEntity {
   @UpdateDateColumn({name: 'last_modification_date', nullable: true})
   lastModificationDate: Date;
 
+  @Column({name: 'avatar', nullable: true, length: 255})
+  avatar: string;
+
   @Column({name: 'first_name', nullable: false, length: 30})
   firstName: string;
 

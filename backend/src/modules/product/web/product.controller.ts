@@ -20,6 +20,7 @@ import {HttpMessage, HttpStatus} from '../../../global/globalEnum';
 import {UsersService} from '../../user/users.service';
 import {UserDto} from '../../user/user.dto';
 import {SearchCriteriaDto, SearchResultDto} from '../../../global/model';
+import {UserEntity} from '../../user/user.entity';
 
 @Controller('products')
 export class ProductController {
@@ -119,8 +120,9 @@ export class ProductController {
     @Param('id') id: number
   ): Promise<ResponseData<ProductWithOwnerDTO>> {
     try {
-      const product = await this.productService.getProductDetails(id);
-      const owner = await this.userService.findById(product.owner);
+      const product: ProductEntity =
+        await this.productService.getProductDetails(id);
+      const owner: UserEntity = await this.userService.findById(product.owner);
       return new ResponseData(
         this.mapToProductOwnerDto(product, owner),
         HttpMessage.OK,
@@ -213,6 +215,7 @@ export class ProductController {
       version: owner.version,
       firstName: owner.firstName,
       lastName: owner.lastName,
+      avatar: owner.avatar,
       email: owner.email,
       phone: owner.phone,
       status: owner.status

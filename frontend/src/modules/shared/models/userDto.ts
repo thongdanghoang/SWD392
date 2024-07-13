@@ -3,6 +3,7 @@ export interface UserDto {
   version: number;
   firstName: string;
   lastName: string;
+  avatar: string;
   email: string;
   phone: string;
   notifications: NotificationDto[];
