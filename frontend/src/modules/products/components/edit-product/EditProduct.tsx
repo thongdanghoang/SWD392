@@ -9,12 +9,12 @@ import {AppRoutingConstants} from '../../../shared/app-routing.constants.ts';
 import {useNavigate, useParams} from 'react-router-dom';
 import {useModal} from '../../../shared/components/modal/useModal.tsx';
 import UploadWidget from '../UploadWidget.tsx';
-import UploadWidgetVideo from '../UploadVideo.tsx';
 import {UserDto} from '../../../shared/models/userDto.ts';
 import {UserContext} from '../../../shared/services/userContext.ts';
 import {getWardByCode} from 'vn-local-plus';
 import {ProductDTO} from '../../models/product.dto.ts';
 import {ProductWithOwnerDTO} from '../../../homepage/model/productWithOwnerDTO.ts';
+import UploadWidgetVideo from '../post-product/UploadVideo.tsx';
 
 export default function EditProduct(): React.ReactElement {
   const currentUser: UserDto | null | undefined = useContext(UserContext)?.user;
