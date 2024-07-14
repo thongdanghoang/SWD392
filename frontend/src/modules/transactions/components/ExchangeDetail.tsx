@@ -75,22 +75,24 @@ export default function ExchangeDetail(): ReactElement {
         .then(response => setUserRequestDto(response.data))
         .catch(error => console.error(error));
     }
-    if (exchangeDetail?.productsToBeExchanged) {
-      const productsToBeExchanged: ProductWithOwnerDTO[] = [];
-      exchangeDetail.productsToBeExchanged.forEach(
-        (productId: string): void => {
+    if (
+      exchangeDetail?.productsToBeExchanged &&
+      exchangeDetail.productsToBeExchanged.length > 0
+    ) {
+      const fetchProductsPromises = exchangeDetail.productsToBeExchanged.map(
+        productId =>
           applicationService
             .createApiClient()
             .get(`${AppRoutingConstants.PRODUCTS_PATH}/${productId}`)
-            .then(response => {
-              productsToBeExchanged.push(response.data.data);
-            })
-            .catch(error => {
-              console.error(error);
-            });
-        }
       );
-      setProductsToBeExchanged(productsToBeExchanged);
+      Promise.all(fetchProductsPromises)
+        .then(responses => {
+          const fetchedProducts = responses.map(response => response.data.data);
+          setProductsToBeExchanged(fetchedProducts);
+        })
+        .catch(error => {
+          console.error(error);
+        });
     } else {
       setProductsToBeExchanged([]);
     }
