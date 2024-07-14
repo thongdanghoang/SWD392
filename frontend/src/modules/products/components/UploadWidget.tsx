@@ -5,18 +5,22 @@ declare global {
     cloudinary: any;
   }
 }
+
 interface UploadWidgetProps {
   onUploadComplete: (urls: string[]) => void;
+  urls?: string[];
 }
 
 const UploadWidget: React.FC<UploadWidgetProps> = ({
-  onUploadComplete
+  onUploadComplete,
+  urls
 }: {
   onUploadComplete: (urls: string[]) => void;
+  urls?: string[];
 }) => {
   const cloudinaryWidget = useRef<any>();
   const widgetRef = useRef<any>();
-  const [imageUrls, setImageUrls] = useState<string[]>([]);
+  const [imageUrls, setImageUrls] = useState<string[]>(urls ?? []);
   const cloudName = import.meta.env.VITE_APP_CLOUDINARY_CLOUD_NAME;
   const uploadPreset = import.meta.env.VITE_APP_CLOUDINARY_UPLOAD_PRESET;
 

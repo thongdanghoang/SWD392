@@ -1,12 +1,12 @@
-import './PostProduct.scss';
+import './EditProduct.scss';
 import '@assets/styles/styles.scss';
 import {Form} from 'react-bootstrap';
-import React, {useContext, useEffect} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import AppButton from '../../../shared/components/buttons/AppButton.tsx';
 import AddressFormModal from '../AddressFormModal.tsx';
 import {useApplicationService} from '../../../shared/services/application.service.ts';
 import {AppRoutingConstants} from '../../../shared/app-routing.constants.ts';
-import {useNavigate} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 import {useModal} from '../../../shared/components/modal/useModal.tsx';
 import UploadWidget from '../UploadWidget.tsx';
 import UploadWidgetVideo from '../UploadVideo.tsx';
@@ -14,11 +14,41 @@ import {UserDto} from '../../../shared/models/userDto.ts';
 import {UserContext} from '../../../shared/services/userContext.ts';
 import {getWardByCode} from 'vn-local-plus';
 import {ProductDTO} from '../../models/product.dto.ts';
+import {ProductWithOwnerDTO} from '../../../homepage/model/productWithOwnerDTO.ts';
 
-export default function PostProduct(): React.ReactElement {
+export default function EditProduct(): React.ReactElement {
   const currentUser: UserDto | null | undefined = useContext(UserContext)?.user;
   const navigate = useNavigate();
   const applicationService = useApplicationService();
+  const {id} = useParams<{id: string}>();
+  const [version, setVersion] = React.useState<number>(0);
+  useState<ProductWithOwnerDTO | null>(null);
+  useEffect(() => {
+    if (id) {
+      applicationService
+        .createApiClient()
+        .get(`${AppRoutingConstants.PRODUCTS_PATH}/${id}`)
+        .then(response => {
+          setVersion(response.data.data.version);
+          setProduct({
+            title: response.data.data.title,
+            isGiveAway: response.data.data.isGiveAway,
+            isUsed: response.data.data.isUsed,
+            suggestedPrice: response.data.data.suggestedPrice,
+            provinceCode: response.data.data.provinceCode,
+            districtCode: response.data.data.districtCode,
+            wardCode: response.data.data.wardCode,
+            addressDetail: response.data.data.addressDetail,
+            images: response.data.data.images,
+            video: response.data.data.video,
+            summary: response.data.data.summary
+          });
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    }
+  }, [id]);
   const [imageErrorMessage, setImageErrorMessage] = React.useState<string>('');
   const [fullAddressName, setFullAddressName] = React.useState<string>('');
   const [product, setProduct] = React.useState<ProductDTO>({
@@ -38,13 +68,6 @@ export default function PostProduct(): React.ReactElement {
   useEffect((): void => {
     if (currentUser?.addressDetail) {
       setFullAddressName(getWardByCode(currentUser.wardCode).fullName);
-      setProduct({
-        ...product,
-        provinceCode: currentUser.provinceCode,
-        districtCode: currentUser.districtCode,
-        wardCode: currentUser.wardCode,
-        addressDetail: currentUser.addressDetail
-      });
     }
   }, [currentUser]);
   const [validated, setValidated] = React.useState(false);
@@ -58,7 +81,11 @@ export default function PostProduct(): React.ReactElement {
     if (form.checkValidity() && product.images.length > 0) {
       applicationService
         .createApiClient()
-        .post(`${AppRoutingConstants.PRODUCTS_PATH}`, product)
+        .put(`${AppRoutingConstants.PRODUCTS_PATH}/${id}`, {
+          ...product,
+          id,
+          version
+        })
         .then((): void => {
           navigate(`${AppRoutingConstants.HOMEPAGE}`);
         })
@@ -121,10 +148,13 @@ export default function PostProduct(): React.ReactElement {
               {imageErrorMessage}
             </div>
           )}
-          {product.images.length < 5 && (
+          {product.images.length < 5 && product.images.length > 0 && (
             <div className="upload-images d-flex justify-content-center align-items-center">
               <div className="row">
-                <UploadWidget onUploadComplete={handleUploadComplete} />
+                <UploadWidget
+                  onUploadComplete={handleUploadComplete}
+                  urls={product.images}
+                />
               </div>
             </div>
           )}
@@ -182,7 +212,7 @@ export default function PostProduct(): React.ReactElement {
                   name="inlineRadioOptions"
                   type="radio"
                   id="inlineRadio1"
-                  value="option1"
+                  value="used"
                   checked={product.isUsed}
                   onChange={(): void => {
                     setProduct({...product, isUsed: true});
@@ -196,7 +226,7 @@ export default function PostProduct(): React.ReactElement {
                   name="inlineRadioOptions"
                   type="radio"
                   id="inlineRadio2"
-                  value="option2"
+                  value="new"
                   checked={!product.isUsed}
                   onChange={(): void => {
                     setProduct({...product, isUsed: false});
@@ -214,6 +244,7 @@ export default function PostProduct(): React.ReactElement {
                 type="checkbox"
                 value=""
                 id="flexCheckDefault"
+                checked={product.isGiveAway}
                 onChange={(): void => {
                   if (product.isGiveAway) {
                     setProduct({
@@ -323,7 +354,7 @@ export default function PostProduct(): React.ReactElement {
           </div>
           <div className="summit d-flex justify-content-end">
             <AppButton className="submit" type="submit" variant={'primary'}>
-              Đăng tin
+              Chỉnh sửa tin đăng
             </AppButton>
           </div>
         </div>

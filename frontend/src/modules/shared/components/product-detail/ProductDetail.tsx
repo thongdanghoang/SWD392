@@ -10,6 +10,8 @@ import io from 'socket.io-client';
 import {UserContext} from '../../services/userContext.ts';
 import {formatToVietnameseCurrency} from '../../utils.ts';
 import {getWardByCode} from 'vn-local-plus';
+import {DeleteProductConfirmationModal} from './DeleteProductConfirmationModal.tsx';
+import {useModal} from '../modal/useModal.tsx';
 
 // Replace with your NestJS server URL
 const socket = io(AppRoutingConstants.CHAT_GATEWAY_URL, {
@@ -64,6 +66,25 @@ export default function ProductDetail(): ReactElement {
 
   const handleLikeClick = (): void => {
     setLiked(!liked);
+  };
+
+  const modalContext = useModal();
+  if (!modalContext) {
+    // handle the case where modalContext is null
+    // for example, you could return a loading spinner
+    return <div>Loading...</div>;
+  }
+  const {showModal} = modalContext;
+  const handleDeleteProduct = (): void => {
+    applicationService
+      .createApiClient()
+      .delete(`${AppRoutingConstants.PRODUCTS_PATH}/${id}`)
+      .then((): void => {
+        navigate(`/`);
+      })
+      .catch(error => {
+        console.error(error);
+      });
   };
 
   return (
@@ -200,15 +221,17 @@ export default function ProductDetail(): ReactElement {
                         </div>
                       </div>
                     </div>
-                    <div className="view-owner">
-                      <AppButton
-                        variant="secondary"
-                        children={`Xem trang cá nhân`}
-                        onClick={() =>
-                          navigate(`/seller-profile/${currentProduct?.id}`)
-                        }
-                      />
-                    </div>
+                    {!currentProduct?.isMyProduct && (
+                      <div className="view-owner">
+                        <AppButton
+                          variant="secondary"
+                          children={`Xem trang cá nhân`}
+                          onClick={() =>
+                            navigate(`/seller-profile/${currentProduct?.id}`)
+                          }
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="row">
@@ -225,6 +248,27 @@ export default function ProductDetail(): ReactElement {
               {currentProduct?.isMyProduct === false && (
                 <div className="semibold-20 text-color-quaternary">
                   Liên hệ với người bán
+                </div>
+              )}
+              {currentProduct?.isMyProduct && (
+                <div className="d-flex flex-column gap-4">
+                  <AppButton
+                    variant="secondary"
+                    children={`Chỉnh sửa bài đăng`}
+                    onClick={() =>
+                      navigate(`/products/modify/${currentProduct?.id}`)
+                    }
+                  />
+                  <AppButton
+                    variant="tertiary"
+                    children={`Gỡ sản phẩm này không trao đổi nữa`}
+                    onClick={() =>
+                      showModal(
+                        DeleteProductConfirmationModal,
+                        handleDeleteProduct
+                      )
+                    }
+                  />
                 </div>
               )}
               {currentProduct?.isMyProduct === false && (
