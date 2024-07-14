@@ -47,21 +47,17 @@ export class UserEntity {
   @Column({name: 'phone', nullable: true, length: 20})
   phone: string;
 
-  // Tỉnh, thành phố
-  @Column({name: 'province_id', nullable: true})
-  provinceId: number;
+  @Column({name: 'province_code', length: 10, nullable: true})
+  provinceCode?: string;
 
-  // Quận huyện thị xã
-  @Column({name: 'district_id', nullable: true})
-  districtId: number;
+  @Column({name: 'district_code', length: 10, nullable: true})
+  districtCode?: string;
 
-  // Phường xã thị trấn
-  @Column({name: 'commune_id', nullable: true})
-  wardId: number;
+  @Column({name: 'ward_code', length: 10, nullable: true})
+  wardCode?: string;
 
-  // Địa chỉ cụ thể
-  @Column({name: 'address_detail', nullable: true, length: 100})
-  addressDetail: string;
+  @Column({name: 'address_detail', type: 'text', nullable: true})
+  addressDetail?: string;
 
   @Column({
     name: 'status',

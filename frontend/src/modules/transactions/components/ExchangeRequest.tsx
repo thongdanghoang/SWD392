@@ -82,8 +82,8 @@ export default function ExchangeRequest(): ReactElement {
       applicationService
         .createApiClient()
         .post(AppRoutingConstants.EXCHANGE_REQUESTS_PATH, exchangeRequest)
-        .then((): void => {
-          navigate(AppRoutingConstants.HOMEPAGE);
+        .then(response => {
+          navigate(`/exchange-detail/${response.data.id}`);
         })
         .catch(error => {
           console.error(error);
@@ -114,14 +114,20 @@ export default function ExchangeRequest(): ReactElement {
       });
   };
   const getDifferentPrice = (): string => {
-    const totalPriceOfSelectedProducts = myProducts
-      .filter(product => selectedProducts.includes(product.id))
-      .reduce((total, product) => total + product.suggestedPrice, 0);
+    const totalPriceOfSelectedProducts: number = myProducts
+      .filter((product: ProductWithOwnerDTO) =>
+        selectedProducts.includes(product.id)
+      )
+      .reduce(
+        (total: number, product: ProductWithOwnerDTO) =>
+          total + (product.suggestedPrice ? Number(product.suggestedPrice) : 0),
+        0
+      );
     return currentProduct
       ? formatToVietnameseCurrency(
           totalPriceOfSelectedProducts - currentProduct.suggestedPrice
         )
-      : '';
+      : 'không hợp lệ';
   };
 
   return (

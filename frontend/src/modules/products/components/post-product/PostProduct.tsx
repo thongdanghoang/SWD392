@@ -1,7 +1,7 @@
 import './PostProduct.scss';
 import '@assets/styles/styles.scss';
 import {Form} from 'react-bootstrap';
-import React from 'react';
+import React, {useContext, useEffect} from 'react';
 import AppButton from '../../../shared/components/buttons/AppButton.tsx';
 import AddressFormModal, {AddressDto} from '../AddressFormModal.tsx';
 import {useApplicationService} from '../../../shared/services/application.service.ts';
@@ -10,6 +10,9 @@ import {useNavigate} from 'react-router-dom';
 import {useModal} from '../../../shared/components/modal/useModal.tsx';
 import UploadWidget from './UploadWidget.tsx';
 import UploadWidgetVideo from './UploadVideo.tsx';
+import {UserDto} from '../../../shared/models/userDto.ts';
+import {UserContext} from '../../../shared/services/userContext.ts';
+import {getWardByCode} from 'vn-local-plus';
 
 interface ProductDTO extends AddressDto {
   title: string;
@@ -26,6 +29,7 @@ interface ProductDTO extends AddressDto {
 }
 
 export default function PostProduct(): React.ReactElement {
+  const currentUser: UserDto | null | undefined = useContext(UserContext)?.user;
   const navigate = useNavigate();
   const applicationService = useApplicationService();
   const [imageErrorMessage, setImageErrorMessage] = React.useState<string>('');
@@ -43,6 +47,18 @@ export default function PostProduct(): React.ReactElement {
     // category: '',
     summary: ''
   });
+  useEffect((): void => {
+    if (currentUser?.addressDetail) {
+      setFullAddressName(getWardByCode(currentUser.wardCode).fullName);
+      setProduct({
+        ...product,
+        provinceCode: currentUser.provinceCode,
+        districtCode: currentUser.districtCode,
+        wardCode: currentUser.wardCode,
+        addressDetail: currentUser.addressDetail
+      });
+    }
+  }, [currentUser]);
   const [validated, setValidated] = React.useState(false);
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
@@ -287,7 +303,12 @@ export default function PostProduct(): React.ReactElement {
                 placeholder="Địa chỉ"
                 required
                 onClick={() =>
-                  showModal(AddressFormModal, handleAddressFormModalSubmit)
+                  showModal(
+                    AddressFormModal,
+                    handleAddressFormModalSubmit,
+                    () => {},
+                    currentUser
+                  )
                 }
                 value={
                   product.addressDetail

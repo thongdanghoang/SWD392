@@ -12,6 +12,9 @@ export class AppRoutingConstants {
   public static readonly USER_PATH: string = `${AppRoutingConstants.BASE_URL}/user`;
   public static readonly LOGOUT_PATH: string = `${AppRoutingConstants.BASE_URL}/user/logout`;
   public static readonly UPDATE_AVATAR_PATH: string = `${AppRoutingConstants.BASE_URL}/user/avatar`;
+  public static readonly UPDATE_FULL_NAME_PATH: string = `${AppRoutingConstants.BASE_URL}/user/name`;
+  public static readonly UPDATE_ADDRESS_PATH: string = `${AppRoutingConstants.BASE_URL}/user/address`;
+  public static readonly UPDATE_PHONE_PATH: string = `${AppRoutingConstants.BASE_URL}/user/phone`;
 
   // Product
   public static readonly PRODUCTS_PATH: string = `${AppRoutingConstants.BASE_URL}/products`;

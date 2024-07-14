@@ -12,7 +12,8 @@ export class ExchangeService {
 
   async getUserExchanges(userId: number): Promise<ExchangeEntity[]> {
     return await this.exchangeReqRepo.find({
-      where: [{userRequest: userId}, {targetUser: userId}]
+      where: [{userRequest: userId}, {targetUser: userId}],
+      order: {creationDate: 'DESC'}
     });
   }
 }
