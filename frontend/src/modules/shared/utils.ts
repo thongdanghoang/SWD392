@@ -13,3 +13,8 @@ export const formatToVietnameseCurrency = (
   }
   return '';
 };
+
+export const getLocalDateTime = (date: Date): string => {
+  const localDate: Date = new Date(date);
+  return `${localDate.toLocaleTimeString()} ${localDate.toLocaleDateString()}`;
+};

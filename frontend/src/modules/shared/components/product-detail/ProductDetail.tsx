@@ -119,8 +119,20 @@ export default function ProductDetail(): ReactElement {
                     Số điện thoại:
                   </div>
                   <div className="regular-14 text-color-tertiary">
-                    {`0978 45* *** (Nhấn để hiện số)`}
+                    {`${
+                      applicationService.isAuthenticated()
+                        ? currentProduct?.owner?.phone
+                        : `${currentProduct?.owner?.phone.slice(0, 4)}****`
+                    }`}
                   </div>
+                  {!applicationService.isAuthenticated() && (
+                    <div
+                      className="regular-14 text-color-quaternary clickable"
+                      onClick={() => applicationService.signIn()}
+                    >
+                      (Đăng nhập để xem số điện thoại)
+                    </div>
+                  )}
                 </div>
                 <div className="d-flex align-items-center gap-2">
                   <div className="semibold-14 text-color-quaternary">
@@ -269,22 +281,12 @@ export default function ProductDetail(): ReactElement {
                   </a>
                 </div>
               </div>
-              <div className="report-actions d-flex justify-content-between">
+              {!currentProduct?.isMyProduct && (
                 <AppButton
-                  variant="secondary"
+                  variant="tertiary"
                   children={`Báo tin không hợp lệ`}
                 />
-                <AppButton
-                  variant="secondary"
-                  className="ms-2"
-                  children={`Báo tin đã bán`}
-                />
-                <AppButton
-                  variant="primary"
-                  className="ms-2"
-                  children={`Đăng tin ngay!`}
-                />
-              </div>
+              )}
             </div>
           </div>
         </div>

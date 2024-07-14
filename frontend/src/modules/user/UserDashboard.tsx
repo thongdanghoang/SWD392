@@ -7,7 +7,7 @@ import {useApplicationService} from '../shared/services/application.service.ts';
 import {ProductWithOwnerDTO} from '../homepage/model/productWithOwnerDTO.ts';
 import {AppRoutingConstants} from '../shared/app-routing.constants.ts';
 import {Table} from 'react-bootstrap';
-import {formatToVietnameseCurrency} from '../shared/utils.ts';
+import {formatToVietnameseCurrency, getLocalDateTime} from '../shared/utils.ts';
 import {
   ExchangeRequestDto,
   ExchangeStatusDto,
@@ -265,17 +265,15 @@ export default function UserDashboard(): ReactElement {
                       <td>#{index + 1}</td>
                       <td>
                         {history?.creationDate
-                          ? new Date(history.creationDate).toLocaleDateString()
+                          ? getLocalDateTime(history.creationDate)
                           : ''}
                       </td>
                       <td>
-                        {history.status === ExchangeStatusDto.ACCEPTED
-                          ? history?.lastModificationDate
-                            ? new Date(
-                                history.lastModificationDate
-                              ).toLocaleDateString()
-                            : ''
-                          : getExchangeStatusText(history.status)}
+                        {history.status === ExchangeStatusDto.PENDING
+                          ? getExchangeStatusText(history.status)
+                          : history?.lastModificationDate
+                            ? getLocalDateTime(history.lastModificationDate)
+                            : ''}
                       </td>
                       <td>
                         {history.status === ExchangeStatusDto.ACCEPTED
