@@ -8,7 +8,6 @@ import './index.css';
 import '@assets/styles/styles.scss';
 import {AuthProviderProps} from 'oidc-react/build/src/AuthContextInterface';
 import {AuthProvider} from 'oidc-react';
-import React from 'react';
 
 const oidcConfig: AuthProviderProps = {
   authority: import.meta.env.VITE_APP_AUTHORITY as string,
@@ -19,9 +18,7 @@ const oidcConfig: AuthProviderProps = {
 };
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <AuthProvider {...oidcConfig}>
-      <App />
-    </AuthProvider>
-  </React.StrictMode>
+  <AuthProvider {...oidcConfig}>
+    <App />
+  </AuthProvider>
 );

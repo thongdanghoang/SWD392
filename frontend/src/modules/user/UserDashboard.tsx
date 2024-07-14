@@ -14,9 +14,15 @@ import {
   getExchangeStatusText
 } from '../transactions/models/model.ts';
 import UploadAvatarWidget from './UploadAvatarWidget.tsx';
+import {useModal} from '../shared/components/modal/useModal.tsx';
+import FirstnameLastnameEditFormModal from './FirstnameLastnameEditFormModal.tsx';
+import AddressFormModal from '../products/components/AddressFormModal.tsx';
+import {getWardByCode} from 'vn-local-plus';
+import PhoneNumberEditFormModal from './PhoneNumberEditFormModal.tsx';
 
 export default function UserDashboard(): ReactElement {
   const currentUser: UserDto | null | undefined = useContext(UserContext)?.user;
+  const updateUserData = useContext(UserContext)?.updateUserData;
   const navigate = useNavigate();
   const applicationService = useApplicationService();
   // Fetch my products
@@ -48,15 +54,75 @@ export default function UserDashboard(): ReactElement {
         });
     }
   }, [applicationService.isAuthenticated()]);
-  const [avatarUrl, setAvatarUrl] = useState<string>(currentUser?.avatar ?? '');
+  const [avatarUrl, setAvatarUrl] = useState<string>('');
+  useEffect((): void => {
+    if (currentUser) {
+      setAvatarUrl(currentUser.avatar);
+    }
+  }, [currentUser]);
   const handleUploadComplete = (imageUrl: string): void => {
     if (applicationService.isAuthenticated()) {
       applicationService
         .createApiClient()
-        .post(AppRoutingConstants.UPDATE_AVATAR_PATH, {avatarUrl: imageUrl})
+        .patch(AppRoutingConstants.UPDATE_AVATAR_PATH, {avatarUrl: imageUrl})
         .then(response => {
           setAvatarUrl(response.data.avatar);
+          updateUserData?.(response.data);
         })
+        .catch(error => console.error(error));
+    }
+  };
+  const getFullAddressName = (user: UserDto): string => {
+    return user.addressDetail
+      ? `${user.addressDetail} ${getWardByCode(user.wardCode).fullName}`
+      : '';
+  };
+  const [fullAddressName, setFullAddressName] = useState<string>('');
+  useEffect((): void => {
+    if (currentUser) {
+      setFullAddressName(getFullAddressName(currentUser));
+    }
+  }, [currentUser]);
+  const modalContext = useModal();
+  if (!modalContext) {
+    return <div>Loading...</div>;
+  }
+  const {showModal} = modalContext;
+  const handleUpdateUserFullNameModalSubmit = (data: any): void => {
+    if (applicationService.isAuthenticated()) {
+      void applicationService
+        .createApiClient()
+        .patch(AppRoutingConstants.UPDATE_FULL_NAME_PATH, {
+          firstName: data.firstName,
+          lastName: data.lastName
+        })
+        .then(response => updateUserData?.(response.data))
+        .catch(error => console.error(error));
+    }
+  };
+  const handleAddressFormModalSubmit = (data: any): void => {
+    const userNewAddressData = {
+      provinceCode: data.provinceCode,
+      districtCode: data.districtCode,
+      wardCode: data.wardCode,
+      addressDetail: data.addressDetail
+    };
+    if (applicationService.isAuthenticated()) {
+      void applicationService
+        .createApiClient()
+        .patch(AppRoutingConstants.UPDATE_ADDRESS_PATH, userNewAddressData)
+        .then(response => setFullAddressName(getFullAddressName(response.data)))
+        .catch(error => console.error(error));
+    }
+  };
+  const handleUpdateUserPhoneModalSubmit = (data: any): void => {
+    if (applicationService.isAuthenticated()) {
+      void applicationService
+        .createApiClient()
+        .patch(AppRoutingConstants.UPDATE_PHONE_PATH, {
+          phone: data.phone
+        })
+        .then(response => updateUserData?.(response.data))
         .catch(error => console.error(error));
     }
   };
@@ -80,13 +146,56 @@ export default function UserDashboard(): ReactElement {
               Thông tin cá nhân
             </div>
             <div className="d-flex flex-column gap-1 gap-lg-2">
-              <div className="semibold-20 text-color-quaternary">{`${currentUser?.firstName} ${currentUser?.lastName}`}</div>
+              <div
+                className="d-flex justify-content-between clickable"
+                onClick={() =>
+                  showModal(
+                    FirstnameLastnameEditFormModal,
+                    handleUpdateUserFullNameModalSubmit,
+                    (): void => {},
+                    currentUser
+                  )
+                }
+              >
+                <div className="semibold-20 text-color-quaternary">{`${currentUser?.firstName} ${currentUser?.lastName}`}</div>
+                <i className="bi bi-pencil-square text-color-quaternary"></i>
+              </div>
               <div className="regular-14 text-color-tertiary">{`Email: ${currentUser?.email}`}</div>
-              <div className="regular-14 text-color-tertiary">{`Địa chỉ: `}</div>
-              <div className="regular-14 text-color-tertiary">{`Sđt: `}</div>
-            </div>
-            <div className="semibold-16 text-color-tertiary text-decoration-underline clickable">
-              Chỉnh sửa
+              <div
+                className="d-flex justify-content-between clickable"
+                onClick={() =>
+                  showModal(
+                    AddressFormModal,
+                    handleAddressFormModalSubmit,
+                    (): void => {},
+                    {
+                      provinceCode: currentUser?.provinceCode,
+                      districtCode: currentUser?.districtCode,
+                      wardCode: currentUser?.wardCode,
+                      addressDetail: currentUser?.addressDetail
+                    }
+                  )
+                }
+              >
+                <div className="regular-14 text-color-tertiary">{`Địa chỉ: ${fullAddressName}`}</div>
+                <i className="bi bi-pencil-square text-color-quaternary"></i>
+              </div>
+              <div
+                className="d-flex justify-content-between clickable"
+                onClick={() =>
+                  showModal(
+                    PhoneNumberEditFormModal,
+                    handleUpdateUserPhoneModalSubmit,
+                    (): void => {},
+                    {
+                      phone: currentUser?.phone
+                    }
+                  )
+                }
+              >
+                <div className="regular-14 text-color-tertiary">{`Sđt: ${currentUser?.phone ?? ''}`}</div>
+                <i className="bi bi-pencil-square text-color-quaternary"></i>
+              </div>
             </div>
           </div>
           <div className="user-posts col p-1 p-lg-3">
@@ -99,28 +208,30 @@ export default function UserDashboard(): ReactElement {
               </div>
             </div>
             <div className="my-posts d-flex flex-column gap-1 gap-lg-3 mt-1 mt-lg-3">
-              {myProducts.map((product: ProductWithOwnerDTO, index: number) => (
-                <div
-                  key={index}
-                  className="my-post d-flex gap-1 gap-lg-3 align-items-center clickable"
-                  onClick={() =>
-                    navigate(`${AppRoutingConstants.PRODUCTS}/${product.id}`)
-                  }
-                >
-                  <div className="post-image">
-                    <img
-                      src={product.images[0]}
-                      alt={product.title}
-                      height={50}
-                      width={50}
-                      style={{objectFit: 'cover', borderRadius: '8px'}}
-                    />
+              {myProducts
+                .slice(0, 3)
+                .map((product: ProductWithOwnerDTO, index: number) => (
+                  <div
+                    key={index}
+                    className="my-post d-flex gap-1 gap-lg-3 align-items-center clickable"
+                    onClick={() =>
+                      navigate(`${AppRoutingConstants.PRODUCTS}/${product.id}`)
+                    }
+                  >
+                    <div className="post-image">
+                      <img
+                        src={product.images[0]}
+                        alt={product.title}
+                        height={50}
+                        width={50}
+                        style={{objectFit: 'cover', borderRadius: '8px'}}
+                      />
+                    </div>
+                    <div className="semibold-14 text-color-quaternary">
+                      {product.title}
+                    </div>
                   </div>
-                  <div className="semibold-14 text-color-quaternary">
-                    {product.title}
-                  </div>
-                </div>
-              ))}
+                ))}
             </div>
           </div>
         </div>

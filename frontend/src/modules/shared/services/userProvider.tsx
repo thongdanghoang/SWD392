@@ -21,8 +21,12 @@ export const UserProvider = ({children}: UserProviderProps): ReactElement => {
     }
   }, [applicationService.isAuthenticated()]);
 
+  const updateUserData = (updatedUserData: UserDto): void => {
+    setUser(updatedUserData);
+  };
+
   return (
-    <UserContext.Provider value={{user, setUser}}>
+    <UserContext.Provider value={{user, setUser, updateUserData}}>
       {children}
     </UserContext.Provider>
   );

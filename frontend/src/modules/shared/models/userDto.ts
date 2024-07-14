@@ -4,6 +4,10 @@ export interface UserDto {
   firstName: string;
   lastName: string;
   avatar: string;
+  provinceCode: string;
+  districtCode: string;
+  wardCode: string;
+  addressDetail: string;
   email: string;
   phone: string;
   notifications: NotificationDto[];

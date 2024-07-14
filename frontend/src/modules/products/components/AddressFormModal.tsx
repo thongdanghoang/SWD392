@@ -35,18 +35,25 @@ export interface AddressDto {
   fullName?: string;
 }
 
-const AddressFormModal = ({hideModal, onSubmit}: ModalProps): ReactElement => {
+const AddressFormModal = ({
+  hideModal,
+  onSubmit,
+  data
+}: ModalProps): ReactElement => {
   const [formData, setFormData] = useState<AddressDto>({
-    provinceCode: '',
-    districtCode: '',
-    wardCode: '',
-    addressDetail: '',
-    fullName: ''
+    provinceCode: data?.provinceCode || '',
+    districtCode: data?.districtCode || '',
+    wardCode: data?.wardCode || '',
+    addressDetail: data?.addressDetail || ''
   });
   const [formProvinces, setFormProvinces] = useState<Province[]>([]);
-  const [selectedProvince, setSelectedProvince] = useState<string>('');
+  const [selectedProvince, setSelectedProvince] = useState<string>(
+    data?.provinceCode || ''
+  );
   const [districts, setDistricts] = useState<District[]>([]);
-  const [selectedDistrict, setSelectedDistrict] = useState<string>('');
+  const [selectedDistrict, setSelectedDistrict] = useState<string>(
+    data?.districtCode || ''
+  );
   const [wards, setWards] = useState<Ward[]>([]);
   const [validated, setValidated] = useState(false);
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
@@ -55,6 +62,7 @@ const AddressFormModal = ({hideModal, onSubmit}: ModalProps): ReactElement => {
     const form = event.currentTarget;
     if (form.checkValidity() && onSubmit) {
       formData.fullName = getWardByCode(formData.wardCode).fullName;
+      formData.addressDetail = formData.addressDetail.trim();
       onSubmit(formData);
       hideModal();
     }
@@ -88,7 +96,7 @@ const AddressFormModal = ({hideModal, onSubmit}: ModalProps): ReactElement => {
         <Modal.Body className="d-flex flex-column gap-4">
           <Form.Group controlId="formProvince">
             <Form.Control
-              className="form-select semibold-16 text-color-quaternary"
+              className="form-select regular-16 text-color-quaternary"
               as="select"
               required
               value={selectedProvince}
@@ -112,7 +120,7 @@ const AddressFormModal = ({hideModal, onSubmit}: ModalProps): ReactElement => {
           </Form.Group>
           <Form.Group controlId="formDistrict">
             <Form.Control
-              className="form-select semibold-16 text-color-quaternary"
+              className="form-select regular-16 text-color-quaternary"
               as="select"
               required
               value={selectedDistrict}
@@ -136,7 +144,7 @@ const AddressFormModal = ({hideModal, onSubmit}: ModalProps): ReactElement => {
           </Form.Group>
           <Form.Group controlId="formWard">
             <Form.Control
-              className="form-select semibold-16 text-color-quaternary"
+              className="form-select regular-16 text-color-quaternary"
               as="select"
               required
               value={formData.wardCode}
@@ -159,14 +167,15 @@ const AddressFormModal = ({hideModal, onSubmit}: ModalProps): ReactElement => {
           </Form.Group>
           <Form.Group controlId="formDetailedAddress">
             <Form.Control
-              className="semibold-16 text-color-quaternary"
+              className="regular-16 text-color-quaternary"
               type="text"
               required
               pattern={'^(?=.*\\S).+$'}
               maxLength={100}
               placeholder="Địa chỉ chi tiết"
+              value={formData.addressDetail}
               onChange={e =>
-                setFormData({...formData, addressDetail: e.target.value.trim()})
+                setFormData({...formData, addressDetail: e.target.value})
               }
             />
             <Form.Control.Feedback type="invalid">
@@ -183,5 +192,4 @@ const AddressFormModal = ({hideModal, onSubmit}: ModalProps): ReactElement => {
     </Modal>
   );
 };
-
 export default AddressFormModal;
