@@ -5,6 +5,7 @@ import {PartialType} from '@nestjs/swagger';
 export class CreateProductDto {
   title: string;
   isGiveAway: boolean;
+  isUsed: boolean;
   suggestedPrice: number;
   summary: string;
   provinceCode: string;
@@ -31,6 +32,7 @@ export interface ProductWithOwnerDTO {
   lastModificationDate: Date;
   title: string;
   isGiveAway: boolean;
+  isUsed: boolean;
   summary: string;
   provinceCode: string;
   districtCode: string;
@@ -52,6 +54,7 @@ export interface ProductDto {
   lastModificationDate: Date;
   title: string;
   isGiveAway: boolean;
+  isUsed: boolean;
   summary: string;
   images: string[];
   video: string;

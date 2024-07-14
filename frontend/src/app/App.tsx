@@ -21,6 +21,7 @@ import SellerProfile from '../modules/shared/components/seller-profile/SellerPro
 import {UserProvider} from '../modules/shared/services/userProvider.tsx';
 import {UserContext} from '../modules/shared/services/userContext.ts';
 import UserDashboard from '../modules/user/UserDashboard.tsx';
+import EditProduct from '../modules/products/components/edit-product/EditProduct.tsx';
 
 export default function App(): ReactElement {
   const applicationService = useApplicationService();
@@ -55,6 +56,10 @@ export default function App(): ReactElement {
                   <Route
                     path="/products/:id"
                     element={<ProductDetail />}
+                  ></Route>
+                  <Route
+                    path="/products/modify/:id"
+                    element={<EditProduct />}
                   ></Route>
                   <Route path="/post-product" element={<PostProduct />}></Route>
                   <Route path="/user-profile" element={<UserProfile />}></Route>

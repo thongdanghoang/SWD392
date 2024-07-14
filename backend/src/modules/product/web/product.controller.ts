@@ -1,10 +1,12 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   Param,
   Post,
+  Put,
   UseGuards
 } from '@nestjs/common';
 import {JwtAuthGuard} from '@5stones/nest-oidc';
@@ -53,6 +55,49 @@ export class ProductController {
         HttpMessage.INTERNAL_SERVER_ERROR,
         HttpStatus.INTERNAL_SERVER_ERROR
       );
+    }
+  }
+
+  @Put('/:id')
+  @UseGuards(JwtAuthGuard)
+  async updateProduct(
+    @Param('id') id: number,
+    @Body() createProductDto: CreateProductDto
+  ): Promise<ResponseData<ProductDto>> {
+    try {
+      const updatedProduct: ProductEntity =
+        await this.productService.updateProduct({
+          ...createProductDto,
+          modifiedBy: `${this.userService.getCurrentUser().firstName} ${this.userService.getCurrentUser().lastName}`
+        });
+      return new ResponseData(
+        this.mapToProductDto(updatedProduct),
+        HttpMessage.OK,
+        HttpStatus.OK
+      );
+    } catch (error) {
+      return new ResponseData<ProductDto>(
+        null,
+        HttpMessage.INTERNAL_SERVER_ERROR,
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
+    }
+  }
+
+  @Delete('/:id')
+  @UseGuards(JwtAuthGuard)
+  async deleteProduct(@Param('id') id: number): Promise<void> {
+    try {
+      const product: ProductEntity =
+        await this.productService.getProductDetails(id);
+      if (product.owner === this.userService.getCurrentUser().id) {
+        await this.productService.deleteProduct(id);
+      } else {
+        throw new Error('Your are not the owner of this product');
+      }
+    } catch (error) {
+      console.error(error);
+      throw new Error('Delete product failed');
     }
   }
 
@@ -167,6 +212,7 @@ export class ProductController {
       lastModificationDate: product.lastModificationDate,
       title: product.title,
       isGiveAway: product.isGiveAway,
+      isUsed: product.isUsed,
       summary: product.summary,
       images: product.images,
       video: product.video,
@@ -191,6 +237,7 @@ export class ProductController {
       lastModificationDate: product.lastModificationDate,
       title: product.title,
       isGiveAway: product.isGiveAway,
+      isUsed: product.isUsed,
       summary: product.summary,
       wardCode: product.wardCode,
       districtCode: product.districtCode,

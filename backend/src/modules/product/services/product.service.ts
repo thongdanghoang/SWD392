@@ -67,4 +67,8 @@ export class ProductService {
   async updateProductStatus(id: number, status: ProductStatus): Promise<void> {
     await this.productRepository.update(id, {status});
   }
+
+  async deleteProduct(id: number): Promise<void> {
+    await this.productRepository.delete(id);
+  }
 }

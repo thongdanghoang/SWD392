@@ -51,6 +51,9 @@ export class ProductEntity {
   @Column({name: 'is_give_away', type: 'boolean', nullable: false})
   isGiveAway: boolean;
 
+  @Column({name: 'is_used', type: 'boolean', nullable: true})
+  isUsed: boolean;
+
   @Column({
     name: 'suggested_price',
     type: 'bigint',
