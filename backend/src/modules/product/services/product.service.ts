@@ -37,6 +37,10 @@ export class ProductService {
     return {results, total};
   }
 
+  async getAllProducts(): Promise<ProductEntity[]> {
+    return await this.productRepository.find({order: {status: 'ASC'}});
+  }
+
   async getProductsByOwnerIdCanBeExchanged(
     owner: number
   ): Promise<ProductEntity[]> {

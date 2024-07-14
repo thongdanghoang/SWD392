@@ -4,7 +4,10 @@ import {ReactElement, useContext, useEffect, useState} from 'react';
 import {useApplicationService} from '../../services/application.service.ts';
 import {AppRoutingConstants} from '../../app-routing.constants.ts';
 import {useNavigate, useParams} from 'react-router-dom';
-import {ProductWithOwnerDTO} from '../../../homepage/model/productWithOwnerDTO.ts';
+import {
+  ProductStatus,
+  ProductWithOwnerDTO
+} from '../../../homepage/model/productWithOwnerDTO.ts';
 import {UserDto} from '../../models/userDto.ts';
 import io from 'socket.io-client';
 import {UserContext} from '../../services/userContext.ts';
@@ -250,49 +253,51 @@ export default function ProductDetail(): ReactElement {
                   Liên hệ với người bán
                 </div>
               )}
-              {currentProduct?.isMyProduct && (
-                <div className="d-flex flex-column gap-4">
-                  <AppButton
-                    variant="secondary"
-                    children={`Chỉnh sửa bài đăng`}
-                    onClick={() =>
-                      navigate(`/products/modify/${currentProduct?.id}`)
-                    }
-                  />
-                  <AppButton
-                    variant="tertiary"
-                    children={`Gỡ sản phẩm này không trao đổi nữa`}
-                    onClick={() =>
-                      showModal(
-                        DeleteProductConfirmationModal,
-                        handleDeleteProduct
-                      )
-                    }
-                  />
-                </div>
-              )}
-              {currentProduct?.isMyProduct === false && (
-                <div className="d-flex flex-column gap-4">
-                  <AppButton
-                    variant="primary"
-                    children={`Giao dịch ngay`}
-                    onClick={() =>
-                      applicationService.checkIsUserDoActionOrElseNavigateLoginPage(
-                        handleExchangeRequestClick
-                      )
-                    }
-                  />
-                  <AppButton
-                    variant="secondary"
-                    children={`Chat với người này`}
-                    onClick={() =>
-                      applicationService.checkAuthenticatedDoActionOrElseNavigateLoginPage(
-                        handleChatClick
-                      )
-                    }
-                  />
-                </div>
-              )}
+              {currentProduct?.isMyProduct &&
+                currentProduct.status === ProductStatus.PUBLISHED && (
+                  <div className="d-flex flex-column gap-4">
+                    <AppButton
+                      variant="secondary"
+                      children={`Chỉnh sửa bài đăng`}
+                      onClick={() =>
+                        navigate(`/products/modify/${currentProduct?.id}`)
+                      }
+                    />
+                    <AppButton
+                      variant="tertiary"
+                      children={`Gỡ sản phẩm này không trao đổi nữa`}
+                      onClick={() =>
+                        showModal(
+                          DeleteProductConfirmationModal,
+                          handleDeleteProduct
+                        )
+                      }
+                    />
+                  </div>
+                )}
+              {currentProduct?.isMyProduct === false &&
+                currentProduct.status === ProductStatus.PUBLISHED && (
+                  <div className="d-flex flex-column gap-4">
+                    <AppButton
+                      variant="primary"
+                      children={`Giao dịch ngay`}
+                      onClick={() =>
+                        applicationService.checkIsUserDoActionOrElseNavigateLoginPage(
+                          handleExchangeRequestClick
+                        )
+                      }
+                    />
+                    <AppButton
+                      variant="secondary"
+                      children={`Chat với người này`}
+                      onClick={() =>
+                        applicationService.checkAuthenticatedDoActionOrElseNavigateLoginPage(
+                          handleChatClick
+                        )
+                      }
+                    />
+                  </div>
+                )}
               <div className="row d-flex align-items-center">
                 <div className="col-6 flex-shrink-0">
                   <img

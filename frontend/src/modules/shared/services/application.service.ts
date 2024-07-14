@@ -28,9 +28,21 @@ class ApplicationService {
   }
 
   public isRoleUser(): boolean {
+    if (this.isModeratorUser()) {
+      return false;
+    }
+    if (this.isRoleAdmin()) {
+      return false;
+    }
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error
     return this.getUserFromIAM().profile?.roles?.includes('swapme.user');
+  }
+
+  public isModeratorUser(): boolean {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    return this.getUserFromIAM().profile?.roles?.includes('swapme.moderator');
   }
 
   public isRoleAdmin(): boolean {

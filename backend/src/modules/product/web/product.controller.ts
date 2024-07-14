@@ -5,11 +5,12 @@ import {
   Get,
   HttpCode,
   Param,
+  Patch,
   Post,
   Put,
   UseGuards
 } from '@nestjs/common';
-import {JwtAuthGuard} from '@5stones/nest-oidc';
+import {JwtAuthGuard, Roles} from '@5stones/nest-oidc';
 import {ProductService} from '../services/product.service';
 import {
   CreateProductDto,
@@ -42,7 +43,7 @@ export class ProductController {
         owner: this.userService.getCurrentUser().id,
         createdBy: `${this.userService.getCurrentUser().firstName} ${this.userService.getCurrentUser().lastName}`,
         modifiedBy: `${this.userService.getCurrentUser().firstName} ${this.userService.getCurrentUser().lastName}`,
-        status: ProductStatus.PUBLISHED
+        status: ProductStatus.REVIEWING
       });
       return new ResponseData(
         this.mapToProductDto(newProduct),
@@ -90,15 +91,107 @@ export class ProductController {
     try {
       const product: ProductEntity =
         await this.productService.getProductDetails(id);
-      if (product.owner === this.userService.getCurrentUser().id) {
-        await this.productService.deleteProduct(id);
-      } else {
-        throw new Error('Your are not the owner of this product');
+      if (
+        product.owner === this.userService.getCurrentUser().id &&
+        (product.status === ProductStatus.REVIEWING ||
+          product.status === ProductStatus.PUBLISHED)
+      ) {
+        return await this.productService.updateProductStatus(
+          id,
+          ProductStatus.REMOVED
+        );
       }
     } catch (error) {
       console.error(error);
       throw new Error('Delete product failed');
     }
+    throw new Error('Delete product failed');
+  }
+
+  @Get('/moderator')
+  @UseGuards(JwtAuthGuard)
+  @Roles('swapme.moderator')
+  async getMyProductsAsModerator(): Promise<ResponseData<ProductDto[]>> {
+    try {
+      return new ResponseData<ProductDto[]>(
+        await this.productService
+          .getAllProducts()
+          .then((products: ProductEntity[]): ProductDto[] =>
+            products.map(
+              (product: ProductEntity): ProductDto =>
+                this.mapToProductDto(product)
+            )
+          ),
+        HttpMessage.OK,
+        HttpStatus.OK
+      );
+    } catch (error) {
+      return new ResponseData<ProductDto[]>(
+        null,
+        HttpMessage.INTERNAL_SERVER_ERROR,
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
+    }
+  }
+
+  @Patch('/moderator/accept/:id')
+  @UseGuards(JwtAuthGuard)
+  @Roles('swapme.moderator')
+  async acceptProduct(@Param('id') id: number): Promise<void> {
+    try {
+      const product: ProductEntity =
+        await this.productService.getProductDetails(id);
+      if (product.status === ProductStatus.REVIEWING) {
+        return await this.productService.updateProductStatus(
+          id,
+          ProductStatus.PUBLISHED
+        );
+      }
+    } catch (error) {
+      console.error(error);
+      throw new Error('Accept product failed');
+    }
+    throw new Error('Accept product failed');
+  }
+
+  @Patch('/moderator/reject/:id')
+  @UseGuards(JwtAuthGuard)
+  @Roles('swapme.moderator')
+  async rejectProduct(@Param('id') id: number): Promise<void> {
+    try {
+      const product: ProductEntity =
+        await this.productService.getProductDetails(id);
+      if (product.status === ProductStatus.REVIEWING) {
+        return await this.productService.updateProductStatus(
+          id,
+          ProductStatus.BANNED
+        );
+      }
+    } catch (error) {
+      console.error(error);
+      throw new Error('Reject product failed');
+    }
+    throw new Error('Reject product failed');
+  }
+
+  @Patch('/moderator/remove/:id')
+  @UseGuards(JwtAuthGuard)
+  @Roles('swapme.moderator')
+  async removeProduct(@Param('id') id: number): Promise<void> {
+    try {
+      const product: ProductEntity =
+        await this.productService.getProductDetails(id);
+      if (product.status === ProductStatus.REVIEWING) {
+        return await this.productService.updateProductStatus(
+          id,
+          ProductStatus.REMOVED
+        );
+      }
+    } catch (error) {
+      console.error(error);
+      throw new Error('Reject product failed');
+    }
+    throw new Error('Reject product failed');
   }
 
   @Get('/my-products')

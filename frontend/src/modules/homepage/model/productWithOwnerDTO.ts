@@ -69,9 +69,9 @@ export const getProductStatusDisplay = (
     case ProductStatus.EXCHANGED:
       return 'Đã trao đổi';
     case ProductStatus.BANNED:
-      return 'Bị cấm';
+      return 'Không được duyệt';
     case ProductStatus.REMOVED:
-      return 'Đã xóa';
+      return 'Đã bị xóa';
     default:
       return 'Không xác định';
   }

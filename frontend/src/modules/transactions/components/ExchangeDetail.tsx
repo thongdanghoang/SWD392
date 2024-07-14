@@ -14,8 +14,12 @@ import {formatToVietnameseCurrency} from '../../shared/utils.ts';
 import {getWardByCode} from 'vn-local-plus';
 import {UserDto} from '../../shared/models/userDto.ts';
 import {UserContext} from '../../shared/services/userContext.ts';
+import io from 'socket.io-client';
 
 export default function ExchangeDetail(): ReactElement {
+  const socket = io(AppRoutingConstants.CHAT_GATEWAY_URL, {
+    transports: ['websocket'] // Ensure WebSocket transport is used
+  });
   const navigate = useNavigate();
   const currentUser: UserDto | null | undefined = useContext(UserContext)?.user;
   const applicationService = useApplicationService();
@@ -112,7 +116,16 @@ export default function ExchangeDetail(): ReactElement {
       .then(() => window.location.reload())
       .catch(error => console.error(error));
   };
-
+  const handleChatClick = async (): Promise<void> => {
+    const buyerId = currentUser?.id;
+    const sellerId =
+      exchangeDetail?.targetUser === currentUser?.id
+        ? exchangeDetail?.targetUser
+        : exchangeDetail?.userRequest;
+    socket.emit('createRoom', {buyerId, sellerId}, (): void => {
+      navigate(`/chat`);
+    });
+  };
   return (
     <div className="container my-5 d-flex gap-4 flex-column exchange-detail">
       <div className=" d-flex flex-column">
@@ -295,6 +308,11 @@ export default function ExchangeDetail(): ReactElement {
             exchangeDetail?.status === ExchangeStatusDto.PENDING && (
               <div className="actions d-flex justify-content-end gap-5 mt-lg-4">
                 <AppButton
+                  variant="secondary"
+                  children={`Chat với người tạo yêu cầu`}
+                  onClick={() => handleChatClick}
+                />
+                <AppButton
                   className="button"
                   variant={'tertiary'}
                   onClick={handleReject}
@@ -310,6 +328,15 @@ export default function ExchangeDetail(): ReactElement {
                 </AppButton>
               </div>
             )}
+          {exchangeDetail?.status === ExchangeStatusDto.PENDING && (
+            <div className="actions d-flex justify-content-end gap-5 mt-lg-4">
+              <AppButton
+                variant="secondary"
+                children={`Chat với người đăng bài`}
+                onClick={() => handleChatClick}
+              />
+            </div>
+          )}
         </div>
       </div>
     </div>
