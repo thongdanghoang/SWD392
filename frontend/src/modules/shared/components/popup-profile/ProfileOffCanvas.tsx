@@ -93,7 +93,10 @@ export default function ProfileOffCanvas({
         <div className="list-item regular-14 text-color-quaternary">
           Đánh giá từ tôi
         </div>
-        <div className="list-item regular-14 text-color-quaternary">
+        <div
+          className="list-item regular-14 text-color-quaternary clickable"
+          onClick={() => navigate(`/oder-history`)}
+        >
           Lịch sử giao dịch
         </div>
         <div className="list-title semibold-16 text-color-quaternary">Khác</div>
