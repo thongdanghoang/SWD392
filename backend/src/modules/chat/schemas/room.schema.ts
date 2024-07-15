@@ -1,16 +1,16 @@
-import {Prop, Schema, SchemaFactory} from '@nestjs/mongoose';
-import {Document} from 'mongoose';
+import {Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
 
-@Schema()
-export class Room extends Document {
-  @Prop({required: true})
+@Entity()
+export class Room {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column()
   buyerId: string;
 
-  @Prop({required: true})
+  @Column()
   sellerId: string;
 
-  @Prop({required: true})
+  @Column({unique: true})
   roomId: string;
 }
-
-export const RoomSchema = SchemaFactory.createForClass(Room);

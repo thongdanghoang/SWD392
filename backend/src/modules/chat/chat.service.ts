@@ -1,43 +1,43 @@
 import {Injectable} from '@nestjs/common';
-import {InjectModel} from '@nestjs/mongoose';
-import {Model} from 'mongoose';
+import {InjectRepository} from '@nestjs/typeorm';
+import {Repository} from 'typeorm';
 import {Message} from './schemas/message.schema';
 import {Room} from './schemas/room.schema';
+import {CreateRoomDto} from './schemas/create-room.dto';
+import {CreateMessageDto} from './schemas/create-message.dto';
 
 @Injectable()
 export class ChatService {
   constructor(
-    @InjectModel(Message.name) private readonly messageModel: Model<Message>,
-    @InjectModel(Room.name) private readonly roomModel: Model<Room>
+    @InjectRepository(Message)
+    private readonly messageRepository: Repository<Message>,
+    @InjectRepository(Room)
+    private readonly roomRepository: Repository<Room>
   ) {}
 
-  async createRoom(buyerId: string, sellerId: string): Promise<Room> {
-    const existingRoom = await this.roomModel.findOne({buyerId, sellerId});
-    if (existingRoom) {
-      return existingRoom;
-    }
+  async createRoom(createRoomDto: CreateRoomDto): Promise<Room> {
+    const {buyerId, sellerId} = createRoomDto;
     const roomId = `${buyerId}-${sellerId}`;
-    const newRoom = new this.roomModel({buyerId, sellerId, roomId});
-    return newRoom.save();
+    let room = await this.roomRepository.findOne({where: {roomId}});
+    if (!room) {
+      room = this.roomRepository.create({buyerId, sellerId, roomId});
+      room = await this.roomRepository.save(room);
+    }
+    return room;
   }
 
   async getMessages(roomId: string): Promise<Message[]> {
-    return this.messageModel.find({roomId}).exec();
+    return this.messageRepository.find({where: {roomId}});
   }
 
-  async saveMessage(
-    roomId: string,
-    sender: string,
-    message: string
-  ): Promise<Message> {
-    const newMessage = new this.messageModel({roomId, sender, message});
-    return newMessage.save();
+  async saveMessage(createMessageDto: CreateMessageDto): Promise<Message> {
+    const message = this.messageRepository.create(createMessageDto);
+    return this.messageRepository.save(message);
   }
+
   async getRooms(userId: string): Promise<Room[]> {
-    return this.roomModel
-      .find({
-        $or: [{buyerId: userId}, {sellerId: userId}]
-      })
-      .exec();
+    return this.roomRepository.find({
+      where: [{buyerId: userId}, {sellerId: userId}]
+    });
   }
 }

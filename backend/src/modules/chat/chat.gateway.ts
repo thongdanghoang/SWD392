@@ -8,6 +8,8 @@ import {
 import {Server, Socket} from 'socket.io';
 import {ChatService} from './chat.service';
 import {Room} from './schemas/room.schema';
+import {CreateRoomDto} from './schemas/create-room.dto';
+import {CreateMessageDto} from './schemas/create-message.dto';
 
 @WebSocketGateway(3001, {namespace: 'chat'})
 export class ChatGateway {
@@ -17,25 +19,15 @@ export class ChatGateway {
   constructor(private readonly chatService: ChatService) {}
 
   @SubscribeMessage('createRoom')
-  async handleCreateRoom(
-    client: Socket,
-    data: {buyerId: string; sellerId: string}
-  ): Promise<Room> {
-    const {buyerId, sellerId} = data;
-    const room = await this.chatService.createRoom(buyerId, sellerId);
+  async handleCreateRoom(client: Socket, data: CreateRoomDto): Promise<Room> {
+    const room = await this.chatService.createRoom(data);
     void client.join(room.roomId);
     return room;
   }
 
   @SubscribeMessage('sendMessage')
-  async handleMessage(
-    @MessageBody() data: {roomId: string; sender: string; message: string}
-  ): Promise<void> {
-    const savedMessage = await this.chatService.saveMessage(
-      data.roomId,
-      data.sender,
-      data.message
-    );
+  async handleMessage(@MessageBody() data: CreateMessageDto): Promise<void> {
+    const savedMessage = await this.chatService.saveMessage(data);
     this.server.to(data.roomId).emit('newMessage', savedMessage);
   }
 
@@ -47,6 +39,7 @@ export class ChatGateway {
     const messages = await this.chatService.getMessages(roomId);
     client.emit('messages', messages);
   }
+
   @SubscribeMessage('joinRoom')
   handleJoinRoom(client: Socket, roomId: string): void {
     void client.join(roomId);
