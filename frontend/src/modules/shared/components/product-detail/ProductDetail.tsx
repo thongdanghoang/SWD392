@@ -16,7 +16,6 @@ import {getWardByCode} from 'vn-local-plus';
 import {DeleteProductConfirmationModal} from './DeleteProductConfirmationModal.tsx';
 import {useModal} from '../modal/useModal.tsx';
 
-// Replace with your NestJS server URL
 const socket = io(AppRoutingConstants.CHAT_GATEWAY_URL, {
   transports: ['websocket'] // Ensure WebSocket transport is used
 });
@@ -25,7 +24,6 @@ export interface Room {
   roomId: string;
   buyerId: string;
   sellerId: string;
-  // Other properties as needed
 }
 
 export default function ProductDetail(): ReactElement {
@@ -35,15 +33,14 @@ export default function ProductDetail(): ReactElement {
   const {id} = useParams<{id: string}>();
   const [currentProduct, setCurrentProduct] =
     useState<ProductWithOwnerDTO | null>(null);
-
+  const [liked, setLiked] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const handleExchangeRequestClick = (): void => {
     if (currentProduct?.isMyProduct) {
-      // TODO: [thongdanghoang] should show a toast message
       return navigate(`/`);
     }
     navigate(`/exchange-request/${currentProduct?.id}`);
   };
-
   const handleChatClick = async (): Promise<void> => {
     const buyerId = currentUser?.id;
     const sellerId = currentProduct?.owner.id;
@@ -64,20 +61,17 @@ export default function ProductDetail(): ReactElement {
         });
     }
   }, [id]);
-
-  const [liked, setLiked] = useState(false);
-
   const handleLikeClick = (): void => {
     setLiked(!liked);
   };
-
   const modalContext = useModal();
   if (!modalContext) {
-    // handle the case where modalContext is null
-    // for example, you could return a loading spinner
     return <div>Loading...</div>;
   }
   const {showModal} = modalContext;
+  if (!modalContext) {
+    return <div>Loading...</div>;
+  }
   const handleDeleteProduct = (): void => {
     applicationService
       .createApiClient()
@@ -89,19 +83,67 @@ export default function ProductDetail(): ReactElement {
         console.error(error);
       });
   };
-
+  const handleThumbnailClick = (index: number): void => {
+    setCurrentImageIndex(index);
+  };
+  const handlePreviousImage = (): void => {
+    setCurrentImageIndex(prevIndex =>
+      prevIndex === 0 ? currentProduct!.images.length - 1 : prevIndex - 1
+    );
+  };
+  const handleNextImage = (): void => {
+    setCurrentImageIndex(
+      prevIndex => (prevIndex + 1) % currentProduct!.images.length
+    );
+  };
   return (
     <div className="product-detail container">
       <section>
         <div className="px-3 px-lg-5 my-1 mb-3 my-5">
-          <div className="row gx-4 align-items-start">
-            <div className="col-6">
-              <img
-                className="card-img mb-4"
-                src={currentProduct?.images[0]}
-                alt="Product image"
-              />
-              <div className="information flex-column d-flex gap-3">
+          <div className="row gx-5 align-items-start">
+            <div className="col-6 position-relative">
+              {currentProduct?.images && currentProduct.images.length > 0 && (
+                <div className="image-container">
+                  <img
+                    className="card-img fixed-size"
+                    src={currentProduct.images[currentImageIndex]}
+                    alt="Product image"
+                  />
+                  <div className="image-nav-buttons">
+                    <button
+                      className="image-nav-button prev-button"
+                      onClick={handlePreviousImage}
+                    >
+                      &lt;
+                    </button>
+                    <button
+                      className="image-nav-button next-button"
+                      onClick={handleNextImage}
+                    >
+                      &gt;
+                    </button>
+                  </div>
+                </div>
+              )}
+              {!currentProduct?.images && (
+                <img
+                  className="card-img"
+                  src={currentProduct?.images[0]}
+                  alt="Product image"
+                />
+              )}
+              <div className="thumbnails">
+                {currentProduct?.images?.map((image, index) => (
+                  <img
+                    key={index}
+                    src={image}
+                    alt={`Thumbnail ${index}`}
+                    className={`thumbnail ${index === currentImageIndex ? 'active' : ''}`}
+                    onClick={() => handleThumbnailClick(index)}
+                  />
+                ))}
+              </div>
+              <div className="information flex-column d-flex gap-2">
                 <div className="d-flex align-items-center justify-content-between">
                   <h1 className="bold-32 text-color-quaternary">
                     {currentProduct?.title}

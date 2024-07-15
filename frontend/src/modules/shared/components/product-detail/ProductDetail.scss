@@ -1,8 +1,7 @@
 @import "@assets/styles/variables";
 
 .product-detail {
-
-  .avatar{
+  .avatar {
     width: 60px;
     height: 60px;
     border-radius: 50%;
@@ -14,7 +13,62 @@
     border-radius: 50%;
     background-color: transparent;
     width: 40px;
-    min-width: 40px;;
+    min-width: 40px;
     height: 40px;
+  }
+
+  .image-container {
+    position: relative;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+
+  .fixed-size {
+    width: 600px;
+    height: 400px;
+    object-fit: cover;
+  }
+
+  .image-nav-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(219, 219, 219, 0.5);
+    border: none;
+    color: white;
+    font-size: 2rem;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    z-index: 10;
+  }
+
+  .prev-button {
+    left: 0;
+  }
+
+  .next-button {
+    right: -24px;
+  }
+
+  .thumbnails {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+    overflow-x: auto;
+    margin-bottom: 10px;
+  }
+
+  .thumbnail {
+    width: 80px;
+    height: 70px;
+    object-fit: cover;
+    cursor: pointer;
+    border: 2px solid transparent;
+    flex-shrink: 0;
+  }
+
+  .thumbnail.active {
+    border: 2px solid $app-tertiary;
   }
 }
