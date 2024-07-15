@@ -49,10 +49,13 @@ export default function UserProfile(): ReactElement {
   }
   useEffect((): void => {
     if (id) {
-      fetchSellerInfo(id).then((data: any) => {
-        console.log(data);
-        setSeller(data);
-      });
+      fetchSellerInfo(id)
+        .then((data: any) => {
+          setSeller(data);
+        })
+        .catch(error => {
+          console.error(error);
+        });
     }
   }, [id]);
 
