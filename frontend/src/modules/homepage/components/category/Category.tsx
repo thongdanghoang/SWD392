@@ -38,7 +38,7 @@ const Category = (): React.ReactElement => {
   return (
     <div className="container my-5 d-flex flex-column gap-5">
       <div className="products-list row g-3">
-        <div className="bold-32">Danh mục</div>
+        <div className="bold-32 text-color-quaternary">Danh mục</div>
         {categories.map((category: CategoryDto) => (
           <div
             className="col-2 d-flex justify-content-center"

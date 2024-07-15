@@ -1,10 +1,19 @@
 import './CategoryItem.scss';
 import {ReactElement} from 'react';
 import {CategoryDto} from '../../model/productWithOwnerDTO.ts';
+import {useNavigate} from 'react-router-dom';
 
 export default function CategoryItem(categoryDto: CategoryDto): ReactElement {
+  const navigate = useNavigate();
+  const handleCategoryClick = (): void => {
+    navigate(`/products?category=${categoryDto.id}`);
+  };
   return (
-    <li key={categoryDto.id} className="category-item clickable">
+    <li
+      key={categoryDto.id}
+      className="category-item clickable"
+      onClick={handleCategoryClick}
+    >
       <div className="category-image">
         <img src={categoryDto?.image} alt={categoryDto.title} />
       </div>

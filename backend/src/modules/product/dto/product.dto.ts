@@ -62,3 +62,8 @@ export interface ProductDto {
   suggestedPrice: number;
   isMyProduct: boolean;
 }
+
+export interface ProductSearchCriteria {
+  keyword: string;
+  categoryId: number;
+}
