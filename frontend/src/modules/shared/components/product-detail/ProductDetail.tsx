@@ -233,7 +233,9 @@ export default function ProductDetail(): ReactElement {
                             if (!applicationService.isAuthenticated()) {
                               applicationService.signIn();
                             } else {
-                              navigate(`/seller-profile/${currentProduct?.id}`);
+                              navigate(
+                                `/seller-profile/${currentProduct?.owner.id}`
+                              );
                             }
                           }}
                         />
