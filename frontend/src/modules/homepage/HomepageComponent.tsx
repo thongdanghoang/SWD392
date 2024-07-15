@@ -9,11 +9,10 @@ export default function HomepageComponent(): ReactElement {
   const applicationService = useApplicationService();
   return (
     <div className="homepage">
+      <Category />
       {(applicationService.isRoleUser() ||
         !applicationService.isAuthenticated()) && <ProductList />}
       {applicationService.isModeratorUser() && <ModeratorProductList />}
-      <Category />
-      <ProductList />
     </div>
   );
 }

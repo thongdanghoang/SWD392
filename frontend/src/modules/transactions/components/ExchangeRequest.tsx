@@ -26,10 +26,6 @@ export default function ExchangeRequest(): ReactElement {
     applicationService.checkIsUserDoActionOrElseNavigateLoginPage(() => {});
   }, []);
 
-  const [confirm, setConfirm] = useState<boolean>(false);
-  const [selectedProductId, setSelectedProductId] = useState<string | null>(
-    null
-  );
   const handleProductChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ): void => {

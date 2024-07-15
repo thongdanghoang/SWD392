@@ -10,7 +10,6 @@ import io from 'socket.io-client';
 import {formatDistanceToNow} from 'date-fns';
 import {vi} from 'date-fns/locale';
 import {UserContext} from '../../services/userContext.ts';
-import {formatToVietnameseCurrency} from '../../utils.ts';
 
 // Replace with your NestJS server URL
 const socket = io(AppRoutingConstants.CHAT_GATEWAY_URL, {

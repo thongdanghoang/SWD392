@@ -41,6 +41,7 @@ export default function EditProduct(): React.ReactElement {
             addressDetail: response.data.data.addressDetail,
             images: response.data.data.images,
             video: response.data.data.video,
+            category: response.data.data.category,
             summary: response.data.data.summary
           });
         })
@@ -62,7 +63,7 @@ export default function EditProduct(): React.ReactElement {
     addressDetail: '',
     images: [],
     video: '',
-    // category: '',
+    category: '',
     summary: ''
   });
   useEffect((): void => {
