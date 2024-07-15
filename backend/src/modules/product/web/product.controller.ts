@@ -296,6 +296,29 @@ export class ProductController {
       } as SearchResultDto<ProductDto>;
     }
   }
+  @Get('/user/:userId/products')
+  async getProductsByUserId(
+    @Param('userId') userId: number
+  ): Promise<ResponseData<ProductDto[]>> {
+    try {
+      const products: ProductEntity[] =
+        await this.productService.getProductsByUserId(userId);
+      const productDtos: ProductDto[] = products.map(product =>
+        this.mapToProductDto(product)
+      );
+      return new ResponseData<ProductDto[]>(
+        productDtos,
+        HttpMessage.OK,
+        HttpStatus.OK
+      );
+    } catch (error) {
+      return new ResponseData<ProductDto[]>(
+        null,
+        HttpMessage.INTERNAL_SERVER_ERROR,
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
+    }
+  }
 
   private mapToProductDto(product: ProductEntity): ProductDto {
     return {

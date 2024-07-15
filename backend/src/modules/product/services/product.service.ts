@@ -75,4 +75,7 @@ export class ProductService {
   async deleteProduct(id: number): Promise<void> {
     await this.productRepository.delete(id);
   }
+  async getProductsByUserId(owner: number): Promise<ProductEntity[]> {
+    return await this.productRepository.findBy({owner});
+  }
 }

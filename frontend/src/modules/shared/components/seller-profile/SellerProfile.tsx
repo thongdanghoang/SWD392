@@ -1,7 +1,11 @@
 import {ReactElement, useContext, useEffect, useState} from 'react';
 import './SellerProfile.scss';
+import '../../../homepage/components/product-card/ProducCard.scss';
 import {useNavigate, useParams} from 'react-router-dom';
-import {ProductWithOwnerDTO} from '../../../homepage/model/productWithOwnerDTO';
+import {
+  ProductStatus,
+  ProductWithOwnerDTO
+} from '../../../homepage/model/productWithOwnerDTO';
 import {useApplicationService} from '../../services/application.service';
 import {AppRoutingConstants} from '../../app-routing.constants';
 import AppButton from '../buttons/AppButton';
@@ -19,57 +23,51 @@ const socket = io(AppRoutingConstants.CHAT_GATEWAY_URL, {
 
 export default function UserProfile(): ReactElement {
   const currentUser: UserDto | null | undefined = useContext(UserContext)?.user;
+  const [seller, setSeller] = useState<UserDto | null>(null);
   const applicationService = useApplicationService();
   const navigate = useNavigate();
-
   const navigateToDetail = (id: string) => {
     return (): void => {
       navigate(`/products/${id}`);
     };
   };
-
   const handleChatClick = async (): Promise<void> => {
     const buyerId = currentUser?.id;
-    const sellerId = currentProduct?.owner.id;
+    const sellerId = seller?.id;
     socket.emit('createRoom', {buyerId, sellerId}, (): void => {
       navigate(`/chat`);
     });
   };
 
-  // Fetch product detail by id
+  // Fetch seller info
   const {id} = useParams<{id: string}>();
-  const [currentProduct, setCurrentProduct] =
-    useState<ProductWithOwnerDTO | null>(null);
-
+  async function fetchSellerInfo(id: string): Promise<any> {
+    const response = await applicationService
+      .createApiClient()
+      .get(`${AppRoutingConstants.BASE_URL}/user/${id}`);
+    return response.data;
+  }
   useEffect((): void => {
     if (id) {
-      applicationService
-        .createApiClient()
-        .get(`${AppRoutingConstants.PRODUCTS_PATH}/${id}`)
-        .then(response => {
-          if (response.data.data.isMyProduct) {
-            console.error('You cannot exchange your own product');
-            navigate(AppRoutingConstants.HOMEPAGE);
-          } else {
-            setCurrentProduct(response.data.data);
-          }
+      fetchSellerInfo(id)
+        .then((data: any) => {
+          setSeller(data);
         })
         .catch(error => {
           console.error(error);
         });
     }
-  }, [id, navigate]);
+  }, [id]);
 
   // Fetch seller products by seller ID
   const [sellerProducts, setSellerProducts] = useState<ProductWithOwnerDTO[]>(
     []
   );
-
   useEffect((): void => {
     if (id) {
       applicationService
         .createApiClient()
-        .get(`${AppRoutingConstants.PRODUCTS_PATH}/${id}`)
+        .get(`${AppRoutingConstants.PRODUCTS_PATH}/user/${id}/products`)
         .then(response => {
           setSellerProducts(response.data.data ?? []);
         })
@@ -79,11 +77,16 @@ export default function UserProfile(): ReactElement {
     }
   }, [id]);
 
-  // Function to handle tab click
   const [activeTab, setActiveTab] = useState<'selling' | 'sold'>('selling');
   const handleTabClick = (tab: 'selling' | 'sold'): void => {
     setActiveTab(tab);
   };
+  const sellingProducts = sellerProducts.filter(
+    product => product.status === ('PUBLISHED' as ProductStatus)
+  );
+  const soldProducts = sellerProducts.filter(
+    product => product.status === ('EXCHANGED' as ProductStatus)
+  );
 
   return (
     <div className="container user-profile">
@@ -100,8 +103,7 @@ export default function UserProfile(): ReactElement {
               </div>
               <div className="info-and-rating">
                 <div className="semibold-20 text-color-quaternary">
-                  {currentProduct?.owner?.firstName}{' '}
-                  {currentProduct?.owner?.lastName}
+                  {seller?.firstName} {seller?.lastName}
                 </div>
                 <div className="rating d-flex gap-2 mt-1">
                   <div className="rate-point semibold-16 text-color-quaternary">
@@ -156,30 +158,34 @@ export default function UserProfile(): ReactElement {
 
       {/* Conditional Rendering */}
       <div>
-        {activeTab === 'selling' ? (
+        {activeTab === 'selling' && (
           <div>
             <div className="d-flex gap-4 flex-column">
               <div className="exchange-info d-flex gap-3">
-                {sellerProducts.length > 0 ? (
+                {sellingProducts.length > 0 ? (
                   <div className="my-products d-flex justify-content-start gap-3">
-                    {sellerProducts?.map((product: ProductWithOwnerDTO) => (
+                    {sellingProducts?.map((product: ProductWithOwnerDTO) => (
                       <li
                         key={product.id}
                         className="product-card clickable"
                         onClick={navigateToDetail(product.id)}
                       >
                         <div className="product-image">
-                          <img src={product.images[0]} alt={product.title} />
+                          <img src={product?.images?.[0]} alt={product.title} />
                         </div>
-                        <div className="product-info">
+                        <div className="product-info mt-2">
                           <div className="d-flex flex-column align-items-start">
-                            <h2 className="product-title">{product.title}</h2>
-                            <p className="product-price">
-                              {formatToVietnameseCurrency(
-                                product.suggestedPrice
-                              )}
+                            <div className="product-title text-color-tertiary semibold-16">
+                              {product.title}
+                            </div>
+                            <p className="product-price text-color-quaternary semibold-20">
+                              {product?.isGiveAway
+                                ? 'Cho tặng miễn phí'
+                                : formatToVietnameseCurrency(
+                                    product?.suggestedPrice
+                                  )}
                             </p>
-                            <p className="product-creation-date">
+                            <p className="product-creation-date text-color-tertiary regular-12">
                               Đăng cách đây{' '}
                               {formatDistanceToNow(
                                 new Date(product.creationDate),
@@ -204,10 +210,57 @@ export default function UserProfile(): ReactElement {
               </div>
             </div>
           </div>
-        ) : (
+        )}
+        {activeTab === 'sold' && (
           <div>
-            <div className="regular-14 text-color-quaternary">
-              Người này chưa bán sản phẩm nào.
+            <div className="d-flex gap-4 flex-column">
+              <div className="exchange-info d-flex gap-3">
+                {soldProducts.length > 0 ? (
+                  <div className="my-products d-flex justify-content-start gap-3">
+                    {soldProducts?.map((product: ProductWithOwnerDTO) => (
+                      <li
+                        key={product.id}
+                        className="product-card clickable"
+                        onClick={navigateToDetail(product.id)}
+                      >
+                        <div className="product-image">
+                          <img src={product?.images?.[0]} alt={product.title} />
+                        </div>
+                        <div className="product-info mt-2">
+                          <div className="d-flex flex-column align-items-start">
+                            <div className="product-title text-color-tertiary semibold-16">
+                              {product.title}
+                            </div>
+                            <p className="product-price text-color-quaternary semibold-20">
+                              {product?.isGiveAway
+                                ? 'Cho tặng miễn phí'
+                                : formatToVietnameseCurrency(
+                                    product?.suggestedPrice
+                                  )}
+                            </p>
+                            <p className="product-creation-date text-color-tertiary regular-12">
+                              Đăng cách đây{' '}
+                              {formatDistanceToNow(
+                                new Date(product.creationDate),
+                                {
+                                  addSuffix: true,
+                                  locale: vi
+                                }
+                              )}{' '}
+                            </p>
+                          </div>
+                        </div>
+                      </li>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="my-products d-flex justify-content-center align-items-center">
+                    <div className="regular-14 text-color-quaternary">
+                      Người này chưa bán sản phẩm nào.
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         )}

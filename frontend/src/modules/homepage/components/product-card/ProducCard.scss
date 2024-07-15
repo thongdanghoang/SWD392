@@ -53,5 +53,11 @@
       font-size: 12px;
       margin-bottom: 5px;
     }
+    .product-title {
+      max-width: 250px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
 }
