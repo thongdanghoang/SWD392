@@ -143,11 +143,7 @@ export default function PostProduct(): React.ReactElement {
             </div>
           )}
           {product.images.length < 5 && (
-            <div className="upload-images d-flex justify-content-center align-items-center">
-              <div className="row">
-                <UploadWidget onUploadComplete={handleUploadComplete} />
-              </div>
-            </div>
+            <UploadWidget onUploadComplete={handleUploadComplete} />
           )}
           {product.video && (
             <div className="product-video">
