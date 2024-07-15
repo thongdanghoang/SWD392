@@ -1,11 +1,7 @@
 import './PostProduct.scss';
 import '@assets/styles/styles.scss';
 import {Form} from 'react-bootstrap';
-<<<<<<< HEAD
 import React, {useContext, useEffect} from 'react';
-=======
-import React, {useEffect} from 'react';
->>>>>>> a3cc445 (SWD-43: Validation when Post Product)
 import AppButton from '../../../shared/components/buttons/AppButton.tsx';
 import AddressFormModal from '../AddressFormModal.tsx';
 import {useApplicationService} from '../../../shared/services/application.service.ts';

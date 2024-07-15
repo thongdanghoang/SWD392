@@ -85,6 +85,14 @@ export default function UserProfile(): ReactElement {
     setActiveTab(tab);
   };
 
+  const formatToVietnameseCurrency = (amount: number): string => {
+    const formatter = new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND'
+    });
+    return formatter.format(amount);
+  };
+
   return (
     <div className="container user-profile">
       <div className="my-5 d-flex gap-4 flex-column">

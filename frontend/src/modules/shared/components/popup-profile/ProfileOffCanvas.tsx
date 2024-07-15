@@ -109,6 +109,26 @@ export default function ProfileOffCanvas({
             }
           }}
         >
+          Cài đặt tài khoản
+        </div>
+        <div className="list-item regular-14  text-color-quaternary">
+          Trợ giúp
+        </div>
+        <div className="list-item regular-14  text-color-quaternary">
+          Đóng góp ý kiến
+        </div>
+        <div
+          className="list-item regular-14  text-color-quaternary"
+          onClick={(): void => {
+            if (applicationService.isRoleAdmin()) {
+              window.location.href =
+                'https://thongdanghoang.id.vn/auth/admin/SwapMe/console/';
+            } else {
+              window.location.href =
+                'https://thongdanghoang.id.vn/auth/realms/SwapMe/account/';
+            }
+          }}
+        >
           Trung tâm bảo mật
         </div>
         <div

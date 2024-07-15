@@ -96,11 +96,7 @@ const AddressFormModal = ({
         <Modal.Body className="d-flex flex-column gap-4">
           <Form.Group controlId="formProvince">
             <Form.Control
-<<<<<<< HEAD
-              className="form-select regular-16 text-color-quaternary"
-=======
               className="form-select semibold-16 text-color-quaternary"
->>>>>>> a3cc445 (SWD-43: Validation when Post Product)
               as="select"
               required
               value={selectedProvince}
@@ -124,11 +120,7 @@ const AddressFormModal = ({
           </Form.Group>
           <Form.Group controlId="formDistrict">
             <Form.Control
-<<<<<<< HEAD
-              className="form-select regular-16 text-color-quaternary"
-=======
               className="form-select semibold-16 text-color-quaternary"
->>>>>>> a3cc445 (SWD-43: Validation when Post Product)
               as="select"
               required
               value={selectedDistrict}
@@ -152,11 +144,7 @@ const AddressFormModal = ({
           </Form.Group>
           <Form.Group controlId="formWard">
             <Form.Control
-<<<<<<< HEAD
-              className="form-select regular-16 text-color-quaternary"
-=======
               className="form-select semibold-16 text-color-quaternary"
->>>>>>> a3cc445 (SWD-43: Validation when Post Product)
               as="select"
               required
               value={formData.wardCode}
@@ -179,11 +167,7 @@ const AddressFormModal = ({
           </Form.Group>
           <Form.Group controlId="formDetailedAddress">
             <Form.Control
-<<<<<<< HEAD
-              className="regular-16 text-color-quaternary"
-=======
               className="semibold-16 text-color-quaternary"
->>>>>>> a3cc445 (SWD-43: Validation when Post Product)
               type="text"
               required
               pattern={'^(?=.*\\S).+$'}
