@@ -241,7 +241,10 @@ export default function UserDashboard(): ReactElement {
               <div className="semibold-20 text-color-tertiary">
                 Lịch sử giao dịch
               </div>
-              <div className="regular-14 text-color-tertiary text-decoration-underline clickable">
+              <div
+                className="regular-14 text-color-tertiary text-decoration-underline clickable"
+                onClick={() => navigate(`/oder-history`)}
+              >
                 Xem tất cả
               </div>
             </div>

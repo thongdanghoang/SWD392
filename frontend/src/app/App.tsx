@@ -22,6 +22,7 @@ import {UserProvider} from '../modules/shared/services/userProvider.tsx';
 import {UserContext} from '../modules/shared/services/userContext.ts';
 import UserDashboard from '../modules/user/UserDashboard.tsx';
 import EditProduct from '../modules/products/components/edit-product/EditProduct.tsx';
+import OderHistory from '../modules/user/OderHistory.tsx';
 
 export default function App(): ReactElement {
   const applicationService = useApplicationService();
@@ -68,6 +69,7 @@ export default function App(): ReactElement {
                     element={<SellerProfile />}
                   ></Route>
                   <Route path="/chat" element={<ChatList />}></Route>
+                  <Route path="/oder-history" element={<OderHistory />}></Route>
                   <Route
                     path="/exchange-request/:id"
                     element={<ExchangeRequest />}
