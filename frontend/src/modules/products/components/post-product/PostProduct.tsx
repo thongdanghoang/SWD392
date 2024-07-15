@@ -103,7 +103,6 @@ export default function PostProduct(): React.ReactElement {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     fetchCategories();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const handleUploadComplete = (imageUrls: string[]): void => {
     setProduct(prevProduct => ({...prevProduct, images: imageUrls}));
