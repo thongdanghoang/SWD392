@@ -1,19 +1,24 @@
-import {Prop, Schema, SchemaFactory} from '@nestjs/mongoose';
-import {Document} from 'mongoose';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn
+} from 'typeorm';
 
-@Schema()
-export class Message extends Document {
-  @Prop({required: true})
+@Entity()
+export class Message {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column()
   roomId: string;
 
-  @Prop({required: true})
+  @Column()
   sender: string;
 
-  @Prop({required: true})
+  @Column()
   message: string;
 
-  @Prop({default: Date.now})
+  @CreateDateColumn()
   createdAt: Date;
 }
-
-export const MessageSchema = SchemaFactory.createForClass(Message);

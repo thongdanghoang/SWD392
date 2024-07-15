@@ -1,16 +1,13 @@
 import {Module} from '@nestjs/common';
-import {MongooseModule} from '@nestjs/mongoose';
+import {TypeOrmModule} from '@nestjs/typeorm';
 import {ChatGateway} from './chat.gateway';
 import {ChatService} from './chat.service';
-import {Message, MessageSchema} from './schemas/message.schema';
-import {Room, RoomSchema} from './schemas/room.schema';
+import {Message} from './schemas/message.schema';
+import {Room} from './schemas/room.schema';
 import {ChatController} from './chat.controller';
 
 @Module({
-  imports: [
-    MongooseModule.forFeature([{name: Message.name, schema: MessageSchema}]),
-    MongooseModule.forFeature([{name: Room.name, schema: RoomSchema}])
-  ],
+  imports: [TypeOrmModule.forFeature([Message, Room])],
   providers: [ChatGateway, ChatService],
   controllers: [ChatController]
 })
