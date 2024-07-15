@@ -46,6 +46,12 @@ export interface ProductDto {
   video: string;
   isMyProduct: boolean;
 }
+export interface CategoryDto {
+  id: number;
+  version: number;
+  title: string;
+  image: string;
+}
 
 export enum ProductStatus {
   REVIEWING = 'REVIEWING',

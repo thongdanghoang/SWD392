@@ -13,6 +13,8 @@ import {NotificationEntity} from './modules/user/notification.entity';
 import {ChatModule} from './modules/chat/chat.module';
 import {Room} from 'src/modules/chat/schemas/room.schema';
 import {Message} from 'src/modules/chat/schemas/message.schema';
+import {CategoryModule} from './modules/category/category.module';
+import {CategoryEntity} from './modules/category/category.entity';
 
 @Module({
   imports: [
@@ -32,14 +34,16 @@ import {Message} from 'src/modules/chat/schemas/message.schema';
         ProductEntity,
         ExchangeEntity,
         Room,
-        Message
+        Message,
+        CategoryEntity
       ],
       synchronize: true
     }),
     ChatModule,
     UserModule,
     ProductModule,
-    TransactionsModule
+    TransactionsModule,
+    CategoryModule
   ],
   controllers: [AppController],
   providers: [AppService]
