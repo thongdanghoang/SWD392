@@ -1,7 +1,11 @@
 import './PostProduct.scss';
 import '@assets/styles/styles.scss';
 import {Form} from 'react-bootstrap';
+<<<<<<< HEAD
 import React, {useContext, useEffect} from 'react';
+=======
+import React, {useEffect} from 'react';
+>>>>>>> a3cc445 (SWD-43: Validation when Post Product)
 import AppButton from '../../../shared/components/buttons/AppButton.tsx';
 import AddressFormModal from '../AddressFormModal.tsx';
 import {useApplicationService} from '../../../shared/services/application.service.ts';
@@ -112,7 +116,7 @@ export default function PostProduct(): React.ReactElement {
   const handleUploadVideoComplete = (videoUrl: string): void => {
     setProduct(prevProduct => ({...prevProduct, video: videoUrl}));
   };
-
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {}, [product]);
 
   return (
@@ -304,6 +308,30 @@ export default function PostProduct(): React.ReactElement {
               ></Form.Control>
               <Form.Control.Feedback type="invalid">
                 Vui lòng nhập mô tả
+              </Form.Control.Feedback>
+            </Form.Group>
+          </div>
+          <div className="address d-flex flex-column gap-3">
+            <div className="semibold-20 text-color-quaternary">
+              Thông tin người bán
+            </div>
+            <Form.Group controlId="formProductAddress" className="">
+              <Form.Control
+                className="form-control regular-14 text-color-tertiary clickable"
+                placeholder="Địa chỉ"
+                required
+                onClick={() =>
+                  showModal(AddressFormModal, handleAddressFormModalSubmit)
+                }
+                value={
+                  product.addressDetail
+                    ? `${product.addressDetail}, ${fullAddressName}`
+                    : ''
+                }
+                onChange={(): void => {}}
+              />
+              <Form.Control.Feedback type="invalid">
+                Vui lòng nhập địa chỉ
               </Form.Control.Feedback>
             </Form.Group>
           </div>
