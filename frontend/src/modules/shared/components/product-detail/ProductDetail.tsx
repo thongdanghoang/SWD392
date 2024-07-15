@@ -229,9 +229,15 @@ export default function ProductDetail(): ReactElement {
                         <AppButton
                           variant="secondary"
                           children={`Xem trang cá nhân`}
-                          onClick={() =>
-                            navigate(`/seller-profile/${currentProduct?.id}`)
-                          }
+                          onClick={() => {
+                            if (!applicationService.isAuthenticated()) {
+                              applicationService.signIn();
+                            } else {
+                              navigate(
+                                `/seller-profile/${currentProduct?.owner.id}`
+                              );
+                            }
+                          }}
                         />
                       </div>
                     )}
