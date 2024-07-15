@@ -35,7 +35,7 @@ export default function PostProduct(): React.ReactElement {
     images: [],
     video: '',
     summary: '',
-    category: ''
+    category: 0
   });
   useEffect((): void => {
     if (currentUser?.addressDetail) {
@@ -167,7 +167,9 @@ export default function PostProduct(): React.ReactElement {
               required
               className="list-of-postings form-select semibold-16 text-color-tertiary"
               value={product.category} // Ensure this reflects the current category ID in your product state
-              onChange={e => setProduct({...product, category: e.target.value})} // Update the product state with the selected category ID
+              onChange={e =>
+                setProduct({...product, category: parseInt(e.target.value, 10)})
+              } // Update the product state with the selected category ID
             >
               {categories.map(category => (
                 <option key={category.id} value={category.id}>

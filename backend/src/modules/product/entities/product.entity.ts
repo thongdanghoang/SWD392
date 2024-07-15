@@ -102,6 +102,6 @@ export class ProductEntity {
   owner: number;
 
   // TODO : [Nguyễn Trần Duy Thái] set this fields mandatory according to ticket SWD-44
-  @Column({type: 'uuid', name: 'category_id', nullable: true})
+  @Column({type: 'int', name: 'category_id', nullable: true})
   category: number;
 }

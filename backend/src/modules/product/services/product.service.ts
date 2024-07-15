@@ -2,7 +2,11 @@ import {Injectable} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {Like, Repository} from 'typeorm';
 import {ProductEntity, ProductStatus} from '../entities/product.entity';
-import {CreateProductDto, UpdateProductDto} from '../dto/product.dto';
+import {
+  CreateProductDto,
+  ProductSearchCriteria,
+  UpdateProductDto
+} from '../dto/product.dto';
 import {
   SearchCriteriaDto,
   SearchResultDto,
@@ -17,21 +21,20 @@ export class ProductService {
   ) {}
 
   async searchProducts(
-    criteria: SearchCriteriaDto<string> = defaultSearchCriteria('')
+    searchCriteria: SearchCriteriaDto<ProductSearchCriteria> = defaultSearchCriteria(
+      null
+    )
   ): Promise<SearchResultDto<ProductEntity>> {
+    const queryCondition = [
+      {
+        status: ProductStatus.PUBLISHED
+      }
+    ];
+    this.buildQuerySearchByCategoryAndKeyword(searchCriteria, queryCondition);
     const [results, total] = await this.productRepository.findAndCount({
-      where: [
-        {
-          title: Like(`%${criteria.criteria}%`),
-          status: ProductStatus.PUBLISHED
-        },
-        {
-          summary: Like(`%${criteria.criteria}%`),
-          status: ProductStatus.PUBLISHED
-        }
-      ],
-      skip: criteria.page.offset,
-      take: criteria.page.limit,
+      where: queryCondition,
+      skip: searchCriteria.page.offset,
+      take: searchCriteria.page.limit,
       order: {creationDate: 'DESC'}
     });
     return {results, total};
@@ -72,10 +75,58 @@ export class ProductService {
     await this.productRepository.update(id, {status});
   }
 
-  async deleteProduct(id: number): Promise<void> {
-    await this.productRepository.delete(id);
-  }
   async getProductsByUserId(owner: number): Promise<ProductEntity[]> {
     return await this.productRepository.findBy({owner});
+  }
+
+  private buildQuerySearchByCategoryAndKeyword(
+    searchCriteria: SearchCriteriaDto<ProductSearchCriteria>,
+    queryCondition: any[]
+  ): void {
+    if (
+      searchCriteria?.criteria?.categoryId &&
+      searchCriteria?.criteria?.keyword
+    ) {
+      queryCondition.push(
+        {
+          title: Like(`%${searchCriteria.criteria.keyword}%`),
+          category: searchCriteria.criteria.categoryId
+        },
+        {
+          summary: Like(`%${searchCriteria.criteria.keyword}%`),
+          category: searchCriteria.criteria.categoryId
+        }
+      );
+    } else {
+      this.buildQuerySearchByCategory(searchCriteria, queryCondition);
+      this.buildQuerySearchByKeyword(searchCriteria, queryCondition);
+    }
+  }
+
+  private buildQuerySearchByKeyword(
+    searchCriteria: SearchCriteriaDto<ProductSearchCriteria>,
+    queryCondition: any[]
+  ): void {
+    if (searchCriteria?.criteria?.keyword) {
+      queryCondition.push(
+        {
+          title: Like(`%${searchCriteria.criteria.keyword}%`)
+        },
+        {
+          summary: Like(`%${searchCriteria.criteria.keyword}%`)
+        }
+      );
+    }
+  }
+
+  private buildQuerySearchByCategory(
+    searchCriteria: SearchCriteriaDto<ProductSearchCriteria>,
+    queryCondition: any[]
+  ): void {
+    if (searchCriteria?.criteria?.categoryId) {
+      queryCondition.push({
+        category: searchCriteria.criteria.categoryId
+      });
+    }
   }
 }

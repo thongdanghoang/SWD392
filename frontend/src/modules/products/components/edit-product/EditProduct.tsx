@@ -21,7 +21,6 @@ export default function EditProduct(): React.ReactElement {
   const navigate = useNavigate();
   const applicationService = useApplicationService();
   const {id} = useParams<{id: string}>();
-  const [version, setVersion] = React.useState<number>(0);
   useState<ProductWithOwnerDTO | null>(null);
   useEffect(() => {
     if (id) {
@@ -29,8 +28,9 @@ export default function EditProduct(): React.ReactElement {
         .createApiClient()
         .get(`${AppRoutingConstants.PRODUCTS_PATH}/${id}`)
         .then(response => {
-          setVersion(response.data.data.version);
           setProduct({
+            id,
+            version: response.data.data.version,
             title: response.data.data.title,
             isGiveAway: response.data.data.isGiveAway,
             isUsed: response.data.data.isUsed,
@@ -63,7 +63,7 @@ export default function EditProduct(): React.ReactElement {
     addressDetail: '',
     images: [],
     video: '',
-    category: '',
+    category: 0,
     summary: ''
   });
   useEffect((): void => {
@@ -82,11 +82,7 @@ export default function EditProduct(): React.ReactElement {
     if (form.checkValidity() && product.images.length > 0) {
       applicationService
         .createApiClient()
-        .put(`${AppRoutingConstants.PRODUCTS_PATH}/${id}`, {
-          ...product,
-          id,
-          version
-        })
+        .put(`${AppRoutingConstants.PRODUCTS_PATH}`, product)
         .then((): void => {
           navigate(`${AppRoutingConstants.HOMEPAGE}`);
         })

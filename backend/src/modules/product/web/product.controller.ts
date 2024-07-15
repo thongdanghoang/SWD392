@@ -5,17 +5,18 @@ import {
   Get,
   HttpCode,
   Param,
-  Patch,
   Post,
   Put,
   UseGuards
 } from '@nestjs/common';
-import {JwtAuthGuard, Roles} from '@5stones/nest-oidc';
+import {JwtAuthGuard} from '@5stones/nest-oidc';
 import {ProductService} from '../services/product.service';
 import {
   CreateProductDto,
   ProductDto,
-  ProductWithOwnerDTO
+  ProductSearchCriteria,
+  ProductWithOwnerDTO,
+  UpdateProductDto
 } from '../dto/product.dto';
 import {ProductEntity, ProductStatus} from '../entities/product.entity';
 import {ResponseData} from '../../../global/globalClass';
@@ -59,16 +60,15 @@ export class ProductController {
     }
   }
 
-  @Put('/:id')
+  @Put()
   @UseGuards(JwtAuthGuard)
   async updateProduct(
-    @Param('id') id: number,
-    @Body() createProductDto: CreateProductDto
+    @Body() updateProductDto: UpdateProductDto
   ): Promise<ResponseData<ProductDto>> {
     try {
       const updatedProduct: ProductEntity =
         await this.productService.updateProduct({
-          ...createProductDto,
+          ...updateProductDto,
           modifiedBy: `${this.userService.getCurrentUser().firstName} ${this.userService.getCurrentUser().lastName}`
         });
       return new ResponseData(
@@ -106,92 +106,6 @@ export class ProductController {
       throw new Error('Delete product failed');
     }
     throw new Error('Delete product failed');
-  }
-
-  @Get('/moderator')
-  @UseGuards(JwtAuthGuard)
-  @Roles('swapme.moderator')
-  async getMyProductsAsModerator(): Promise<ResponseData<ProductDto[]>> {
-    try {
-      return new ResponseData<ProductDto[]>(
-        await this.productService
-          .getAllProducts()
-          .then((products: ProductEntity[]): ProductDto[] =>
-            products.map(
-              (product: ProductEntity): ProductDto =>
-                this.mapToProductDto(product)
-            )
-          ),
-        HttpMessage.OK,
-        HttpStatus.OK
-      );
-    } catch (error) {
-      return new ResponseData<ProductDto[]>(
-        null,
-        HttpMessage.INTERNAL_SERVER_ERROR,
-        HttpStatus.INTERNAL_SERVER_ERROR
-      );
-    }
-  }
-
-  @Patch('/moderator/accept/:id')
-  @UseGuards(JwtAuthGuard)
-  @Roles('swapme.moderator')
-  async acceptProduct(@Param('id') id: number): Promise<void> {
-    try {
-      const product: ProductEntity =
-        await this.productService.getProductDetails(id);
-      if (product.status === ProductStatus.REVIEWING) {
-        return await this.productService.updateProductStatus(
-          id,
-          ProductStatus.PUBLISHED
-        );
-      }
-    } catch (error) {
-      console.error(error);
-      throw new Error('Accept product failed');
-    }
-    throw new Error('Accept product failed');
-  }
-
-  @Patch('/moderator/reject/:id')
-  @UseGuards(JwtAuthGuard)
-  @Roles('swapme.moderator')
-  async rejectProduct(@Param('id') id: number): Promise<void> {
-    try {
-      const product: ProductEntity =
-        await this.productService.getProductDetails(id);
-      if (product.status === ProductStatus.REVIEWING) {
-        return await this.productService.updateProductStatus(
-          id,
-          ProductStatus.BANNED
-        );
-      }
-    } catch (error) {
-      console.error(error);
-      throw new Error('Reject product failed');
-    }
-    throw new Error('Reject product failed');
-  }
-
-  @Patch('/moderator/remove/:id')
-  @UseGuards(JwtAuthGuard)
-  @Roles('swapme.moderator')
-  async removeProduct(@Param('id') id: number): Promise<void> {
-    try {
-      const product: ProductEntity =
-        await this.productService.getProductDetails(id);
-      if (product.status === ProductStatus.PUBLISHED) {
-        return await this.productService.updateProductStatus(
-          id,
-          ProductStatus.REMOVED
-        );
-      }
-    } catch (error) {
-      console.error(error);
-      throw new Error('Reject product failed');
-    }
-    throw new Error('Reject product failed');
   }
 
   @Get('/my-products')
@@ -278,7 +192,7 @@ export class ProductController {
   @Post('/search')
   @HttpCode(200)
   async searchProducts(
-    @Body() criteria: SearchCriteriaDto<string>
+    @Body() criteria: SearchCriteriaDto<ProductSearchCriteria>
   ): Promise<SearchResultDto<ProductDto>> {
     try {
       const searchResultEntity =
@@ -296,6 +210,7 @@ export class ProductController {
       } as SearchResultDto<ProductDto>;
     }
   }
+
   @Get('/user/:userId/products')
   async getProductsByUserId(
     @Param('userId') userId: number
@@ -308,6 +223,30 @@ export class ProductController {
       );
       return new ResponseData<ProductDto[]>(
         productDtos,
+        HttpMessage.OK,
+        HttpStatus.OK
+      );
+    } catch (error) {
+      return new ResponseData<ProductDto[]>(
+        null,
+        HttpMessage.INTERNAL_SERVER_ERROR,
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
+    }
+  }
+
+  @Get()
+  async getAllProducts(): Promise<ResponseData<ProductDto[]>> {
+    try {
+      return new ResponseData<ProductDto[]>(
+        await this.productService
+          .getAllProducts()
+          .then((products: ProductEntity[]): ProductDto[] =>
+            products.map(
+              (product: ProductEntity): ProductDto =>
+                this.mapToProductDto(product)
+            )
+          ),
         HttpMessage.OK,
         HttpStatus.OK
       );

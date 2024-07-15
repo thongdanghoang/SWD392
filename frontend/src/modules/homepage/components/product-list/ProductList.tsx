@@ -23,13 +23,26 @@ const ProductList = (): React.ReactElement => {
   );
   const limit: number = ApplicationConstants.DEFAULT_LIMIT;
   const applicationService = useApplicationService();
-  const criteria: string = queryParameters.get('q') ?? '';
+  const keyword: string = queryParameters.get('q') ?? '';
+  const [categoryId, setCategoryId] = useState<number | null>(
+    parseInt(queryParameters.get('category') ?? '', 10) || null
+  );
 
-  const fetchProducts = (newOffset: number): void => {
+  useEffect(() => {
+    const newCategoryId = parseInt(queryParameters.get('category') ?? '', 10);
+    if (!isNaN(newCategoryId)) {
+      setCategoryId(newCategoryId);
+    }
+  }, [queryParameters]);
+
+  const fetchProducts = (): void => {
     applicationService
       .createApiClient()
       .post(`${AppRoutingConstants.PRODUCTS_PATH}/search`, {
-        criteria,
+        criteria: {
+          keyword,
+          categoryId
+        },
         page: {
           offset,
           limit
@@ -40,7 +53,6 @@ const ProductList = (): React.ReactElement => {
           results: [...prevState.results, ...response.data.results],
           total: response.data.total
         }));
-        setOffset(newOffset + limit);
       })
       .catch(error => {
         console.error('API error:', error);
@@ -51,8 +63,8 @@ const ProductList = (): React.ReactElement => {
   useEffect(() => {
     setOffset(0);
     setSearchResult({results: [], total: 0});
-    fetchProducts(offset);
-  }, [criteria]);
+    fetchProducts();
+  }, [keyword, categoryId]);
 
   if (error) {
     return <div>{error}</div>;
@@ -83,9 +95,9 @@ const ProductList = (): React.ReactElement => {
           <div className="load-more d-flex justify-content-center">
             <AppButton
               variant="primary"
-              onClick={() => {
+              onClick={(): void => {
                 setOffset(prevOffset => prevOffset + limit);
-                fetchProducts(offset);
+                fetchProducts();
               }}
             >
               Xem Thêm

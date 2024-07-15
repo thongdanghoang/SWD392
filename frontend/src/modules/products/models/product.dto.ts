@@ -13,6 +13,6 @@ export interface ProductDTO extends AddressDto {
   addressDetail: string;
   images: string[];
   video: string;
-  category: string;
+  category: number;
   summary: string;
 }
