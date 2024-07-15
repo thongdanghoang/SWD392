@@ -203,7 +203,10 @@ export default function UserDashboard(): ReactElement {
               <div className="semibold-16 text-color-tertiary">
                 Bài đăng của bạn
               </div>
-              <div className="regular-14 text-color-tertiary text-decoration-underline clickable">
+              <div
+                className="regular-14 text-color-tertiary text-decoration-underline clickable"
+                onClick={() => navigate('/user-profile')}
+              >
                 Xem tất cả
               </div>
             </div>

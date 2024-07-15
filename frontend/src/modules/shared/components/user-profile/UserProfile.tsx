@@ -63,7 +63,7 @@ export default function UserProfile(): ReactElement {
             </div>
             <AppButton
               variant="secondary"
-              onClick={() => navigate(`/edit-profile`)}
+              onClick={() => navigate('/user/dashboard')}
               children={'Chỉnh sửa '}
             />
           </div>
