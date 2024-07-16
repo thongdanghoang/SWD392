@@ -198,106 +198,111 @@ export default function UserDashboard(): ReactElement {
               </div>
             </div>
           </div>
-          <div className="user-posts col p-1 p-lg-3">
-            <div className="d-flex justify-content-between">
-              <div className="semibold-16 text-color-tertiary">
-                Bài đăng của bạn
+          {!applicationService.isModeratorUser() && (
+            <div className="user-posts col p-1 p-lg-3">
+              <div className="d-flex justify-content-between">
+                <div className="semibold-16 text-color-tertiary">
+                  Bài đăng của bạn
+                </div>
+                <div
+                  className="regular-14 text-color-tertiary text-decoration-underline clickable"
+                  onClick={() => navigate('/user-profile')}
+                >
+                  Xem tất cả
+                </div>
               </div>
-              <div
-                className="regular-14 text-color-tertiary text-decoration-underline clickable"
-                onClick={() => navigate('/user-profile')}
-              >
-                Xem tất cả
-              </div>
-            </div>
-            <div className="my-posts d-flex flex-column gap-1 gap-lg-3 mt-1 mt-lg-3">
-              {myProducts
-                .slice(0, 3)
-                .map((product: ProductWithOwnerDTO, index: number) => (
-                  <div
-                    key={index}
-                    className="my-post d-flex gap-1 gap-lg-3 align-items-center clickable"
-                    onClick={() =>
-                      navigate(`${AppRoutingConstants.PRODUCTS}/${product.id}`)
-                    }
-                  >
-                    <div className="post-image">
-                      <img
-                        src={product.images[0]}
-                        alt={product.title}
-                        height={50}
-                        width={50}
-                        style={{objectFit: 'cover', borderRadius: '8px'}}
-                      />
-                    </div>
-                    <div className="semibold-14 text-color-quaternary">
-                      {product.title}
-                    </div>
-                  </div>
-                ))}
-            </div>
-          </div>
-        </div>
-        <div className="row">
-          <div className="exchange-histories col">
-            <div className="p-2 p-lg-4 d-flex justify-content-between align-items-center">
-              <div className="semibold-20 text-color-tertiary">
-                Lịch sử giao dịch
-              </div>
-              <div className="regular-14 text-color-tertiary text-decoration-underline clickable">
-                Xem tất cả
-              </div>
-            </div>
-            <div className="histories">
-              <Table responsive borderless hover>
-                <thead>
-                  <tr>
-                    <th>No.</th>
-                    <th>Ngày bắt đầu</th>
-                    <th>Ngày kết thúc</th>
-                    <th>Số tiền</th>
-                    <th>Tình trạng</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {histories.map((history, index) => (
-                    <tr
-                      key={history.id}
-                      onClick={() => navigate(`/exchange-detail/${history.id}`)}
+              <div className="my-posts d-flex flex-column gap-1 gap-lg-3 mt-1 mt-lg-3">
+                {myProducts
+                  .slice(0, 3)
+                  .map((product: ProductWithOwnerDTO, index: number) => (
+                    <div
+                      key={index}
+                      className="my-post d-flex gap-1 gap-lg-3 align-items-center clickable"
+                      onClick={() =>
+                        navigate(
+                          `${AppRoutingConstants.PRODUCTS}/${product.id}`
+                        )
+                      }
                     >
-                      <td>#{index + 1}</td>
-                      <td>
-                        {history?.creationDate
-                          ? getLocalDateTime(history.creationDate)
-                          : ''}
-                      </td>
-                      <td>
-                        {history.status === ExchangeStatusDto.PENDING
-                          ? getExchangeStatusText(history.status)
-                          : history?.lastModificationDate
-                            ? getLocalDateTime(history.lastModificationDate)
-                            : ''}
-                      </td>
-                      <td>
-                        {history.status === ExchangeStatusDto.ACCEPTED
-                          ? formatToVietnameseCurrency(0)
-                          : formatToVietnameseCurrency(0)}
-                      </td>
-                      <td>{getExchangeStatusText(history.status)}</td>
-                    </tr>
+                      <div className="post-image">
+                        <img
+                          src={product.images[0]}
+                          alt={product.title}
+                          height={50}
+                          width={50}
+                          style={{objectFit: 'cover', borderRadius: '8px'}}
+                        />
+                      </div>
+                      <div className="semibold-14 text-color-quaternary">
+                        {product.title}
+                      </div>
+                    </div>
                   ))}
-                  {histories.length === 0 && (
+              </div>
+            </div>
+          )}
+        </div>
+        {!applicationService.isModeratorUser() && (
+          <div className="row">
+            <div className="exchange-histories col">
+              <div className="p-2 p-lg-4 d-flex justify-content-between align-items-center">
+                <div className="semibold-20 text-color-tertiary">
+                  Lịch sử giao dịch
+                </div>
+              </div>
+              <div className="histories">
+                <Table responsive borderless hover>
+                  <thead>
                     <tr>
-                      <td colSpan={5} className="text-center">
-                        Chưa có bất kì trao đổi nào được thực hiện
-                      </td>
+                      <th>No.</th>
+                      <th>Ngày bắt đầu</th>
+                      <th>Ngày kết thúc</th>
+                      <th>Số tiền</th>
+                      <th>Tình trạng</th>
                     </tr>
-                  )}
-                </tbody>
-              </Table>
+                  </thead>
+                  <tbody>
+                    {histories.map((history, index) => (
+                      <tr
+                        key={history.id}
+                        onClick={() =>
+                          navigate(`/exchange-detail/${history.id}`)
+                        }
+                      >
+                        <td>#{index + 1}</td>
+                        <td>
+                          {history?.creationDate
+                            ? getLocalDateTime(history.creationDate)
+                            : ''}
+                        </td>
+                        <td>
+                          {history.status === ExchangeStatusDto.PENDING
+                            ? getExchangeStatusText(history.status)
+                            : history?.lastModificationDate
+                              ? getLocalDateTime(history.lastModificationDate)
+                              : ''}
+                        </td>
+                        <td>
+                          {history.status === ExchangeStatusDto.ACCEPTED
+                            ? formatToVietnameseCurrency(0)
+                            : formatToVietnameseCurrency(0)}
+                        </td>
+                        <td>{getExchangeStatusText(history.status)}</td>
+                      </tr>
+                    ))}
+                    {histories.length === 0 && (
+                      <tr>
+                        <td colSpan={5} className="text-center">
+                          Chưa có bất kì trao đổi nào được thực hiện
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </Table>
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
