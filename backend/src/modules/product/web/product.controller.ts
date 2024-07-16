@@ -181,7 +181,7 @@ export class ProductController {
     try {
       const product: ProductEntity =
         await this.productService.getProductDetails(id);
-      if (product.status === ProductStatus.REVIEWING) {
+      if (product.status === ProductStatus.PUBLISHED) {
         return await this.productService.updateProductStatus(
           id,
           ProductStatus.REMOVED
