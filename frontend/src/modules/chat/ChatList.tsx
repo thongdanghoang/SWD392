@@ -1,4 +1,10 @@
-import React, {ReactElement, useContext, useEffect, useState} from 'react';
+import React, {
+  ReactElement,
+  useContext,
+  useEffect,
+  useRef,
+  useState
+} from 'react';
 import io from 'socket.io-client';
 import {useApplicationService} from '../shared/services/application.service.ts';
 import './ChatList.scss';
@@ -49,6 +55,7 @@ function ChatRoom({
   const buyerId = parts.slice(0, 5).join('-');
   const sellerId = parts.slice(5).join('-');
   const idToFetch = sellerId === userId ? buyerId : sellerId;
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   async function fetchSellerInfo(sellerId: string): Promise<any> {
     const response = await applicationService
@@ -62,6 +69,7 @@ function ChatRoom({
       setSellerName(`${sellerData.firstName} ${sellerData.lastName}`);
     });
   }, [idToFetch]);
+
   useEffect(() => {
     applicationService
       .createApiClient()
@@ -69,7 +77,7 @@ function ChatRoom({
       .then(response => {
         setMessages(response.data);
       })
-      .catch(error => console.error('Error fetching } messages:', error));
+      .catch(error => console.error('Error fetching messages:', error));
   }, [roomId]);
 
   useEffect(() => {
@@ -83,6 +91,13 @@ function ChatRoom({
       socket.off('newMessage', handleNewMessage);
     };
   }, [roomId]);
+
+  useEffect(() => {
+    const chatHistoryElement = document.querySelector('.chat-history');
+    if (chatHistoryElement) {
+      chatHistoryElement.scrollTop = chatHistoryElement.scrollHeight;
+    }
+  }, [messages]);
 
   const sendMessage = (event: React.FormEvent): void => {
     event.preventDefault();
@@ -124,22 +139,24 @@ function ChatRoom({
       <div className="chat-history">
         <ul className="m-b-0">
           {messages.map((msg, index) => (
-            <li
-              key={index}
-              className={`clearfix ${msg.sender === userId ? 'my-message' : 'other-message'}`}
-            >
+            <li key={index} className="clearfix">
               <div
                 className={`message ${msg.sender === userId ? 'my-message' : 'other-message'}`}
               >
                 {msg.message}
-              </div>
-              <div className="message-data">
-                <span className="message-data-time">
-                  {new Date(msg.createdAt).toLocaleTimeString()}
-                </span>
+                <div className="message-data">
+                  <span className="message-data-time">
+                    {new Intl.DateTimeFormat('default', {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                      hour12: false
+                    }).format(new Date(msg.createdAt))}
+                  </span>
+                </div>
               </div>
             </li>
           ))}
+          <div ref={messagesEndRef} />
         </ul>
       </div>
       <div className="chat-message clearfix">
@@ -153,8 +170,17 @@ function ChatRoom({
               onChange={event => setMessage(event.target.value)}
             />
             <div className="input-group-append">
-              <button className="btn btn-primary" type="submit">
-                Send
+              <button className="btn btn-send" type="submit">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                  color="#70E2A2"
+                >
+                  <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+                </svg>
               </button>
             </div>
           </div>
@@ -225,7 +251,7 @@ function ChatList(): ReactElement {
       <div className="row clearfix">
         <div className="col-lg-12">
           <div className="card chat-app">
-            <div id="plist" className="people-list">
+            <div id="plist" className="people-list" style={{height: '100%'}}>
               <div className="input-group">
                 <input
                   type="text"
@@ -233,14 +259,21 @@ function ChatList(): ReactElement {
                   placeholder="Search..."
                 />
               </div>
-              <ul className="list-unstyled chat-list mt-2 mb-0">
+              <ul
+                className="list-unstyled chat-list mt-2 mb-0"
+                style={{
+                  height: '100%',
+                  width: 'max-content',
+                  paddingRight: '5px'
+                }}
+              >
                 {rooms.map(room => {
                   const seller =
                     sellers[room.sellerId] || sellers[room.buyerId];
                   return (
                     <li
                       key={room.roomId}
-                      className="clearfix"
+                      className={`clearfix ${selectedRoom === room.roomId ? 'active' : ''}`}
                       onClick={() => onSelectRoom(room.roomId)}
                     >
                       <img
