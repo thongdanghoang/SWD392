@@ -164,7 +164,7 @@ export default function ProductDetail(): ReactElement {
                   </div>
                   <div className="regular-14 text-color-tertiary">
                     {currentProduct &&
-                      `${currentProduct.addressDetail}, ${getWardByCode(currentProduct.wardCode).fullName}`}
+                      `${currentProduct.addressDetail}, ${getWardByCode(currentProduct.wardCode)?.fullName}`}
                   </div>
                 </div>
                 <div className="d-flex align-items-center gap-4 d-none">
@@ -284,15 +284,18 @@ export default function ProductDetail(): ReactElement {
               {currentProduct?.isMyProduct === false &&
                 currentProduct.status === ProductStatus.PUBLISHED && (
                   <div className="d-flex flex-column gap-4">
-                    <AppButton
-                      variant="primary"
-                      children={`Giao dịch ngay`}
-                      onClick={() =>
-                        applicationService.checkIsUserDoActionOrElseNavigateLoginPage(
-                          handleExchangeRequestClick
-                        )
-                      }
-                    />
+                    {!applicationService.isModeratorUser() && (
+                      <AppButton
+                        variant="primary"
+                        children={`Giao dịch ngay`}
+                        onClick={() =>
+                          applicationService.checkIsUserDoActionOrElseNavigateLoginPage(
+                            handleExchangeRequestClick
+                          )
+                        }
+                      />
+                    )}
+
                     <AppButton
                       variant="secondary"
                       children={`Chat với người này`}
@@ -336,12 +339,13 @@ export default function ProductDetail(): ReactElement {
                   </a>
                 </div>
               </div>
-              {!currentProduct?.isMyProduct && (
-                <AppButton
-                  variant="tertiary"
-                  children={`Báo tin không hợp lệ`}
-                />
-              )}
+              {!currentProduct?.isMyProduct &&
+                !applicationService.isModeratorUser() && (
+                  <AppButton
+                    variant="tertiary"
+                    children={`Báo tin không hợp lệ`}
+                  />
+                )}
             </div>
           </div>
         </div>
