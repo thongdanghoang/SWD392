@@ -25,12 +25,11 @@ export class ProductService {
       null
     )
   ): Promise<SearchResultDto<ProductEntity>> {
-    const queryCondition = [
-      {
-        status: ProductStatus.PUBLISHED
-      }
-    ];
+    const queryCondition = [];
     this.buildQuerySearchByCategoryAndKeyword(searchCriteria, queryCondition);
+    if (queryCondition.length === 0) {
+      queryCondition.push({status: ProductStatus.PUBLISHED});
+    }
     const [results, total] = await this.productRepository.findAndCount({
       where: queryCondition,
       skip: searchCriteria.page.offset,
@@ -89,10 +88,12 @@ export class ProductService {
     ) {
       queryCondition.push(
         {
+          status: ProductStatus.PUBLISHED,
           title: Like(`%${searchCriteria.criteria.keyword}%`),
           category: searchCriteria.criteria.categoryId
         },
         {
+          status: ProductStatus.PUBLISHED,
           summary: Like(`%${searchCriteria.criteria.keyword}%`),
           category: searchCriteria.criteria.categoryId
         }
@@ -110,9 +111,11 @@ export class ProductService {
     if (searchCriteria?.criteria?.keyword) {
       queryCondition.push(
         {
+          status: ProductStatus.PUBLISHED,
           title: Like(`%${searchCriteria.criteria.keyword}%`)
         },
         {
+          status: ProductStatus.PUBLISHED,
           summary: Like(`%${searchCriteria.criteria.keyword}%`)
         }
       );
@@ -125,6 +128,7 @@ export class ProductService {
   ): void {
     if (searchCriteria?.criteria?.categoryId) {
       queryCondition.push({
+        status: ProductStatus.PUBLISHED,
         category: searchCriteria.criteria.categoryId
       });
     }
