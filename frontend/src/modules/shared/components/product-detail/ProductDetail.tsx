@@ -33,7 +33,6 @@ export default function ProductDetail(): ReactElement {
   const {id} = useParams<{id: string}>();
   const [currentProduct, setCurrentProduct] =
     useState<ProductWithOwnerDTO | null>(null);
-  const [liked, setLiked] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const handleExchangeRequestClick = (): void => {
     if (currentProduct?.isMyProduct) {
@@ -61,9 +60,6 @@ export default function ProductDetail(): ReactElement {
         });
     }
   }, [id]);
-  const handleLikeClick = (): void => {
-    setLiked(!liked);
-  };
   const modalContext = useModal();
   if (!modalContext) {
     return <div>Loading...</div>;
@@ -148,16 +144,6 @@ export default function ProductDetail(): ReactElement {
                   <h1 className="bold-32 text-color-quaternary">
                     {currentProduct?.title}
                   </h1>
-                  <div
-                    className="wish-btn clickable d-flex justify-content-center align-items-center"
-                    onClick={handleLikeClick}
-                  >
-                    {liked ? (
-                      <i className="bi bi-heart-fill text-color-sub-color"></i>
-                    ) : (
-                      <i className="bi bi-heart text-color-sub-color"></i>
-                    )}
-                  </div>
                 </div>
                 <div className="suggested-price">
                   <div className="semibold-20 text-color-tertiary">
@@ -177,7 +163,7 @@ export default function ProductDetail(): ReactElement {
                     Tình trạng:
                   </div>
                   <div className="regular-14 text-color-tertiary">
-                    Đã sử dụng
+                    {currentProduct?.isUsed ? 'Đã qua sử dụng' : 'Mới'}
                   </div>
                 </div>
                 <div className="d-flex align-items-center gap-2">
@@ -187,7 +173,7 @@ export default function ProductDetail(): ReactElement {
                   <div className="regular-14 text-color-tertiary">
                     {`${
                       applicationService.isAuthenticated()
-                        ? currentProduct?.owner?.phone
+                        ? currentProduct?.owner?.phone ?? 'Chưa cập nhật'
                         : `${currentProduct?.owner?.phone.slice(0, 4)}****`
                     }`}
                   </div>
@@ -243,26 +229,11 @@ export default function ProductDetail(): ReactElement {
                           />
                         )}
                       </div>
-                      <div className="info-and-rating">
+                      <div className="info-and-rating d-flex align-items-center">
                         <div className="semibold-20 text-color-quaternary">
                           {currentProduct?.owner
                             ? `${currentProduct?.owner.firstName} ${currentProduct?.owner.lastName}`
                             : 'Người bán'}
-                        </div>
-                        <div className="rating d-flex gap-3">
-                          <div className="rate-point semibold-16 text-color-quaternary">
-                            5.0
-                          </div>
-                          <div className="stars d-flex gap-1">
-                            <i className="bi bi-star-fill text-color-secondary"></i>
-                            <i className="bi bi-star-fill text-color-secondary"></i>
-                            <i className="bi bi-star-fill text-color-secondary"></i>
-                            <i className="bi bi-star-half text-color-secondary"></i>
-                            <i className="bi bi-star text-color-secondary"></i>
-                          </div>
-                          <div className="number-of-rates regular-14 text-color-quaternary">
-                            (10)
-                          </div>
                         </div>
                       </div>
                     </div>
@@ -283,16 +254,6 @@ export default function ProductDetail(): ReactElement {
                         />
                       </div>
                     )}
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="follow col-6 d-flex justify-content-between">
-                    <div className="following regular-14 text-color-quaternary">
-                      12 đang theo dõi
-                    </div>
-                    <div className="followers regular-14 text-color-quaternary">
-                      12 người theo dõi
-                    </div>
                   </div>
                 </div>
               </div>
@@ -323,10 +284,10 @@ export default function ProductDetail(): ReactElement {
                     />
                   </div>
                 )}
-              {currentProduct?.isMyProduct === false &&
-                currentProduct.status === ProductStatus.PUBLISHED && (
-                  <div className="d-flex flex-column gap-4">
-                    {!applicationService.isModeratorUser() && (
+              {currentProduct?.isMyProduct === false && (
+                <div className="d-flex flex-column gap-4">
+                  {!applicationService.isModeratorUser() &&
+                    currentProduct.status === ProductStatus.PUBLISHED && (
                       <AppButton
                         variant="primary"
                         children={`Giao dịch ngay`}
@@ -337,7 +298,7 @@ export default function ProductDetail(): ReactElement {
                         }
                       />
                     )}
-
+                  {!currentProduct.isMyProduct && (
                     <AppButton
                       variant="secondary"
                       children={`Chat với người này`}
@@ -347,8 +308,9 @@ export default function ProductDetail(): ReactElement {
                         )
                       }
                     />
-                  </div>
-                )}
+                  )}
+                </div>
+              )}
               <div className="row d-flex align-items-center">
                 <div className="col-6 flex-shrink-0">
                   <img
@@ -365,29 +327,20 @@ export default function ProductDetail(): ReactElement {
                     vệ quyền lợi cá nhân của quý khách, xin vui lòng báo cáo cho
                     chúng tôi khi thấy có các dấu hiệu bất thường và đáng ngờ.
                   </div>
-                  <div className="regular-12 text-color-quaternary">
-                    Tìm hiểu thêm{'>>>>'}{' '}
-                  </div>
                 </div>
               </div>
               <div className="d-flex align-items-center gap-3">
                 <i className="fs-1 bi bi-shield-check text-color-quaternary"></i>
-                <div className="regular-12 text-color-quaternary">
-                  Tin đăng này đã được kiểm duyệt. Nếu gặp vấn đề, vui lòng báo
-                  cáo tin đăng hoặc liên hệ CSKH để được trợ giúp.
-                  {` `}
-                  <a className="text-decoration-none text-color-quaternary">
-                    Xem thêm {'>>>'}
-                  </a>
-                </div>
-              </div>
-              {!currentProduct?.isMyProduct &&
-                !applicationService.isModeratorUser() && (
-                  <AppButton
-                    variant="tertiary"
-                    children={`Báo tin không hợp lệ`}
-                  />
+                {(currentProduct?.status === ProductStatus.PUBLISHED ||
+                  currentProduct?.status === ProductStatus.EXCHANGING ||
+                  currentProduct?.status === ProductStatus.EXCHANGED) && (
+                  <div className="regular-12 text-color-quaternary">
+                    Tin đăng này đã được kiểm duyệt. Nếu gặp vấn đề, vui lòng
+                    báo cáo tin đăng hoặc liên hệ CSKH để được trợ giúp.
+                    {` `}
+                  </div>
                 )}
+              </div>
             </div>
           </div>
         </div>

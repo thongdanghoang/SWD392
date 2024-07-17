@@ -16,7 +16,8 @@ export default function HomepageComponent(): ReactElement {
           <ProductList />
         </>
       )}
-      {applicationService.isModeratorUser() && <ModeratorProductList />}
+      {(applicationService.isModeratorUser() ||
+        applicationService.isRoleAdmin()) && <ModeratorProductList />}
     </div>
   );
 }

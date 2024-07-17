@@ -7,12 +7,12 @@ import {ResponseData} from '../../../global/globalClass';
 import {HttpMessage, HttpStatus} from '../../../global/globalEnum';
 
 @Controller('products/moderator')
+@UseGuards(JwtAuthGuard)
+@Roles('swapme.moderator', 'swapme.admin')
 export class ProductModeratorController {
   constructor(private readonly productService: ProductService) {}
 
   @Get()
-  @UseGuards(JwtAuthGuard)
-  @Roles('swapme.moderator')
   async getMyProductsAsModerator(): Promise<ResponseData<ProductDto[]>> {
     try {
       return new ResponseData<ProductDto[]>(
@@ -38,8 +38,6 @@ export class ProductModeratorController {
   }
 
   @Patch('/accept/:id')
-  @UseGuards(JwtAuthGuard)
-  @Roles('swapme.moderator')
   async acceptProduct(@Param('id') id: number): Promise<void> {
     try {
       const product: ProductEntity =
@@ -58,8 +56,6 @@ export class ProductModeratorController {
   }
 
   @Patch('/reject/:id')
-  @UseGuards(JwtAuthGuard)
-  @Roles('swapme.moderator')
   async rejectProduct(@Param('id') id: number): Promise<void> {
     try {
       const product: ProductEntity =
@@ -78,8 +74,6 @@ export class ProductModeratorController {
   }
 
   @Patch('/remove/:id')
-  @UseGuards(JwtAuthGuard)
-  @Roles('swapme.moderator')
   async removeProduct(@Param('id') id: number): Promise<void> {
     try {
       const product: ProductEntity =
