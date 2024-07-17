@@ -5,16 +5,12 @@ import {ProductDto} from '../dto/product.dto';
 import {ProductEntity, ProductStatus} from '../entities/product.entity';
 import {ResponseData} from '../../../global/globalClass';
 import {HttpMessage, HttpStatus} from '../../../global/globalEnum';
-import {UsersService} from '../../user/users.service';
 
-@Controller('products')
+@Controller('products/moderator')
 export class ProductModeratorController {
-  constructor(
-    private readonly productService: ProductService,
-    private readonly userService: UsersService
-  ) {}
+  constructor(private readonly productService: ProductService) {}
 
-  @Get('/moderator')
+  @Get()
   @UseGuards(JwtAuthGuard)
   @Roles('swapme.moderator')
   async getMyProductsAsModerator(): Promise<ResponseData<ProductDto[]>> {
@@ -32,6 +28,7 @@ export class ProductModeratorController {
         HttpStatus.OK
       );
     } catch (error) {
+      console.error(error);
       return new ResponseData<ProductDto[]>(
         null,
         HttpMessage.INTERNAL_SERVER_ERROR,
@@ -40,7 +37,7 @@ export class ProductModeratorController {
     }
   }
 
-  @Patch('/moderator/accept/:id')
+  @Patch('/accept/:id')
   @UseGuards(JwtAuthGuard)
   @Roles('swapme.moderator')
   async acceptProduct(@Param('id') id: number): Promise<void> {
@@ -60,7 +57,7 @@ export class ProductModeratorController {
     throw new Error('Accept product failed');
   }
 
-  @Patch('/moderator/reject/:id')
+  @Patch('/reject/:id')
   @UseGuards(JwtAuthGuard)
   @Roles('swapme.moderator')
   async rejectProduct(@Param('id') id: number): Promise<void> {
@@ -80,7 +77,7 @@ export class ProductModeratorController {
     throw new Error('Reject product failed');
   }
 
-  @Patch('/moderator/remove/:id')
+  @Patch('/remove/:id')
   @UseGuards(JwtAuthGuard)
   @Roles('swapme.moderator')
   async removeProduct(@Param('id') id: number): Promise<void> {
@@ -117,9 +114,7 @@ export class ProductModeratorController {
       modifiedBy: product.modifiedBy,
       creationDate: product.creationDate,
       status: product.status,
-      isMyProduct: this.userService.getCurrentUser()
-        ? product.owner === this.userService.getCurrentUser()?.id
-        : false
+      isMyProduct: false
     } as ProductDto;
   }
 }

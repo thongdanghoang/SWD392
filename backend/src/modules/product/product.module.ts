@@ -10,6 +10,6 @@ import {ProductModeratorController} from './web/product.moderator.controller';
   imports: [TypeOrmModule.forFeature([ProductEntity]), UserModule],
   providers: [ProductService],
   exports: [ProductService],
-  controllers: [ProductController, ProductModeratorController]
+  controllers: [ProductModeratorController, ProductController]
 })
 export class ProductModule {}
