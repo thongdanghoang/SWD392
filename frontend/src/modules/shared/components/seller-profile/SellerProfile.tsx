@@ -84,9 +84,6 @@ export default function UserProfile(): ReactElement {
   const sellingProducts = sellerProducts.filter(
     product => product.status === ('PUBLISHED' as ProductStatus)
   );
-  const soldProducts = sellerProducts.filter(
-    product => product.status === ('EXCHANGED' as ProductStatus)
-  );
 
   return (
     <div className="container user-profile">
@@ -150,9 +147,7 @@ export default function UserProfile(): ReactElement {
           <div
             className={`col-6 clickable tab ${activeTab === 'sold' ? 'active' : ''}`}
             onClick={() => handleTabClick('sold')}
-          >
-            Đã bán
-          </div>
+          ></div>
         </div>
       </div>
 
@@ -204,59 +199,6 @@ export default function UserProfile(): ReactElement {
                   <div className="my-products d-flex justify-content-center align-items-center">
                     <div className="regular-14 text-color-quaternary">
                       Người này chưa có sản phẩm nào để giao dịch
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
-        {activeTab === 'sold' && (
-          <div>
-            <div className="d-flex gap-4 flex-column">
-              <div className="exchange-info d-flex gap-3">
-                {soldProducts.length > 0 ? (
-                  <div className="my-products d-flex justify-content-start gap-3">
-                    {soldProducts?.map((product: ProductWithOwnerDTO) => (
-                      <li
-                        key={product.id}
-                        className="product-card clickable"
-                        onClick={navigateToDetail(product.id)}
-                      >
-                        <div className="product-image">
-                          <img src={product?.images?.[0]} alt={product.title} />
-                        </div>
-                        <div className="product-info mt-2">
-                          <div className="d-flex flex-column align-items-start">
-                            <div className="product-title text-color-tertiary semibold-16">
-                              {product.title}
-                            </div>
-                            <p className="product-price text-color-quaternary semibold-20">
-                              {product?.isGiveAway
-                                ? 'Cho tặng miễn phí'
-                                : formatToVietnameseCurrency(
-                                    product?.suggestedPrice
-                                  )}
-                            </p>
-                            <p className="product-creation-date text-color-tertiary regular-12">
-                              Đăng cách đây{' '}
-                              {formatDistanceToNow(
-                                new Date(product.creationDate),
-                                {
-                                  addSuffix: true,
-                                  locale: vi
-                                }
-                              )}{' '}
-                            </p>
-                          </div>
-                        </div>
-                      </li>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="my-products d-flex justify-content-center align-items-center">
-                    <div className="regular-14 text-color-quaternary">
-                      Người này chưa bán sản phẩm nào.
                     </div>
                   </div>
                 )}
