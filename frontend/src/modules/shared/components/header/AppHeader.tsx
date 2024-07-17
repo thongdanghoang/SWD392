@@ -130,7 +130,7 @@ export default function AppHeader(): ReactElement {
                 <div
                   className="notification-button-wrapper clickable"
                   onClick={() =>
-                    applicationService.checkIsUserDoActionOrElseNavigateLoginPage(
+                    applicationService.checkAuthenticatedDoActionOrElseNavigateLoginPage(
                       () => setShowNotifications(!showNotifications)
                     )
                   }
@@ -193,23 +193,25 @@ export default function AppHeader(): ReactElement {
               <div
                 className="chat clickable"
                 onClick={() =>
-                  applicationService.checkIsUserDoActionOrElseNavigateLoginPage(
+                  applicationService.checkAuthenticatedDoActionOrElseNavigateLoginPage(
                     () => navigate('/chat')
                   )
                 }
               >
                 <i className="fs-5 bi bi-chat-left-text"></i>
               </div>
-              <div
-                className="cart clickable"
-                onClick={() =>
-                  applicationService.checkAuthenticatedDoActionOrElseNavigateLoginPage(
-                    () => {}
-                  )
-                }
-              >
-                <i className="fs-5 bi bi-bag"></i>
-              </div>
+              {applicationService.isRoleUser() && (
+                <div
+                  className="cart clickable"
+                  onClick={() =>
+                    applicationService.checkAuthenticatedDoActionOrElseNavigateLoginPage(
+                      () => navigate('/user-profile')
+                    )
+                  }
+                >
+                  <i className="fs-5 bi bi-bag"></i>
+                </div>
+              )}
               <div
                 className="user-info d-flex flex-row align-items-center gap-2 btn"
                 data-bs-toggle={user ? 'offcanvas' : undefined}

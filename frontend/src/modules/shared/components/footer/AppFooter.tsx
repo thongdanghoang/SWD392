@@ -101,37 +101,6 @@ export default function AppFooter(): ReactElement {
                   </a>
                 </div>
               </div>
-
-              <div className="app-support d-flex gap-5">
-                <ul className="support list-unstyled text-end d-flex flex-column gap-3 me-5">
-                  <h5 className="semibold-16">Hỗ trợ khách hàng</h5>
-                  <li>
-                    <a className="regular-14">Trung tâm trợ giúp</a>
-                  </li>
-                  <li>
-                    <a className="regular-14">An toàn mua bán</a>
-                  </li>
-                  <li>
-                    <a className="regular-14">Liên hệ hỗ trợ</a>
-                  </li>
-                </ul>
-
-                <ul className="help list-unstyled text-end d-flex flex-column gap-3">
-                  <h5 className="semibold-16">Về chúng tôi</h5>
-                  <li>
-                    <a className="regular-14">Giới thiệu</a>
-                  </li>
-                  <li>
-                    <a className="regular-14">Quy chế hoạt động</a>
-                  </li>
-                  <li>
-                    <a className="regular-14">Chính sách bảo mật</a>
-                  </li>
-                  <li>
-                    <a className="regular-14">Giải quyết tranh chấp</a>
-                  </li>
-                </ul>
-              </div>
             </div>
           </div>
           <div className="copyright d-flex justify-content-between">

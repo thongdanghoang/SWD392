@@ -75,24 +75,9 @@ export default function UserProfile(): ReactElement {
                   />
                 )}
               </div>
-              <div className="info-and-rating">
+              <div className="info-and-rating d-flex align-items-center">
                 <div className="semibold-20 text-color-quaternary">
                   {currentUser?.firstName} {currentUser?.lastName}
-                </div>
-                <div className="rating d-flex gap-2 mt-1">
-                  <div className="rate-point semibold-16 text-color-quaternary">
-                    5.0
-                  </div>
-                  <div className="stars d-flex gap-1">
-                    <i className="bi bi-star-fill text-color-secondary"></i>
-                    <i className="bi bi-star-fill text-color-secondary"></i>
-                    <i className="bi bi-star-fill text-color-secondary"></i>
-                    <i className="bi bi-star-half text-color-secondary"></i>
-                    <i className="bi bi-star text-color-secondary"></i>
-                  </div>
-                  <div className="number-of-rates regular-14 text-color-quaternary mt-1">
-                    (10)
-                  </div>
                 </div>
               </div>
             </div>
