@@ -21,12 +21,17 @@
     position: relative;
     text-align: center;
     margin-bottom: 1rem;
+    
+    &:hover .image-nav-button {
+      opacity: 1;
+    }
   }
 
   .fixed-size {
     width: 600px;
     height: 400px;
     object-fit: cover;
+    object-position: center; 
   }
 
   .image-nav-button {
@@ -40,6 +45,8 @@
     padding: 0.5rem 1rem;
     cursor: pointer;
     z-index: 10;
+    opacity: 0;
+    transition: opacity 0.3s;
   }
 
   .prev-button {
@@ -62,7 +69,7 @@
   .thumbnail {
     width: 80px;
     height: 70px;
-    object-fit: cover;
+    object-fit: cover; 
     cursor: pointer;
     border: 2px solid transparent;
     flex-shrink: 0;
