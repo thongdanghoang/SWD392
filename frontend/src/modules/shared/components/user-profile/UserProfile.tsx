@@ -1,4 +1,4 @@
-import {ReactElement, useContext, useState, useEffect} from 'react';
+import {ReactElement, useContext, useEffect, useState} from 'react';
 import './UserProfile.scss';
 import {UserDto} from '../../models/userDto';
 import {useNavigate} from 'react-router-dom';
