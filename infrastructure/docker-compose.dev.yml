@@ -1,0 +1,32 @@
+version: "3.9"
+services:
+  identity-access-management:
+    container_name: keycloak
+    image: quay.io/keycloak/keycloak:24.0.4
+    command: [ "start-dev" ]
+    environment:
+      KEYCLOAK_LOGLEVEL: INFO
+      ROOT_LOGLEVEL: INFO
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin123
+    volumes:
+      - ./keycloak/themes/swapme:/opt/keycloak/themes/swapme
+    ports:
+      - "8443:8080"
+    depends_on:
+      - mysqlDB
+  mysqlDB:
+    container_name: mysqlDB
+    image: mysql:8.0
+    environment:
+      TZ: Asia/Ho_Chi_Minh
+      MYSQL_ROOT_PASSWORD: root_P@ssW0rd
+    volumes:
+      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    ports:
+      - "3306:3306"

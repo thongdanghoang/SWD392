@@ -1,21 +1,41 @@
 version: "3.9"
 services:
+  web:
+    container_name: swap-me-web
+    image: thongdh3401/swap-me-web:${RELEASE}
+    ports:
+      - "5173:80"
+    environment:
+      - TZ=Asia/Ho_Chi_Minh
+    depends_on:
+      - services
+  services:
+    container_name: swap-me-services
+    image: thongdh3401/swap-me-services:${RELEASE}
+    ports:
+      - "3000:3000"
+      - "3001:3001"
+    environment:
+      - TZ=Asia/Ho_Chi_Minh
+    depends_on:
+        - mysqlDB
+        - keycloak
   identity-access-management:
     container_name: keycloak
     image: quay.io/keycloak/keycloak:24.0.4
     command: [ "start"]
     environment:
       # Database Configuration
-      KC_DB: "postgres"
-      KC_DB_URL_HOST: "postgresDb"
-      KC_DB_USERNAME: ${KC_DB_USERNAME}
+      KC_DB: "mysql"
+      KC_DB_URL_HOST: "mysqlDB"
+      KC_DB_USERNAME: ${KC_DB_USERNAME
       KC_DB_PASSWORD: ${KC_DB_PASSWORD}
       # Proxy Configuration
       KC_PROXY_HEADERS: "xforwarded"
       KC_HTTP_RELATIVE_PATH: ${KC_HTTP_RELATIVE_PATH}
       #TLS Configuration
-      KC_HTTPS_CERTIFICATE_FILE: "/keycloak/tls/cert.pem"
-      KC_HTTPS_CERTIFICATE_KEY_FILE: "/keycloak/tls/key.pem"
+      KC_HTTPS_CERTIFICATE_FILE: "/keycloak/tls/fullchain.pem"
+      KC_HTTPS_CERTIFICATE_KEY_FILE: "/keycloak/tls/private.pem"
       #Hostname Configuration
       KC_HOSTNAME: ${KC_HOSTNAME}
       KC_HOSTNAME_STRICT_HTTPS: 'true'
@@ -23,32 +43,13 @@ services:
       KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
     volumes:
-      - ./keycloak/cert.pem:/keycloak/tls/cert.pem
-      - ./keycloak/key.pem:/keycloak/tls/key.pem
-      - ./keycloak/themes:/opt/keycloak/themes
+      - ./fullchain.pem:/keycloak/tls/fullchain.pem
+      - ./private.pem:/keycloak/tls/private.pem
+      - ./swapme-theme:/opt/keycloak/themes/swapme
     ports:
       - "8443:8443"
     depends_on:
-      - postgresDb
-  postgresDb:
-    container_name: postgresDb
-    image: postgres:15
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: keycloak
-    ports:
-      - "5432:5432"
-    volumes:
-      - ./postgres/postgres-data.sql:/docker-entrypoint-initdb.d/postgres-data.sql
-#  mongoDb:
-#    container_name: mongoDb
-#    image: mongodb/mongodb-community-server:latest
-#    environment:
-#      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
-#      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
-#    ports:
-#      - "27017:27017"
+      - mysqlDB
   mysqlDB:
     container_name: mysqlDB
     image: mysql:8.0
