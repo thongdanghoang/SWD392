@@ -14,12 +14,9 @@ import {formatToVietnameseCurrency} from '../../shared/utils.ts';
 import {getWardByCode} from 'vn-local-plus';
 import {UserDto} from '../../shared/models/userDto.ts';
 import {UserContext} from '../../shared/services/userContext.ts';
-import io from 'socket.io-client';
+import {socket} from '../../shared/applicationConstants.ts';
 
 export default function ExchangeDetail(): ReactElement {
-  const socket = io(AppRoutingConstants.CHAT_GATEWAY_URL, {
-    transports: ['websocket'] // Ensure WebSocket transport is used
-  });
   const navigate = useNavigate();
   const currentUser: UserDto | null | undefined = useContext(UserContext)?.user;
   const applicationService = useApplicationService();

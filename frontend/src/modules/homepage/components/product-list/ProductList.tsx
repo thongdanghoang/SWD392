@@ -18,9 +18,7 @@ const ProductList = (): React.ReactElement => {
   );
   const [queryParameters] = useSearchParams();
   const [error, setError] = useState<string | null>(null);
-  const [offset, setOffset] = useState<number>(
-    ApplicationConstants.DEFAULT_OFFSET
-  );
+  const [offset, setOffset] = useState<number>(0);
   const limit: number = ApplicationConstants.DEFAULT_LIMIT;
   const applicationService = useApplicationService();
   const keyword: string = queryParameters.get('q') ?? '';
@@ -49,6 +47,7 @@ const ProductList = (): React.ReactElement => {
         }
       })
       .then(response => {
+        setOffset(offset + limit);
         setSearchResult(prevState => ({
           results: [...prevState.results, ...response.data.results],
           total: response.data.total
@@ -60,9 +59,7 @@ const ProductList = (): React.ReactElement => {
       });
   };
 
-  useEffect(() => {
-    setOffset(0);
-    setSearchResult({results: [], total: 0});
+  useEffect((): void => {
     fetchProducts();
   }, [keyword, categoryId]);
 
@@ -96,7 +93,6 @@ const ProductList = (): React.ReactElement => {
             <AppButton
               variant="primary"
               onClick={(): void => {
-                setOffset(prevOffset => prevOffset + limit);
                 fetchProducts();
               }}
             >
