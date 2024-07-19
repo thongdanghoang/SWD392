@@ -69,10 +69,10 @@ export default function ProfileOffCanvas({
           onClick={(): void => {
             if (applicationService.isRoleAdmin()) {
               window.location.href =
-                'https://thongdanghoang.id.vn/auth/admin/SwapMe/console/';
+                'http://localhost:8443/admin/swap-me/console/';
             } else {
               window.location.href =
-                'https://thongdanghoang.id.vn/auth/realms/SwapMe/account/';
+                'http://localhost:8443/realms/swap-me/account/';
             }
           }}
         >

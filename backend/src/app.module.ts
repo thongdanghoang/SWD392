@@ -19,11 +19,11 @@ import {CategoryEntity} from './modules/category/category.entity';
 @Module({
   imports: [
     AuthModule.forRoot({
-      oidcAuthority: 'https://thongdanghoang.id.vn/auth/realms/SwapMe'
+      oidcAuthority: 'http://localhost:8443/realms/swap-me'
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'thongdanghoang.id.vn',
+      host: 'localhost',
       port: 3306,
       username: 'root',
       password: 'root_P@ssW0rd',
