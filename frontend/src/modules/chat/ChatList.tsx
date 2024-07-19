@@ -5,17 +5,12 @@ import React, {
   useRef,
   useState
 } from 'react';
-import io from 'socket.io-client';
 import {useApplicationService} from '../shared/services/application.service.ts';
 import './ChatList.scss';
 import {UserDto} from 'src/modules/shared/models/userDto.ts';
 import {AppRoutingConstants} from '../shared/app-routing.constants.ts';
 import {UserContext} from '../shared/services/userContext.ts';
-
-const socket = io(AppRoutingConstants.CHAT_GATEWAY_URL, {
-  transports: ['websocket'],
-  autoConnect: true
-});
+import {socket} from '../shared/applicationConstants.ts';
 
 interface Room {
   roomId: string;

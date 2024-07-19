@@ -150,10 +150,12 @@ export class ExchangeRequestController {
         ) {
           void this.saveExchangeRequestAndUpdateNotifications(exchangeRequest);
         }
-        void this.setStatusToProductsRequestAndSaveExchangeRequestAndUpdateNotifications(
-          exchangeRequest,
-          ProductStatus.PUBLISHED
-        );
+        if (exchangeRequest.productsToBeExchanged) {
+          void this.setStatusToProductsRequestAndSaveExchangeRequestAndUpdateNotifications(
+            exchangeRequest,
+            ProductStatus.PUBLISHED
+          );
+        }
       }
     }
   }
@@ -164,11 +166,11 @@ export class ExchangeRequestController {
   ): Promise<ExchangeEntity> {
     try {
       await Promise.all(
-        exchangeRequest.productsToBeExchanged
-          .map((productId: number): number => productId)
-          .map(async (productId: number): Promise<void> => {
+        exchangeRequest.productsToBeExchanged.map(
+          async (productId: number): Promise<void> => {
             return this.productService.updateProductStatus(productId, status);
-          })
+          }
+        )
       );
       return await this.saveExchangeRequestAndUpdateNotifications(
         exchangeRequest

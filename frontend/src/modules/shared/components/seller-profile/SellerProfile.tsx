@@ -10,16 +10,11 @@ import {useApplicationService} from '../../services/application.service';
 import {AppRoutingConstants} from '../../app-routing.constants';
 import AppButton from '../buttons/AppButton';
 import {UserDto} from '../../models/userDto';
-import io from 'socket.io-client';
 import {formatDistanceToNow} from 'date-fns';
 import {vi} from 'date-fns/locale';
 import {UserContext} from '../../services/userContext.ts';
 import {formatToVietnameseCurrency} from '../../utils.ts';
-
-// Replace with your NestJS server URL
-const socket = io(AppRoutingConstants.CHAT_GATEWAY_URL, {
-  transports: ['websocket'] // Ensure WebSocket transport is used
-});
+import {socket} from '../../applicationConstants.ts';
 
 export default function UserProfile(): ReactElement {
   const currentUser: UserDto | null | undefined = useContext(UserContext)?.user;
@@ -41,12 +36,14 @@ export default function UserProfile(): ReactElement {
 
   // Fetch seller info
   const {id} = useParams<{id: string}>();
+
   async function fetchSellerInfo(id: string): Promise<any> {
     const response = await applicationService
       .createApiClient()
       .get(`${AppRoutingConstants.BASE_URL}/user/${id}`);
     return response.data;
   }
+
   useEffect((): void => {
     if (id) {
       fetchSellerInfo(id)

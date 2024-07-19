@@ -9,16 +9,12 @@ import {
   ProductWithOwnerDTO
 } from '../../../homepage/model/productWithOwnerDTO.ts';
 import {UserDto} from '../../models/userDto.ts';
-import io from 'socket.io-client';
 import {UserContext} from '../../services/userContext.ts';
 import {formatToVietnameseCurrency} from '../../utils.ts';
 import {getWardByCode} from 'vn-local-plus';
 import {DeleteProductConfirmationModal} from './DeleteProductConfirmationModal.tsx';
 import {useModal} from '../modal/useModal.tsx';
-
-const socket = io(AppRoutingConstants.CHAT_GATEWAY_URL, {
-  transports: ['websocket'] // Ensure WebSocket transport is used
-});
+import {socket} from '../../applicationConstants.ts';
 
 export interface Room {
   roomId: string;
