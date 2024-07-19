@@ -40,6 +40,12 @@ export class ExchangeRequestController {
   ): Promise<ExchangeDetailDto> {
     const exchangeRequest: ExchangeEntity =
       await this.service.getExchangeRequest(exchangeId);
+    if (exchangeRequest.status !== ExchangeStatus.PENDING) {
+      throw new HttpException(
+        'Exchange request has been processed',
+        HttpStatus.CONFLICT
+      );
+    }
     exchangeRequest.status = ExchangeStatus.ACCEPTED;
     await this.updateProductStatus(
       exchangeRequest.productRequest,
@@ -67,6 +73,12 @@ export class ExchangeRequestController {
   ): Promise<ExchangeDetailDto> {
     const exchangeRequest: ExchangeEntity =
       await this.service.getExchangeRequest(exchangeId);
+    if (exchangeRequest.status !== ExchangeStatus.PENDING) {
+      throw new HttpException(
+        'Exchange request has been processed',
+        HttpStatus.CONFLICT
+      );
+    }
     exchangeRequest.status = ExchangeStatus.REJECTED;
     if (
       !exchangeRequest.productsToBeExchanged ||
